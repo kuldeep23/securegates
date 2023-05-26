@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/pages/authentication/signup_page.dart';
-import 'package:secure_gates_project/widgets/oauth_login_button.dart';
 import 'package:secure_gates_project/widgets/rounded_text_field.dart';
+
+import '../../services/auth_service.dart';
 
 class LoginPage extends HookConsumerWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -39,69 +39,6 @@ class LoginPage extends HookConsumerWidget {
                               fontSize: 40,
                               fontWeight: FontWeight.w600,
                             ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Log in with one of the following options.",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: OAuthLoginButton(
-                                      icon: const Icon(FontAwesomeIcons.google),
-                                      onPressed: () async {
-                                        // isLoading.value = true;
-
-                                        // await ref
-                                        //     .read(authServiceProvider)
-                                        //     .signInWithGoogle(context)
-                                        //     .catchError((e, st) {
-                                        //   if (e is CustomExeption) {
-                                        //     isLoading.value = false;
-                                        //   }
-                                        // });
-
-                                        // isLoading.value = false;
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 10),
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          child: const Row(
-                            children: [
-                              Expanded(
-                                child: Divider(
-                                  thickness: 2,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Text(
-                                  "Or Connect with",
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.grey),
-                                ),
-                              ),
-                              Expanded(
-                                child: Divider(
-                                  thickness: 2,
-                                ),
-                              ),
-                            ],
                           ),
                         ),
                         Container(
@@ -200,19 +137,19 @@ class LoginPage extends HookConsumerWidget {
                                   ),
                                 ),
                                 onTap: () async {
-                                  // isLoading.value = true;
+                                  isLoading.value = true;
 
-                                  // await ref
-                                  //     .read(authServiceProvider)
-                                  //     .signInWithEmail(
-                                  //         _emailController.text.trim(),
-                                  //         _passwordController.text.trim(),
-                                  //         context)
-                                  //     .catchError((e, st) {
-                                  //   isLoading.value = false;
-                                  // });
+                                  await ref
+                                      .read(authServiceProvider)
+                                      .signInWithEmail(
+                                        emailController.text.trim(),
+                                        passwordController.text.trim(),
+                                      )
+                                      .catchError((e, st) {
+                                    isLoading.value = false;
+                                  });
 
-                                  // isLoading.value = false;
+                                  isLoading.value = false;
                                 }),
                             const SizedBox(
                               height: 5,
