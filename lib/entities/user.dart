@@ -3,6 +3,7 @@ import 'dart:convert';
 
 class User {
   final String uid;
+  final String socCode;
   final String ownerTenant;
   final String ownerName;
   final String ownerImage;
@@ -32,6 +33,7 @@ class User {
   final String isActive;
   User({
     required this.uid,
+    required this.socCode,
     required this.ownerTenant,
     required this.ownerName,
     required this.ownerImage,
@@ -63,6 +65,7 @@ class User {
 
   User copyWith({
     String? uid,
+    String? socCode,
     String? ownerTenant,
     String? ownerName,
     String? ownerImage,
@@ -93,6 +96,7 @@ class User {
   }) {
     return User(
       uid: uid ?? this.uid,
+      socCode: socCode ?? this.socCode,
       ownerTenant: ownerTenant ?? this.ownerTenant,
       ownerName: ownerName ?? this.ownerName,
       ownerImage: ownerImage ?? this.ownerImage,
@@ -126,6 +130,7 @@ class User {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'uid': uid,
+      'socCode': socCode,
       'ownerTenant': ownerTenant,
       'ownerName': ownerName,
       'ownerImage': ownerImage,
@@ -158,34 +163,35 @@ class User {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      uid: map['uid'] as String,
+      uid: map['UID'] as String,
+      socCode: map['Soc_Code'] as String,
       ownerTenant: map['Owner_Tenant'] as String,
-      ownerName: map['ownerName'] as String,
-      ownerImage: map['ownerImage'] as String,
-      contactNumber: map['contactNumber'] as String,
-      email: map['email'] as String,
-      password: map['password'] as String,
-      hometownAddress: map['hometownAddress'] as String,
-      member: map['member'] as String,
-      gender: map['gender'] as String,
-      dob: map['dob'] as String,
-      bloodGroup: map['bloodGroup'] as String,
-      profession: map['profession'] as String,
-      professionDetails: map['professionDetails'] as String,
-      flatNumber: map['flatNumber'] as String,
-      flatBlock: map['flatBlock'] as String,
-      flatFloor: map['flatFloor'] as String,
-      flatType: map['flatType'] as String,
-      parkingType: map['parkingType'] as String,
-      parkingNumber: map['parkingNumber'] as String,
-      petType: map['petType'] as String,
-      petName: map['petName'] as String,
-      twoWheelerType: map['twoWheelerType'] as String,
-      twoWheelerNumber: map['twoWheelerNumber'] as String,
-      fourWheelerBrand: map['fourWheelerBrand'] as String,
-      fourWheelerNumber: map['fourWheelerNumber'] as String,
-      creationDate: map['creationDate'] as String,
-      isActive: map['isActive'] as String,
+      ownerName: map['Owner_Name'] as String,
+      ownerImage: map['Owner_Image'] as String,
+      contactNumber: map['Contact_Number'] as String,
+      email: map['Email'] as String,
+      password: map['assword'] as String,
+      hometownAddress: map['HomeTown_Address'] as String,
+      member: map['Member'] as String,
+      gender: map['Mender'] as String,
+      dob: map['DOB'] as String,
+      bloodGroup: map['Blood_Group'] as String,
+      profession: map['Profession'] as String,
+      professionDetails: map['Profession_Details'] as String,
+      flatNumber: map['Flat_Number'] as String,
+      flatBlock: map['Flat_Block'] as String,
+      flatFloor: map['Flat_Floor'] as String,
+      flatType: map['Flat_Type'] as String,
+      parkingType: map['Parking_Type'] as String,
+      parkingNumber: map['Parking_Number'] as String,
+      petType: map['Pet_Type'] as String,
+      petName: map['Pet_Name'] as String,
+      twoWheelerType: map['Two_Wheeler_Type'] as String,
+      twoWheelerNumber: map['Two_Wheeler_Number'] as String,
+      fourWheelerBrand: map['Four_Wheeler_Brand'] as String,
+      fourWheelerNumber: map['Four_Wheeler_Number'] as String,
+      creationDate: map['Creation_Date'] as String,
+      isActive: map['Is_Active'] as String,
     );
   }
 
@@ -196,7 +202,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(uid: $uid, ownerTenant: $ownerTenant, ownerName: $ownerName, ownerImage: $ownerImage, contactNumber: $contactNumber, email: $email, password: $password, hometownAddress: $hometownAddress, member: $member, gender: $gender, dob: $dob, bloodGroup: $bloodGroup, profession: $profession, professionDetails: $professionDetails, flatNumber: $flatNumber, flatBlock: $flatBlock, flatFloor: $flatFloor, flatType: $flatType, parkingType: $parkingType, parkingNumber: $parkingNumber, petType: $petType, petName: $petName, twoWheelerType: $twoWheelerType, twoWheelerNumber: $twoWheelerNumber, fourWheelerBrand: $fourWheelerBrand, fourWheelerNumber: $fourWheelerNumber, creationDate: $creationDate, isActive: $isActive)';
+    return 'User(uid: $uid, socCode: $socCode, ownerTenant: $ownerTenant, ownerName: $ownerName, ownerImage: $ownerImage, contactNumber: $contactNumber, email: $email, password: $password, hometownAddress: $hometownAddress, member: $member, gender: $gender, dob: $dob, bloodGroup: $bloodGroup, profession: $profession, professionDetails: $professionDetails, flatNumber: $flatNumber, flatBlock: $flatBlock, flatFloor: $flatFloor, flatType: $flatType, parkingType: $parkingType, parkingNumber: $parkingNumber, petType: $petType, petName: $petName, twoWheelerType: $twoWheelerType, twoWheelerNumber: $twoWheelerNumber, fourWheelerBrand: $fourWheelerBrand, fourWheelerNumber: $fourWheelerNumber, creationDate: $creationDate, isActive: $isActive)';
   }
 
   @override
@@ -204,6 +210,7 @@ class User {
     if (identical(this, other)) return true;
 
     return other.uid == uid &&
+        other.socCode == socCode &&
         other.ownerTenant == ownerTenant &&
         other.ownerName == ownerName &&
         other.ownerImage == ownerImage &&
@@ -236,6 +243,7 @@ class User {
   @override
   int get hashCode {
     return uid.hashCode ^
+        socCode.hashCode ^
         ownerTenant.hashCode ^
         ownerName.hashCode ^
         ownerImage.hashCode ^
