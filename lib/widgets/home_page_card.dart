@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePageCard extends StatelessWidget {
-  const HomePageCard(
-      {super.key, required this.featureText, required this.image});
+  const HomePageCard({
+    super.key,
+    required this.featureText,
+    required this.image,
+    required,
+  });
 
   final String image;
   final String featureText;
