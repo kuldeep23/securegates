@@ -18,6 +18,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   google_fonts: ^4.0.4
   hooks_riverpod: ^2.3.6
+  rive: ^0.11.2
   shared_preferences: ^2.1.1
 
 dev_dependencies:
@@ -27,3 +28,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/RiveAssets/
