@@ -1,9 +1,10 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:secure_gates_project/entities/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class BaseLoginPresistenceService {
-  Future<void> setLoginStatus(bool value);
-  Future<bool> getLoginStatus();
+  Future<void> setUserInPrefs(String userData);
+  Future<User?> getUserFromPrefs();
 }
 
 final loginPresistenceServiceProvider =
@@ -12,18 +13,28 @@ final loginPresistenceServiceProvider =
 });
 
 class LoginPresistenceService implements BaseLoginPresistenceService {
-  static const PREF_KEY = "loginStatusOnDisk";
+  static const PREF_KEY_FOR_USER = "prefKeyForUser";
+  static SharedPreferences? _sharedPreferences;
 
-  @override
-  Future<bool> getLoginStatus() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-    return sharedPreferences.getBool(PREF_KEY) ?? false;
+  static Future<void> init() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
   }
 
   @override
-  Future<void> setLoginStatus(bool value) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setBool(PREF_KEY, value);
+  Future<User?> getUserFromPrefs() async {
+    final userDataInJson =
+        _sharedPreferences!.getString(PREF_KEY_FOR_USER) ?? "";
+
+    if (userDataInJson.isEmpty) {
+      return null;
+    } else {
+      final currentUser = User.fromJson(userDataInJson);
+      return currentUser;
+    }
+  }
+
+  @override
+  Future<void> setUserInPrefs(String userData) async {
+    _sharedPreferences!.setString(PREF_KEY_FOR_USER, userData);
   }
 }
