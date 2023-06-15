@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:secure_gates_project/controller/login_presistense_controller.dart';
+import 'package:secure_gates_project/controller/user_controller.dart';
+import 'package:secure_gates_project/services/login_presistence_service.dart';
 
 import '../custom_exception.dart';
 
@@ -28,7 +31,14 @@ class AuthenticationService implements BaseAuthenticationService {
         data: formData,
       );
       if (userResponse.data["flag"] == 1) {
-        await ref.watch(loginPresistenseController).setStatus(true);
+        final testData =
+            Map<String, dynamic>.from(userResponse.data["data"] as dynamic);
+
+        final passingData = jsonEncode(testData);
+        await ref
+            .read(loginPresistenceServiceProvider)
+            .setUserInPrefs(passingData);
+        await ref.read(userControllerProvider).configCurrentUser();
       }
     } catch (e) {
       throw CustomExeption(message: e.toString());
@@ -37,6 +47,7 @@ class AuthenticationService implements BaseAuthenticationService {
 
   @override
   Future<void> signOut() async {
-    await ref.watch(loginPresistenseController).setStatus(false);
+    await ref.watch(loginPresistenceServiceProvider).setUserInPrefs("");
+    ref.watch(userControllerProvider).configCurrentUser();
   }
 }
