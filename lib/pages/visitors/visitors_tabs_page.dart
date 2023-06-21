@@ -30,7 +30,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
               indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(12), // Creates border
                 color: Colors.greenAccent,
-              ), //Chan
+              ),
               tabs: const [
                 Tab(
                   text: "All Visitors",

@@ -9,13 +9,13 @@ class HomePageCard extends StatelessWidget {
     required,
   });
 
-  final String image;
+  final ImageProvider image;
   final String featureText;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(5),
       margin: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -31,11 +31,11 @@ class HomePageCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.network(
-            image,
+          Image(
+            image: image,
             fit: BoxFit.fill,
-            height: 75,
-            width: 75,
+            height: 60,
+            width: 60,
           ),
           const SizedBox(
             height: 10,

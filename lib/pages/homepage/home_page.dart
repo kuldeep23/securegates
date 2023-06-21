@@ -12,6 +12,7 @@ import 'package:secure_gates_project/entities/visitor.dart';
 import 'package:secure_gates_project/services/auth_service.dart';
 import 'package:secure_gates_project/services/dashboard_data_service.dart';
 import 'package:secure_gates_project/widgets/home_page_card.dart';
+import 'package:secure_gates_project/widgets/skelton_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../visitors/visitors_tabs_page.dart';
@@ -34,7 +35,6 @@ final featuresDataProvider =
 });
 
 final homePageVisitors = FutureProvider.autoDispose<List<Visitor>>((ref) async {
-  await Future.delayed(const Duration(seconds: 5));
   final data = ref.watch(dashboardServiceProvider);
   final visitors = data.getLastThreeVisitors();
 
@@ -143,6 +143,13 @@ class HomePage extends HookConsumerWidget {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10, bottom: 10),
+                  child: CircleAvatar(
+                    child: Text(
+                        userProvider.currentUser!.ownerName.substring(0, 1)),
+                  ),
+                ),
               ],
             ),
           ),
@@ -165,12 +172,13 @@ class HomePage extends HookConsumerWidget {
               data: (data) {
                 return CarouselSlider(
                   options: CarouselOptions(
-                      height: 120,
-                      viewportFraction: 0.6,
-                      autoPlay: false,
-                      autoPlayInterval: const Duration(
-                        seconds: 6,
-                      )),
+                    height: 120,
+                    viewportFraction: 0.6,
+                    autoPlay: true,
+                    autoPlayInterval: const Duration(
+                      seconds: 6,
+                    ),
+                  ),
                   items: data.map((item) {
                     return Container(
                         width: MediaQuery.of(context).size.width,
@@ -216,6 +224,20 @@ class HomePage extends HookConsumerWidget {
           const SizedBox(
             height: 10,
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Services",
+                  style: GoogleFonts.montserrat(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
           featureData.when(
               data: (data) {
                 return Column(
@@ -239,7 +261,9 @@ class HomePage extends HookConsumerWidget {
                                     },
                                     child: HomePageCard(
                                       featureText: item.featureName,
-                                      image: item.featureIcon,
+                                      image: const AssetImage(
+                                        "assets/image_assets/004-visitor.png",
+                                      ),
                                     ),
                                   ),
                                 ))
@@ -256,7 +280,8 @@ class HomePage extends HookConsumerWidget {
                             .map((item) => Expanded(
                                   child: HomePageCard(
                                     featureText: item.featureName,
-                                    image: item.featureIcon,
+                                    image: const AssetImage(
+                                        "assets/image_assets/004-visitor.png"),
                                   ),
                                 ))
                             .toList(),
@@ -340,20 +365,29 @@ class HomePage extends HookConsumerWidget {
           ),
           visitorsData.when(
               data: (data) => Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        quickDialogue(
-                            callBack: () {},
-                            subtitle: "subtitle",
-                            title: "title",
-                            context: context);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          children: data
-                              .map((item) => Card(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        children: data
+                            .map((item) => GestureDetector(
+                                  onTap: () {
+                                    quickDialogue(
+                                      callBack: () {},
+                                      subtitle: item.visitorStatus,
+                                      title: item.visitorName,
+                                      visitorType: item.visitorType,
+                                      context: context,
+                                      inTime: item.visitorEnterTime,
+                                      outTime: item.visitorEnterTime,
+                                      allowedBy: item.visitorApproveBy,
+                                      visitorTypeDetail: item.visitorTypeDetail,
+                                      image: NetworkImage(
+                                        item.visitorImage,
+                                      ),
+                                    );
+                                  },
+                                  child: Card(
                                     margin: const EdgeInsets.symmetric(
                                       horizontal: 5,
                                       vertical: 7,
@@ -475,9 +509,9 @@ class HomePage extends HookConsumerWidget {
                                         ),
                                       ),
                                     ),
-                                  ))
-                              .toList(),
-                        ),
+                                  ),
+                                ))
+                            .toList(),
                       ),
                     ),
                   ),
@@ -485,15 +519,9 @@ class HomePage extends HookConsumerWidget {
                     child: Shimmer.fromColors(
                       baseColor: Colors.grey[300]!,
                       highlightColor: Colors.grey[100]!,
-                      child: Card(
-                        elevation: 1.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: const SizedBox(
-                          height: 80,
-                          width: 170,
-                        ),
+                      child: const Skeleton(
+                        width: 100,
+                        height: 100,
                       ),
                     ),
                   ),
@@ -535,33 +563,52 @@ class HomePage extends HookConsumerWidget {
   }
 }
 
-Future<void> quickDialogue(
-    {Color dialogueThemeColor = const Color(0xFF9CC5FF),
-    required void Function() callBack,
-    String discardTitle = 'Cancel',
-    String submitTitle = 'Okay',
-    required String subtitle,
-    bool onlyShow = false,
-    required String title,
-    required BuildContext context}) async {
+Future<void> quickDialogue({
+  Color dialogueThemeColor = const Color(0xFF9CC5FF),
+  required void Function() callBack,
+  String discardTitle = 'Cancel',
+  String submitTitle = 'Okay',
+  required String visitorType,
+  required String subtitle,
+  bool onlyShow = false,
+  required String title,
+  required BuildContext context,
+  required ImageProvider image,
+  required String inTime,
+  required String outTime,
+  required String allowedBy,
+  required String visitorTypeDetail,
+}) async {
   await showAnimatedDialog(
+    duration: const Duration(milliseconds: 200),
     barrierDismissible: true,
     animationType: DialogTransitionType.fade,
     context: context,
     builder: (context) {
       return AlertDialog(
+        contentPadding: EdgeInsets.zero,
+        titlePadding: const EdgeInsets.all(10),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(11),
+          borderRadius: BorderRadius.circular(20),
         ),
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
+        title: Column(
           children: [
-            Center(
-              child: Icon(
-                Icons.check_circle,
-                size: 35,
-                color: Colors.green[600],
+            Text(
+              visitorType,
+              style: const TextStyle(
+                fontSize: 25,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(50)),
+              child: Image(
+                image: image,
+                height: 100,
+                width: 100,
+                fit: BoxFit.contain,
               ),
             ),
           ],
@@ -580,57 +627,117 @@ Future<void> quickDialogue(
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              width: 390 * .65,
+              padding: const EdgeInsets.symmetric(
+                vertical: 1,
+                horizontal: 5,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xff6CB4EE),
+                borderRadius: BorderRadius.circular(
+                  10,
+                ),
+              ),
               child: Text(
-                subtitle,
-                overflow: TextOverflow.clip,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey,
+                subtitle.toUpperCase(),
+                style:
+                    GoogleFonts.montserrat(fontSize: 10, color: Colors.white),
+              ),
+            ),
+            const SizedBox(height: 5),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Divider(),
+            ),
+            const SizedBox(height: 5),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.logout,
+                    size: 15,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(inTime),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  const RotatedBox(
+                    quarterTurns: 2,
+                    child: Icon(
+                      Icons.logout,
+                      size: 15,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(outTime),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.person,
+                    size: 15,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text("Allowed by $allowedBy"),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.store,
+                    size: 15,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(visitorTypeDetail),
+                ],
+              ),
+            ),
+            const SizedBox(height: 7),
+            InkWell(
+              onTap: () {},
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: const BoxDecoration(
+                  color: Color(0xff6CB4EE),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(
+                      20,
+                    ),
+                    bottomRight: Radius.circular(
+                      20,
+                    ),
+                  ),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.phone,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            Visibility(
-              visible: !onlyShow,
-              replacement: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text("Ok")),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      discardTitle,
-                      style: TextStyle(color: dialogueThemeColor),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      callBack();
-                    },
-                    child: Text(
-                      submitTitle,
-                      style: TextStyle(color: dialogueThemeColor),
-                    ),
-                  ),
-                ],
-              ),
-            )
           ],
         ),
       );

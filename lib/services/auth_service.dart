@@ -39,7 +39,7 @@ class AuthenticationService implements BaseAuthenticationService {
             .read(loginPresistenceServiceProvider)
             .setUserInPrefs(passingData);
         await ref.read(userControllerProvider).configCurrentUser();
-      }
+      } else {}
     } catch (e) {
       throw CustomExeption(message: e.toString());
     }
