@@ -14,6 +14,7 @@ import 'package:secure_gates_project/services/dashboard_data_service.dart';
 import 'package:secure_gates_project/widgets/home_page_card.dart';
 import 'package:secure_gates_project/widgets/skelton_widget.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter/src/painting/gradient.dart' as gradient;
 
 import '../visitors/visitors_tabs_page.dart';
 
@@ -720,7 +721,16 @@ Future<void> quickDialogue({
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 decoration: const BoxDecoration(
-                  color: Color(0xff6CB4EE),
+                  gradient: gradient.LinearGradient(
+                    colors: [
+                      Color(0xff00B4DB),
+                      Color(0xff0083B0),
+                    ],
+                    begin: Alignment.topCenter, //begin of the gradient color
+                    end: Alignment.bottomCenter, //end of the gradient color
+                    //stops for individual color
+                    //set the stops number equal to numbers of color
+                  ),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(
                       20,
