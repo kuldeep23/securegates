@@ -22,11 +22,29 @@ final allVisitorProvider =
 
   return visitors;
 });
-final currentVisitors = FutureProvider.autoDispose<List<Visitor>>((ref) async {
+final currentVisitorsProvider =
+    FutureProvider.autoDispose<List<Visitor>>((ref) async {
   final data = FormData.fromMap(
       {'soc': 'CP', 'visitor_is_valid': '1', 'visitor_flat_no': '360'});
   final response = await Dio().post(
-    "https://gatesadmin.000webhostapp.com/get_all_visitors.php",
+    "https://gatesadmin.000webhostapp.com/get_inside_visitors.php",
+    data: data,
+  );
+
+  final results = List<Map<String, dynamic>>.from(response.data);
+
+  List<Visitor> visitors = results
+      .map((cardData) => Visitor.fromMap(cardData))
+      .toList(growable: false);
+
+  return visitors;
+});
+
+final wrongVisitorsProvider =
+    FutureProvider.autoDispose<List<Visitor>>((ref) async {
+  final data = FormData.fromMap({'soc': 'CP', 'flat_no': '360'});
+  final response = await Dio().post(
+    "https://gatesadmin.000webhostapp.com/get_wrong_visitors.php",
     data: data,
   );
 
@@ -45,6 +63,8 @@ class VisitorsTabsPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allVisitors = ref.watch(allVisitorProvider);
+    final currentVisitors = ref.watch(currentVisitorsProvider);
+    final wrongVisitors = ref.watch(wrongVisitorsProvider);
     final tabController = useTabController(initialLength: 4);
 
     return Scaffold(
@@ -72,7 +92,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
       body: TabBarView(
         controller: tabController,
         children: [
-          allVisitors.when(
+          currentVisitors.when(
               data: (data) => Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: ListView(
@@ -203,7 +223,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
               error: (e, s) {
                 return Text(e.toString());
               }),
-          allVisitors.when(
+          wrongVisitors.when(
               data: (data) => Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: ListView(
