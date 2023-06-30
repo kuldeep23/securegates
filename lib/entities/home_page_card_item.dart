@@ -6,11 +6,13 @@ class HomePageCardItem {
   final String featureName;
   final String featureIcon;
   final String featureSoc;
+  final String featureColor;
   HomePageCardItem({
     required this.uid,
     required this.featureName,
     required this.featureIcon,
     required this.featureSoc,
+    required this.featureColor,
   });
 
   HomePageCardItem copyWith({
@@ -18,12 +20,14 @@ class HomePageCardItem {
     String? featureName,
     String? featureIcon,
     String? featureSoc,
+    String? featureColor,
   }) {
     return HomePageCardItem(
       uid: uid ?? this.uid,
       featureName: featureName ?? this.featureName,
       featureIcon: featureIcon ?? this.featureIcon,
       featureSoc: featureSoc ?? this.featureSoc,
+      featureColor: featureColor ?? this.featureColor,
     );
   }
 
@@ -33,6 +37,7 @@ class HomePageCardItem {
       'featureName': featureName,
       'featureIcon': featureIcon,
       'featureSoc': featureSoc,
+      'featureColor': featureColor,
     };
   }
 
@@ -42,6 +47,7 @@ class HomePageCardItem {
       featureName: map['feature_name'] as String,
       featureIcon: map['feature_icon'] as String,
       featureSoc: map['feature_soc'] as String,
+      featureColor: map['feature_color'] as String,
     );
   }
 
@@ -52,7 +58,7 @@ class HomePageCardItem {
 
   @override
   String toString() {
-    return 'HomePageCardItem(uid: $uid, featureName: $featureName, featureIcon: $featureIcon, featureSoc: $featureSoc)';
+    return 'HomePageCardItem(uid: $uid, featureName: $featureName, featureIcon: $featureIcon, featureSoc: $featureSoc, featureColor: $featureColor)';
   }
 
   @override
@@ -62,7 +68,8 @@ class HomePageCardItem {
     return other.uid == uid &&
         other.featureName == featureName &&
         other.featureIcon == featureIcon &&
-        other.featureSoc == featureSoc;
+        other.featureSoc == featureSoc &&
+        other.featureColor == featureColor;
   }
 
   @override
@@ -70,6 +77,7 @@ class HomePageCardItem {
     return uid.hashCode ^
         featureName.hashCode ^
         featureIcon.hashCode ^
-        featureSoc.hashCode;
+        featureSoc.hashCode ^
+        featureColor.hashCode;
   }
 }

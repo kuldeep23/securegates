@@ -6,25 +6,26 @@ class HomePageCard extends StatelessWidget {
     super.key,
     required this.featureText,
     required this.image,
+    required this.cardColor,
     required,
   });
 
   final ImageProvider image;
   final String featureText;
+  final Color cardColor;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(3),
+    return SizedBox(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            height: 85,
-            width: 85,
-            padding: const EdgeInsets.all(10),
+            height: 80,
+            width: 80,
+            padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: cardColor,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
@@ -36,7 +37,8 @@ class HomePageCard extends StatelessWidget {
             ),
             child: Image(
               image: image,
-              fit: BoxFit.fill,
+              color: Colors.white,
+              fit: BoxFit.contain,
             ),
           ),
           const SizedBox(
@@ -44,8 +46,9 @@ class HomePageCard extends StatelessWidget {
           ),
           Text(
             featureText,
+            overflow: TextOverflow.ellipsis,
             style: GoogleFonts.montserrat(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
           ),

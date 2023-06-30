@@ -29,5 +29,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-    </application>
+    </application> 
+    <query>
+        <intent>
+        <action android:name="android.intent.action.DIAL" />
+        <data android:scheme="tel" />
+        </intent>
+    </query>
 </manifest>

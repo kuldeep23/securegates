@@ -12,9 +12,11 @@ import 'package:secure_gates_project/entities/visitor.dart';
 import 'package:secure_gates_project/services/auth_service.dart';
 import 'package:secure_gates_project/services/dashboard_data_service.dart';
 import 'package:secure_gates_project/widgets/home_page_card.dart';
+import 'package:secure_gates_project/widgets/photo_view_wrapper.dart';
 import 'package:secure_gates_project/widgets/skelton_widget.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/src/painting/gradient.dart' as gradient;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../visitors/visitors_tabs_page.dart';
 
@@ -55,6 +57,8 @@ class HomePage extends HookConsumerWidget {
     final visitorsData = ref.watch(homePageVisitors);
     final userProvider = ref.watch(userControllerProvider);
     final selectedIndex = useState(0);
+    final currentCarouselIndex = useState(0);
+    final CarouselController carouselController = CarouselController();
 
     return Scaffold(
       body: Column(
@@ -146,9 +150,27 @@ class HomePage extends HookConsumerWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 10, bottom: 10),
-                  child: CircleAvatar(
-                    child: Text(
-                        userProvider.currentUser!.ownerName.substring(0, 1)),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 17,
+                        child: GestureDetector(
+                          child: const Icon(
+                            Icons.notifications_outlined,
+                            size: 20,
+                          ),
+                          onTap: () {},
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      CircleAvatar(
+                        radius: 17,
+                        child: Text(userProvider.currentUser!.ownerName
+                            .substring(0, 1)),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -171,38 +193,63 @@ class HomePage extends HookConsumerWidget {
           ),
           carouselData.when(
               data: (data) {
-                return CarouselSlider(
-                  options: CarouselOptions(
-                    height: 120,
-                    viewportFraction: 0.6,
-                    autoPlay: true,
-                    autoPlayInterval: const Duration(
-                      seconds: 6,
-                    ),
-                  ),
-                  items: data.map((item) {
-                    return Container(
-                        width: MediaQuery.of(context).size.width,
-                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF9CC5FF),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              10,
+                return Column(
+                  children: [
+                    CarouselSlider(
+                      options: CarouselOptions(
+                          height: 120,
+                          viewportFraction: 0.6,
+                          autoPlay: true,
+                          autoPlayInterval: const Duration(
+                            seconds: 6,
+                          ),
+                          onPageChanged: (index, reason) {
+                            currentCarouselIndex.value = index;
+                          }),
+                      carouselController: carouselController,
+                      items: data.map((item) {
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF9CC5FF),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  10,
+                                ),
+                              ),
                             ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                item.bannerImage,
+                                fit: BoxFit.fill,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.error);
+                                },
+                              ),
+                            ));
+                      }).toList(),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: data.asMap().entries.map((entry) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 1.7),
+                          child: Icon(
+                            Icons.circle,
+                            size: 13,
+                            color: currentCarouselIndex.value == entry.key
+                                ? Colors.grey[600]
+                                : Colors.grey[300],
                           ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            item.bannerImage,
-                            fit: BoxFit.fill,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error);
-                            },
-                          ),
-                        ));
-                  }).toList(),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 );
               },
               loading: () => Center(
@@ -247,39 +294,44 @@ class HomePage extends HookConsumerWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 5),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: data
-                            .sublist(0, 3)
-                            .map((item) => Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const VisitorsTabsPage()),
-                                      );
-                                    },
-                                    child: HomePageCard(
-                                      featureText: item.featureName,
-                                      image: const AssetImage(
-                                        "assets/image_assets/004-visitor.png",
-                                      ),
-                                    ),
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: data.sublist(0, 4).map((item) {
+                          return Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const VisitorsTabsPage(),
                                   ),
-                                ))
-                            .toList(),
+                                );
+                              },
+                              child: HomePageCard(
+                                cardColor: Color(
+                                    int.parse("0xff${item.featureColor}")),
+                                featureText: item.featureName,
+                                image: const AssetImage(
+                                  "assets/image_assets/004-visitor.png",
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                          horizontal: 10, vertical: 2),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: data
-                            .sublist(3, data.length)
+                            .sublist(3, 7)
                             .map((item) => Expanded(
                                   child: HomePageCard(
+                                    cardColor: Color(
+                                      int.parse("0xff${item.featureColor}"),
+                                    ),
                                     featureText: item.featureName,
                                     image: const AssetImage(
                                         "assets/image_assets/004-visitor.png"),
@@ -380,9 +432,11 @@ class HomePage extends HookConsumerWidget {
                                       visitorType: item.visitorType,
                                       context: context,
                                       inTime: item.visitorEnterTime,
-                                      outTime: item.visitorEnterTime,
+                                      outTime: item.visitorExitTime ??
+                                          "Still Inside",
                                       allowedBy: item.visitorApproveBy,
                                       visitorTypeDetail: item.visitorTypeDetail,
+                                      phoneNo: item.visitorMobile,
                                       image: NetworkImage(
                                         item.visitorImage,
                                       ),
@@ -405,11 +459,21 @@ class HomePage extends HookConsumerWidget {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
                                                 children: [
-                                                  CircleAvatar(
-                                                    radius: 30,
-                                                    backgroundImage:
-                                                        NetworkImage(
-                                                      item.visitorImage,
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                50)),
+                                                    child: Hero(
+                                                      tag: "HeroImage",
+                                                      child: Image(
+                                                        image: NetworkImage(
+                                                          item.visitorImage,
+                                                        ),
+                                                        height: 70,
+                                                        width: 70,
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
@@ -454,8 +518,12 @@ class HomePage extends HookConsumerWidget {
                                                           ),
                                                           decoration:
                                                               BoxDecoration(
-                                                            color: const Color(
-                                                                0xff6CB4EE),
+                                                            color: item.visitorStatus ==
+                                                                    "Inside"
+                                                                ? const Color(
+                                                                    0xffEA7255)
+                                                                : const Color(
+                                                                    0xff43E36A),
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
@@ -492,11 +560,18 @@ class HomePage extends HookConsumerWidget {
                                                         color: Colors.grey[600],
                                                       ),
                                                     ),
-                                                    const SizedBox(
-                                                      height: 7,
-                                                    ),
                                                     Text(
                                                       "Entered at ${item.visitorEnterTime}",
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey[600],
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      item.visitorExitTime!
+                                                              .isEmpty
+                                                          ? "Still Inside"
+                                                          : "Exit at ${item.visitorExitTime}",
                                                       style: TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.grey[600],
@@ -546,17 +621,17 @@ class HomePage extends HookConsumerWidget {
           NavigationDestination(
             selectedIcon: Icon(Icons.person),
             icon: Icon(Icons.person_outline),
-            label: 'User',
+            label: 'Activities',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            selectedIcon: Icon(Icons.emergency),
+            icon: Icon(Icons.emergency_outlined),
+            label: 'Emergency',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.person),
-            icon: Icon(Icons.person_outline),
-            label: 'User',
+            selectedIcon: Icon(Icons.settings),
+            icon: Icon(Icons.settings_outlined),
+            label: 'Settings',
           ),
         ],
       ),
@@ -565,7 +640,7 @@ class HomePage extends HookConsumerWidget {
 }
 
 Future<void> quickDialogue({
-  Color dialogueThemeColor = const Color(0xFF9CC5FF),
+  Color dialogueThemeColor = Colors.white,
   required void Function() callBack,
   String discardTitle = 'Cancel',
   String submitTitle = 'Okay',
@@ -579,6 +654,7 @@ Future<void> quickDialogue({
   required String outTime,
   required String allowedBy,
   required String visitorTypeDetail,
+  required String phoneNo,
 }) async {
   await showAnimatedDialog(
     duration: const Duration(milliseconds: 200),
@@ -594,22 +670,47 @@ Future<void> quickDialogue({
         ),
         title: Column(
           children: [
-            Text(
-              visitorType,
-              style: const TextStyle(
-                fontSize: 25,
+            Transform.translate(
+              offset: const Offset(0, -45),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                  Text(
+                    visitorType,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  const SizedBox(
+                    width: 25,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(50)),
-              child: Image(
-                image: image,
-                height: 100,
-                width: 100,
-                fit: BoxFit.contain,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        HeroPhotoViewRouteWrapper(imageProvider: image),
+                  ),
+                );
+              },
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(50)),
+                child: Hero(
+                  tag: "HeroImage",
+                  child: Image(
+                    image: image,
+                    height: 100,
+                    width: 100,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
           ],
@@ -717,7 +818,15 @@ Future<void> quickDialogue({
             ),
             const SizedBox(height: 7),
             InkWell(
-              onTap: () {},
+              onTap: () async {
+                Uri phoneno = Uri.parse('tel:+91$phoneNo');
+                // Uri phoneno = Uri.parse('https://flutter.dev');
+                if (await canLaunchUrl(phoneno)) {
+                  await launchUrl(phoneno);
+                } else {
+                  print("cannot launch this url");
+                }
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 decoration: const BoxDecoration(
