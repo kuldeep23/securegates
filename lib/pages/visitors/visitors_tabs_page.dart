@@ -73,7 +73,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
       appBar: AppBar(
         bottom: TabBar(
           controller: tabController,
-          isScrollable: true,
+          isScrollable: false,
           tabs: const [
             Tab(
               text: "Current",
@@ -111,6 +111,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                     outTime: item.visitorEnterTime,
                                     allowedBy: item.visitorApproveBy,
                                     visitorTypeDetail: item.visitorTypeDetail,
+                                    phoneNo: item.visitorMobile,
                                     image: NetworkImage(
                                       item.visitorImage,
                                     ),

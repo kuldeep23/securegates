@@ -105,10 +105,10 @@ class Visitor {
       visitorEnterTime: map['visitor_enter_time'] as String,
       visitorExitDate: map['visitor_exit_date'] != null
           ? map['visitor_exit_date'] as String
-          : null,
+          : "",
       visitorExitTime: map['visitor_exit_time'] != null
           ? map['visitor_exit_time'] as String
-          : null,
+          : "",
       visitorApproveBy: map['visitor_approve_by'] as String,
       visitorStatus: map['visitor_status'] as String,
       visitorIsValid: map['visitor_is_valid'] as String,
