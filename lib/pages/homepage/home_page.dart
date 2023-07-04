@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
@@ -14,7 +15,6 @@ import 'package:secure_gates_project/services/dashboard_data_service.dart';
 import 'package:secure_gates_project/widgets/home_page_card.dart';
 import 'package:secure_gates_project/widgets/photo_view_wrapper.dart';
 import 'package:secure_gates_project/widgets/skelton_widget.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:flutter/src/painting/gradient.dart' as gradient;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -138,13 +138,19 @@ class HomePage extends HookConsumerWidget {
                             );
                           });
                     },
-                    child: Text(
-                      userProvider.currentUser!.ownerName,
-                      style: GoogleFonts.montserrat(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
+                    child: AnimatedTextKit(
+                      animatedTexts: [
+                        TypewriterAnimatedText(
+                          userProvider.currentUser!.ownerName,
+                          speed: const Duration(milliseconds: 200),
+                          textStyle: GoogleFonts.montserrat(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                      onTap: () {},
                     ),
                   ),
                 ),
@@ -252,18 +258,11 @@ class HomePage extends HookConsumerWidget {
                   ],
                 );
               },
-              loading: () => Center(
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.red,
-                      highlightColor: Colors.yellow,
-                      child: const Text(
-                        'Shimmer',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 40.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+              loading: () => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Shimming(
+                      height: 120,
+                      width: size.width,
                     ),
                   ),
               error: (e, s) {
@@ -344,43 +343,60 @@ class HomePage extends HookConsumerWidget {
                 );
               },
               loading: () => Center(
-                    child: Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: List.filled(3, 0, growable: true)
-                                    .sublist(0, 3)
-                                    .map((item) => const SizedBox(
-                                          height: 110,
-                                          width: 110,
-                                        ))
-                                    .toList(),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: List.filled(10, 0, growable: true)
-                                    .sublist(3, 6)
-                                    .map((item) => const SizedBox(
-                                          height: 110,
-                                          width: 110,
-                                        ))
-                                    .toList(),
-                              ),
-                            ),
-                          ],
-                        )),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: List.filled(4, 0, growable: true)
+                                .sublist(0, 4)
+                                .map((item) => const Column(
+                                      children: [
+                                        Shimming(
+                                          height: 80,
+                                          width: 80,
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Shimming(
+                                          height: 10,
+                                          width: 60,
+                                        ),
+                                      ],
+                                    ))
+                                .toList(),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: List.filled(10, 0, growable: true)
+                                .sublist(3, 7)
+                                .map((item) => const Column(
+                                      children: [
+                                        Shimming(
+                                          height: 80,
+                                          width: 80,
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Shimming(
+                                          height: 10,
+                                          width: 60,
+                                        ),
+                                      ],
+                                    ))
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
               error: (e, s) {
                 return Text(e.toString());
@@ -464,16 +480,13 @@ class HomePage extends HookConsumerWidget {
                                                         const BorderRadius.all(
                                                             Radius.circular(
                                                                 50)),
-                                                    child: Hero(
-                                                      tag: "HeroImage",
-                                                      child: Image(
-                                                        image: NetworkImage(
-                                                          item.visitorImage,
-                                                        ),
-                                                        height: 70,
-                                                        width: 70,
-                                                        fit: BoxFit.cover,
+                                                    child: Image(
+                                                      image: NetworkImage(
+                                                        item.visitorImage,
                                                       ),
+                                                      height: 70,
+                                                      width: 70,
+                                                      fit: BoxFit.cover,
                                                     ),
                                                   ),
                                                 ],
@@ -591,14 +604,93 @@ class HomePage extends HookConsumerWidget {
                       ),
                     ),
                   ),
-              loading: () => Center(
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: const Skeleton(
-                        width: 100,
-                        height: 100,
-                      ),
+              loading: () => Expanded(
+                    child: ListView.builder(
+                      itemCount: 3,
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (context, index) {
+                        return const Card(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 7,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: IntrinsicHeight(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CircleSkeleton(
+                                          size: 70,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  VerticalDivider(
+                                    width: 15,
+                                    thickness: 1,
+                                    color: Colors.grey,
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Shimming(
+                                                height: 20,
+                                                width: 170,
+                                              ),
+                                              Shimming(
+                                                height: 10,
+                                                width: 40,
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Shimming(
+                                            height: 15,
+                                            width: 150,
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Shimming(
+                                            height: 15,
+                                            width: 150,
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Shimming(
+                                            height: 15,
+                                            width: 150,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
               error: (e, s) {
@@ -703,7 +795,7 @@ Future<void> quickDialogue({
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(50)),
                 child: Hero(
-                  tag: "HeroImage",
+                  tag: image,
                   child: Image(
                     image: image,
                     height: 100,
