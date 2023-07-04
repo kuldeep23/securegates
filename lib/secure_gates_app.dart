@@ -20,9 +20,9 @@ class MyApp extends HookConsumerWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Secure Gates',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xffFF6663)),
         useMaterial3: true,
       ),
       home: loginStatus != null ? const HomePage() : const LoginPage(),

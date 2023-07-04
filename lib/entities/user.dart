@@ -5,7 +5,8 @@ class User {
   final String uid;
   final String socCode;
   final String ownerTenant;
-  final String ownerName;
+  final String ownerFirstName;
+  final String ownerLastName;
   final String ownerImage;
   final String contactNumber;
   final String email;
@@ -35,7 +36,8 @@ class User {
     required this.uid,
     required this.socCode,
     required this.ownerTenant,
-    required this.ownerName,
+    required this.ownerFirstName,
+    required this.ownerLastName,
     required this.ownerImage,
     required this.contactNumber,
     required this.email,
@@ -67,7 +69,8 @@ class User {
     String? uid,
     String? socCode,
     String? ownerTenant,
-    String? ownerName,
+    String? ownerFirstName,
+    String? ownerLastName,
     String? ownerImage,
     String? contactNumber,
     String? email,
@@ -98,7 +101,8 @@ class User {
       uid: uid ?? this.uid,
       socCode: socCode ?? this.socCode,
       ownerTenant: ownerTenant ?? this.ownerTenant,
-      ownerName: ownerName ?? this.ownerName,
+      ownerFirstName: ownerFirstName ?? this.ownerFirstName,
+      ownerLastName: ownerLastName ?? this.ownerLastName,
       ownerImage: ownerImage ?? this.ownerImage,
       contactNumber: contactNumber ?? this.contactNumber,
       email: email ?? this.email,
@@ -132,7 +136,8 @@ class User {
       'uid': uid,
       'socCode': socCode,
       'ownerTenant': ownerTenant,
-      'ownerName': ownerName,
+      'ownerFirstName': ownerFirstName,
+      'ownerLastName': ownerLastName,
       'ownerImage': ownerImage,
       'contactNumber': contactNumber,
       'email': email,
@@ -166,7 +171,8 @@ class User {
       uid: map['UID'] as String,
       socCode: map['Soc_Code'] as String,
       ownerTenant: map['Owner_Tenant'] as String,
-      ownerName: map['Owner_Name'] as String,
+      ownerFirstName: map['Owner_First_Name'] as String,
+      ownerLastName: map['Owner_Last_Name'] as String,
       ownerImage: map['Owner_Image'] as String,
       contactNumber: map['Contact_Number'] as String,
       email: map['Email'] as String,
@@ -202,7 +208,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(uid: $uid, socCode: $socCode, ownerTenant: $ownerTenant, ownerName: $ownerName, ownerImage: $ownerImage, contactNumber: $contactNumber, email: $email, password: $password, hometownAddress: $hometownAddress, member: $member, gender: $gender, dob: $dob, bloodGroup: $bloodGroup, profession: $profession, professionDetails: $professionDetails, flatNumber: $flatNumber, flatBlock: $flatBlock, flatFloor: $flatFloor, flatType: $flatType, parkingType: $parkingType, parkingNumber: $parkingNumber, petType: $petType, petName: $petName, twoWheelerType: $twoWheelerType, twoWheelerNumber: $twoWheelerNumber, fourWheelerBrand: $fourWheelerBrand, fourWheelerNumber: $fourWheelerNumber, creationDate: $creationDate, isActive: $isActive)';
+    return 'User(uid: $uid, socCode: $socCode, ownerTenant: $ownerTenant, ownerFirstName: $ownerFirstName, ownerLastName: $ownerLastName, ownerImage: $ownerImage, contactNumber: $contactNumber, email: $email, password: $password, hometownAddress: $hometownAddress, member: $member, gender: $gender, dob: $dob, bloodGroup: $bloodGroup, profession: $profession, professionDetails: $professionDetails, flatNumber: $flatNumber, flatBlock: $flatBlock, flatFloor: $flatFloor, flatType: $flatType, parkingType: $parkingType, parkingNumber: $parkingNumber, petType: $petType, petName: $petName, twoWheelerType: $twoWheelerType, twoWheelerNumber: $twoWheelerNumber, fourWheelerBrand: $fourWheelerBrand, fourWheelerNumber: $fourWheelerNumber, creationDate: $creationDate, isActive: $isActive)';
   }
 
   @override
@@ -212,7 +218,8 @@ class User {
     return other.uid == uid &&
         other.socCode == socCode &&
         other.ownerTenant == ownerTenant &&
-        other.ownerName == ownerName &&
+        other.ownerFirstName == ownerFirstName &&
+        other.ownerLastName == ownerLastName &&
         other.ownerImage == ownerImage &&
         other.contactNumber == contactNumber &&
         other.email == email &&
@@ -245,7 +252,8 @@ class User {
     return uid.hashCode ^
         socCode.hashCode ^
         ownerTenant.hashCode ^
-        ownerName.hashCode ^
+        ownerFirstName.hashCode ^
+        ownerLastName.hashCode ^
         ownerImage.hashCode ^
         contactNumber.hashCode ^
         email.hashCode ^

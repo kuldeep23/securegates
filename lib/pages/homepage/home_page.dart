@@ -16,7 +16,6 @@ import 'package:secure_gates_project/services/dashboard_data_service.dart';
 import 'package:secure_gates_project/widgets/home_page_card.dart';
 import 'package:secure_gates_project/widgets/photo_view_wrapper.dart';
 import 'package:secure_gates_project/widgets/skelton_widget.dart';
-import 'package:flutter/src/painting/gradient.dart' as gradient;
 import 'package:url_launcher/url_launcher.dart';
 
 import '../visitors/visitors_tabs_page.dart';
@@ -69,7 +68,7 @@ class HomePage extends HookConsumerWidget {
             height: 90,
             width: size.width,
             decoration: const BoxDecoration(
-              color: Color(0xFF7553F6),
+              color: Color(0xffFF6663),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -142,7 +141,7 @@ class HomePage extends HookConsumerWidget {
                     child: AnimatedTextKit(
                       animatedTexts: [
                         TypewriterAnimatedText(
-                          userProvider.currentUser!.ownerName,
+                          "Hello ${userProvider.currentUser!.ownerFirstName}",
                           speed: const Duration(milliseconds: 200),
                           textStyle: GoogleFonts.montserrat(
                             fontSize: 20,
@@ -174,7 +173,7 @@ class HomePage extends HookConsumerWidget {
                       ),
                       CircleAvatar(
                         radius: 17,
-                        child: Text(userProvider.currentUser!.ownerName
+                        child: Text(userProvider.currentUser!.ownerFirstName
                             .substring(0, 1)),
                       ),
                     ],
@@ -185,13 +184,13 @@ class HomePage extends HookConsumerWidget {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: 10,
+              horizontal: 7,
               vertical: 10,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Welcome to Cenetral Park society, Jhansi",
+                Text("Welcome to Cenetral Park society",
                     style: GoogleFonts.sourceSansPro(
                       fontSize: 20,
                     )),
@@ -248,7 +247,7 @@ class HomePage extends HookConsumerWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 1.7),
                           child: Icon(
                             Icons.circle,
-                            size: 13,
+                            size: 10,
                             color: currentCarouselIndex.value == entry.key
                                 ? Colors.grey[600]
                                 : Colors.grey[300],
@@ -270,11 +269,11 @@ class HomePage extends HookConsumerWidget {
                 return Text(e.toString());
               }),
           const SizedBox(
-            height: 10,
+            height: 5,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: 15,
+              horizontal: 10,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -292,7 +291,7 @@ class HomePage extends HookConsumerWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                          horizontal: 7, vertical: 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: data.sublist(0, 4).map((item) {
@@ -311,9 +310,7 @@ class HomePage extends HookConsumerWidget {
                                 cardColor: Color(
                                     int.parse("0xff${item.featureColor}")),
                                 featureText: item.featureName,
-                                image: const AssetImage(
-                                  "assets/image_assets/004-visitor.png",
-                                ),
+                                image: NetworkImage(item.featureIcon),
                               ),
                             ),
                           );
@@ -322,19 +319,18 @@ class HomePage extends HookConsumerWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 2),
+                          horizontal: 7, vertical: 2),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: data
-                            .sublist(3, 7)
+                            .sublist(4, 8)
                             .map((item) => Expanded(
                                   child: HomePageCard(
                                     cardColor: Color(
                                       int.parse("0xff${item.featureColor}"),
                                     ),
                                     featureText: item.featureName,
-                                    image: const AssetImage(
-                                        "assets/image_assets/004-visitor.png"),
+                                    image: NetworkImage(item.featureIcon),
                                   ),
                                 ))
                             .toList(),
@@ -348,7 +344,7 @@ class HomePage extends HookConsumerWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
+                              horizontal: 7, vertical: 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: List.filled(4, 0, growable: true)
@@ -373,7 +369,7 @@ class HomePage extends HookConsumerWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 5),
+                              horizontal: 7, vertical: 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: List.filled(10, 0, growable: true)
@@ -436,7 +432,7 @@ class HomePage extends HookConsumerWidget {
           visitorsData.when(
               data: (data) => Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 7),
                       child: ListView(
                         padding: EdgeInsets.zero,
                         children: data
@@ -707,23 +703,39 @@ class HomePage extends HookConsumerWidget {
         selectedIndex: selectedIndex.value,
         destinations: const [
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(
+              Icons.home,
+            ),
+            icon: Icon(
+              Icons.home_outlined,
+            ),
             label: 'Home',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.person),
-            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(
+              Icons.person,
+            ),
+            icon: Icon(
+              Icons.person_outline,
+            ),
             label: 'Activities',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.emergency),
-            icon: Icon(Icons.emergency_outlined),
+            selectedIcon: Icon(
+              Icons.emergency,
+            ),
+            icon: Icon(
+              Icons.emergency_outlined,
+            ),
             label: 'Emergency',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.settings),
-            icon: Icon(Icons.settings_outlined),
+            selectedIcon: Icon(
+              Icons.settings,
+            ),
+            icon: Icon(
+              Icons.settings_outlined,
+            ),
             label: 'Settings',
           ),
         ],
@@ -733,7 +745,7 @@ class HomePage extends HookConsumerWidget {
 }
 
 Future<void> quickDialogue({
-  Color dialogueThemeColor = Colors.white,
+  Color dialogueThemeColor = const Color(0xffFF6663),
   required void Function() callBack,
   String discardTitle = 'Cancel',
   String submitTitle = 'Okay',
@@ -755,202 +767,206 @@ Future<void> quickDialogue({
     animationType: DialogTransitionType.fade,
     context: context,
     builder: (context) {
-      return AlertDialog(
-        contentPadding: EdgeInsets.zero,
-        titlePadding: const EdgeInsets.all(10),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: Column(
-          children: [
-            Transform.translate(
-              offset: const Offset(0, -45),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: 25,
+      return Theme(
+        data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
+        child: AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          titlePadding: const EdgeInsets.all(10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Column(
+            children: [
+              Transform.translate(
+                offset: const Offset(0, -45),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                    Text(
+                      visitorType,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(
+                      width: 25,
+                    ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          HeroPhotoViewRouteWrapper(imageProvider: image),
+                    ),
+                  );
+                },
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(50)),
+                  child: Hero(
+                    tag: image,
+                    child: Image(
+                      image: image,
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover,
+                    ),
                   ),
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   Text(
-                    visitorType,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  const SizedBox(
-                    width: 25,
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                 ],
               ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        HeroPhotoViewRouteWrapper(imageProvider: image),
-                  ),
-                );
-              },
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(50)),
-                child: Hero(
-                  tag: image,
-                  child: Image(
-                    image: image,
-                    height: 100,
-                    width: 100,
-                    fit: BoxFit.cover,
+              const SizedBox(height: 5),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 1,
+                  horizontal: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xff6CB4EE),
+                  borderRadius: BorderRadius.circular(
+                    10,
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 1,
-                horizontal: 5,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xff6CB4EE),
-                borderRadius: BorderRadius.circular(
-                  10,
+                child: Text(
+                  subtitle.toUpperCase(),
+                  style:
+                      GoogleFonts.montserrat(fontSize: 10, color: Colors.white),
                 ),
               ),
-              child: Text(
-                subtitle.toUpperCase(),
-                style:
-                    GoogleFonts.montserrat(fontSize: 10, color: Colors.white),
+              const SizedBox(height: 5),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Divider(),
               ),
-            ),
-            const SizedBox(height: 5),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Divider(),
-            ),
-            const SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.logout,
-                    size: 15,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(inTime),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  const RotatedBox(
-                    quarterTurns: 2,
-                    child: Icon(
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    const Icon(
                       Icons.logout,
                       size: 15,
                     ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(outTime),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.person,
-                    size: 15,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text("Allowed by $allowedBy"),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.store,
-                    size: 15,
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(visitorTypeDetail),
-                ],
-              ),
-            ),
-            const SizedBox(height: 7),
-            InkWell(
-              onTap: () async {
-                Uri phoneno = Uri.parse('tel:+91$phoneNo');
-                // Uri phoneno = Uri.parse('https://flutter.dev');
-                if (await canLaunchUrl(phoneno)) {
-                  await launchUrl(phoneno);
-                } else {
-                  print("cannot launch this url");
-                }
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: const BoxDecoration(
-                  gradient: gradient.LinearGradient(
-                    colors: [
-                      Color(0xff00B4DB),
-                      Color(0xff0083B0),
-                    ],
-                    begin: Alignment.topCenter, //begin of the gradient color
-                    end: Alignment.bottomCenter, //end of the gradient color
-                    //stops for individual color
-                    //set the stops number equal to numbers of color
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(
-                      20,
+                    const SizedBox(
+                      width: 5,
                     ),
-                    bottomRight: Radius.circular(
-                      20,
+                    Text(inTime),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    const RotatedBox(
+                      quarterTurns: 2,
+                      child: Icon(
+                        Icons.logout,
+                        size: 15,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(outTime),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.person,
+                      size: 15,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text("Allowed by $allowedBy"),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.store,
+                      size: 15,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(visitorTypeDetail),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 7),
+              InkWell(
+                onTap: () async {
+                  Uri phoneno = Uri.parse('tel:+91$phoneNo');
+                  // Uri phoneno = Uri.parse('https://flutter.dev');
+                  if (await canLaunchUrl(phoneno)) {
+                    await launchUrl(phoneno);
+                  } else {
+                    print("cannot launch this url");
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: const BoxDecoration(
+                    color: Color(0xffFF6663),
+                    // gradient: gradient.LinearGradient(
+                    //   colors: [
+                    //     Color(0xffFF6663),
+                    //     Color(0xff0083B0),
+                    //   ],
+                    //   begin: Alignment.topCenter, //begin of the gradient color
+                    //   end: Alignment.bottomCenter, //end of the gradient color
+                    //   //stops for individual color
+                    //   //set the stops number equal to numbers of color
+                    // ),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(
+                        20,
+                      ),
+                      bottomRight: Radius.circular(
+                        20,
+                      ),
+                    ),
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.phone,
+                      color: Colors.white,
                     ),
                   ),
                 ),
-                child: const Center(
-                  child: Icon(
-                    Icons.phone,
-                    color: Colors.white,
-                  ),
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     },
