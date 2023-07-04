@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -227,8 +228,8 @@ class HomePage extends HookConsumerWidget {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                item.bannerImage,
+                              child: FastCachedImage(
+                                url: item.bannerImage,
                                 fit: BoxFit.fill,
                                 errorBuilder: (context, error, stackTrace) {
                                   return const Icon(Icons.error);
