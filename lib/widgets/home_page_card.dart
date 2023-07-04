@@ -37,7 +37,6 @@ class HomePageCard extends StatelessWidget {
             ),
             child: Image(
               image: image,
-              color: Colors.white,
               fit: BoxFit.contain,
             ),
           ),
