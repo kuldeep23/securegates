@@ -22,7 +22,14 @@ class MyApp extends HookConsumerWidget {
       debugShowCheckedModeBanner: false,
       title: 'Secure Gates',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xffFF6663)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xffFF6663),
+        ),
+        appBarTheme: const AppBarTheme(
+          iconTheme: IconThemeData(color: Colors.white),
+          color: Color(0xffFF6663),
+        ),
+        fontFamily: "Ubuntu",
         useMaterial3: true,
       ),
       home: loginStatus != null ? const HomePage() : const LoginPage(),
