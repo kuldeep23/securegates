@@ -4,6 +4,7 @@ import 'dart:convert';
 class User {
   final String uid;
   final String socCode;
+  final String socName;
   final String ownerTenant;
   final String ownerFirstName;
   final String ownerLastName;
@@ -35,6 +36,7 @@ class User {
   User({
     required this.uid,
     required this.socCode,
+    required this.socName,
     required this.ownerTenant,
     required this.ownerFirstName,
     required this.ownerLastName,
@@ -68,6 +70,7 @@ class User {
   User copyWith({
     String? uid,
     String? socCode,
+    String? socName,
     String? ownerTenant,
     String? ownerFirstName,
     String? ownerLastName,
@@ -100,6 +103,7 @@ class User {
     return User(
       uid: uid ?? this.uid,
       socCode: socCode ?? this.socCode,
+      socName: socName ?? this.socName,
       ownerTenant: ownerTenant ?? this.ownerTenant,
       ownerFirstName: ownerFirstName ?? this.ownerFirstName,
       ownerLastName: ownerLastName ?? this.ownerLastName,
@@ -135,6 +139,7 @@ class User {
     return <String, dynamic>{
       'uid': uid,
       'socCode': socCode,
+      'socName': socName,
       'ownerTenant': ownerTenant,
       'ownerFirstName': ownerFirstName,
       'ownerLastName': ownerLastName,
@@ -170,6 +175,7 @@ class User {
     return User(
       uid: map['UID'] as String,
       socCode: map['Soc_Code'] as String,
+      socName: map['Soc_Name'] as String,
       ownerTenant: map['Owner_Tenant'] as String,
       ownerFirstName: map['Owner_First_Name'] as String,
       ownerLastName: map['Owner_Last_Name'] as String,
@@ -208,7 +214,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(uid: $uid, socCode: $socCode, ownerTenant: $ownerTenant, ownerFirstName: $ownerFirstName, ownerLastName: $ownerLastName, ownerImage: $ownerImage, contactNumber: $contactNumber, email: $email, password: $password, hometownAddress: $hometownAddress, member: $member, gender: $gender, dob: $dob, bloodGroup: $bloodGroup, profession: $profession, professionDetails: $professionDetails, flatNumber: $flatNumber, flatBlock: $flatBlock, flatFloor: $flatFloor, flatType: $flatType, parkingType: $parkingType, parkingNumber: $parkingNumber, petType: $petType, petName: $petName, twoWheelerType: $twoWheelerType, twoWheelerNumber: $twoWheelerNumber, fourWheelerBrand: $fourWheelerBrand, fourWheelerNumber: $fourWheelerNumber, creationDate: $creationDate, isActive: $isActive)';
+    return 'User(uid: $uid, socCode: $socCode, socName: $socName, ownerTenant: $ownerTenant, ownerFirstName: $ownerFirstName, ownerLastName: $ownerLastName, ownerImage: $ownerImage, contactNumber: $contactNumber, email: $email, password: $password, hometownAddress: $hometownAddress, member: $member, gender: $gender, dob: $dob, bloodGroup: $bloodGroup, profession: $profession, professionDetails: $professionDetails, flatNumber: $flatNumber, flatBlock: $flatBlock, flatFloor: $flatFloor, flatType: $flatType, parkingType: $parkingType, parkingNumber: $parkingNumber, petType: $petType, petName: $petName, twoWheelerType: $twoWheelerType, twoWheelerNumber: $twoWheelerNumber, fourWheelerBrand: $fourWheelerBrand, fourWheelerNumber: $fourWheelerNumber, creationDate: $creationDate, isActive: $isActive)';
   }
 
   @override
@@ -217,6 +223,7 @@ class User {
 
     return other.uid == uid &&
         other.socCode == socCode &&
+        other.socName == socName &&
         other.ownerTenant == ownerTenant &&
         other.ownerFirstName == ownerFirstName &&
         other.ownerLastName == ownerLastName &&
@@ -251,6 +258,7 @@ class User {
   int get hashCode {
     return uid.hashCode ^
         socCode.hashCode ^
+        socName.hashCode ^
         ownerTenant.hashCode ^
         ownerFirstName.hashCode ^
         ownerLastName.hashCode ^

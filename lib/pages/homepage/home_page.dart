@@ -1,12 +1,12 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:rive/rive.dart';
+import 'package:lottie/lottie.dart';
 import 'package:secure_gates_project/controller/user_controller.dart';
 import 'package:secure_gates_project/entities/carousel_item.dart';
 import 'package:secure_gates_project/entities/home_page_card_item.dart';
@@ -44,8 +44,6 @@ final homePageVisitors = FutureProvider.autoDispose<List<Visitor>>((ref) async {
   return visitors;
 });
 
-late SMIBool? isMenuOpenInput;
-
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
@@ -59,424 +57,464 @@ class HomePage extends HookConsumerWidget {
     final selectedIndex = useState(0);
     final currentCarouselIndex = useState(0);
     final CarouselController carouselController = CarouselController();
+    final isConnectedToNetwork = useState(false);
+    final connectivity = Connectivity();
 
-    return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 90,
-            width: size.width,
-            decoration: const BoxDecoration(
-              color: Color(0xffFF6663),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 10, bottom: 10),
-                  child: GestureDetector(
-                    onLongPress: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return SimpleDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(25),
-                                  child: Column(
-                                    children: [
-                                      const Text(
-                                        "Log Out Confirm ?",
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text("Cancel"),
-                                          ),
-                                          ElevatedButton(
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                Colors.deepPurple,
-                                              ),
-                                            ),
-                                            onPressed: () async {
-                                              await ref
-                                                  .read(authServiceProvider)
-                                                  .signOut()
-                                                  .then((value) =>
-                                                      Navigator.pop(context));
-                                            },
-                                            child: const Text(
-                                              "Log Out",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
+    useEffect(() {
+      final networkSubscription = connectivity.onConnectivityChanged
+          .listen((ConnectivityResult result) {
+        switch (result) {
+          case ConnectivityResult.mobile:
+            isConnectedToNetwork.value = true;
+            return;
+          case ConnectivityResult.bluetooth:
+            return;
+          case ConnectivityResult.ethernet:
+            return;
+          case ConnectivityResult.vpn:
+            return;
+          case ConnectivityResult.other:
+            return;
+          case ConnectivityResult.wifi:
+            isConnectedToNetwork.value = true;
+            return;
+          case ConnectivityResult.none:
+            isConnectedToNetwork.value = false;
+            return;
+        }
+      });
+
+      return () {
+        networkSubscription.cancel();
+      };
+    }, [isConnectedToNetwork]);
+
+    if (isConnectedToNetwork.value) {
+      return Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          title: GestureDetector(
+            onLongPress: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SimpleDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(25),
+                          child: Column(
+                            children: [
+                              const Text(
+                                "Log Out Confirm ?",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              ],
-                            );
-                          });
-                    },
-                    child: AnimatedTextKit(
-                      animatedTexts: [
-                        TypewriterAnimatedText(
-                          "Hello ${userProvider.currentUser!.ownerFirstName}",
-                          speed: const Duration(milliseconds: 200),
-                          textStyle: GoogleFonts.montserrat(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Cancel"),
+                                  ),
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                        Colors.deepPurple,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      await ref
+                                          .read(authServiceProvider)
+                                          .signOut()
+                                          .then((value) =>
+                                              Navigator.pop(context));
+                                    },
+                                    child: const Text(
+                                      "Log Out",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
                         ),
                       ],
+                    );
+                  });
+            },
+            child: AnimatedTextKit(
+              animatedTexts: [
+                TypewriterAnimatedText(
+                  "Hello ${userProvider.currentUser!.ownerFirstName}",
+                  speed: const Duration(milliseconds: 200),
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+              onTap: () {},
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 10,
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 17,
+                    child: GestureDetector(
+                      child: const Icon(
+                        Icons.notifications_outlined,
+                        size: 20,
+                      ),
                       onTap: () {},
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10, bottom: 10),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 17,
-                        child: GestureDetector(
-                          child: const Icon(
-                            Icons.notifications_outlined,
-                            size: 20,
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      CircleAvatar(
-                        radius: 17,
-                        child: Text(userProvider.currentUser!.ownerFirstName
-                            .substring(0, 1)),
-                      ),
-                    ],
+                  const SizedBox(
+                    width: 10,
                   ),
-                ),
-              ],
+                  CircleAvatar(
+                    radius: 17,
+                    child: Text(userProvider.currentUser!.ownerFirstName
+                        .substring(0, 1)),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 7,
-              vertical: 10,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Welcome to Cenetral Park society",
-                    style: GoogleFonts.sourceSansPro(
+          ],
+        ),
+        body: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 6,
+                vertical: 6,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Welcome to ${userProvider.currentUser!.socName}",
+                    style: const TextStyle(
                       fontSize: 20,
-                    )),
-              ],
-            ),
-          ),
-          carouselData.when(
-              data: (data) {
-                return Column(
-                  children: [
-                    CarouselSlider(
-                      options: CarouselOptions(
-                          height: 120,
-                          viewportFraction: 0.6,
-                          autoPlay: true,
-                          autoPlayInterval: const Duration(
-                            seconds: 6,
-                          ),
-                          onPageChanged: (index, reason) {
-                            currentCarouselIndex.value = index;
-                          }),
-                      carouselController: carouselController,
-                      items: data.map((item) {
-                        return Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF9CC5FF),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  10,
-                                ),
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: FastCachedImage(
-                                url: item.bannerImage,
-                                fit: BoxFit.fill,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(Icons.error);
-                                },
-                              ),
-                            ));
-                      }).toList(),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: data.asMap().entries.map((entry) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 1.7),
-                          child: Icon(
-                            Icons.circle,
-                            size: 10,
-                            color: currentCarouselIndex.value == entry.key
-                                ? Colors.grey[600]
-                                : Colors.grey[300],
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                );
-              },
-              loading: () => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Shimming(
-                      height: 120,
-                      width: size.width,
                     ),
                   ),
-              error: (e, s) {
-                return Text(e.toString());
-              }),
-          const SizedBox(
-            height: 5,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
+                ],
+              ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Services",
-                  style: GoogleFonts.montserrat(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          featureData.when(
-              data: (data) {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 7, vertical: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: data.sublist(0, 4).map((item) {
-                          return Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
+            carouselData.when(
+                data: (data) {
+                  return Column(
+                    children: [
+                      CarouselSlider(
+                        options: CarouselOptions(
+                            height: 120,
+                            viewportFraction: 0.6,
+                            autoPlay: true,
+                            autoPlayInterval: const Duration(
+                              seconds: 6,
+                            ),
+                            onPageChanged: (index, reason) {
+                              currentCarouselIndex.value = index;
+                            }),
+                        carouselController: carouselController,
+                        items: data.map((item) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const VisitorsTabsPage(),
+                                      builder: (context) =>
+                                          HeroPhotoViewRouteWrapper(
+                                            imageProvider:
+                                                NetworkImage(item.bannerImage),
+                                          )));
+                            },
+                            child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 5.0),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF9CC5FF),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                      10,
+                                    ),
                                   ),
-                                );
-                              },
-                              child: HomePageCard(
-                                cardColor: Color(
-                                    int.parse("0xff${item.featureColor}")),
-                                featureText: item.featureName,
-                                image: NetworkImage(item.featureIcon),
-                              ),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: FastCachedImage(
+                                    url: item.bannerImage,
+                                    fit: BoxFit.fill,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(Icons.error);
+                                    },
+                                  ),
+                                )),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: data.asMap().entries.map((entry) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 1.7),
+                            child: Icon(
+                              Icons.circle,
+                              size: 10,
+                              color: currentCarouselIndex.value == entry.key
+                                  ? Colors.grey[600]
+                                  : Colors.grey[300],
                             ),
                           );
                         }).toList(),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 7, vertical: 2),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: data
-                            .sublist(4, 8)
-                            .map((item) => Expanded(
-                                  child: HomePageCard(
-                                    cardColor: Color(
-                                      int.parse("0xff${item.featureColor}"),
-                                    ),
-                                    featureText: item.featureName,
-                                    image: NetworkImage(item.featureIcon),
-                                  ),
-                                ))
-                            .toList(),
+                    ],
+                  );
+                },
+                loading: () => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      child: Shimming(
+                        height: 120,
+                        width: size.width,
                       ),
                     ),
-                  ],
-                );
-              },
-              loading: () => Center(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 7, vertical: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: List.filled(4, 0, growable: true)
-                                .sublist(0, 4)
-                                .map((item) => const Column(
-                                      children: [
-                                        Shimming(
-                                          height: 80,
-                                          width: 80,
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Shimming(
-                                          height: 10,
-                                          width: 60,
-                                        ),
-                                      ],
-                                    ))
-                                .toList(),
-                          ),
+                error: (e, s) {
+                  return Text(e.toString());
+                }),
+            // end fo carousel
+            const SizedBox(
+              height: 5,
+            ),
+            // Starting Services
+            const Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Services",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "See all",
+                    style: TextStyle(color: Color.fromARGB(255, 0, 76, 137)),
+                  ),
+                ],
+              ),
+            ),
+            featureData.when(
+                data: (data) {
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: data.sublist(0, 4).map((item) {
+                            return Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const VisitorsTabsPage(),
+                                    ),
+                                  );
+                                },
+                                child: HomePageCard(
+                                  cardColor: Color(
+                                      int.parse("0xff${item.featureColor}")),
+                                  featureText: item.featureName,
+                                  image: NetworkImage(item.featureIcon),
+                                ),
+                              ),
+                            );
+                          }).toList(),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 7, vertical: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: List.filled(10, 0, growable: true)
-                                .sublist(3, 7)
-                                .map((item) => const Column(
-                                      children: [
-                                        Shimming(
-                                          height: 80,
-                                          width: 80,
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Shimming(
-                                          height: 10,
-                                          width: 60,
-                                        ),
-                                      ],
-                                    ))
-                                .toList(),
-                          ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 2),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: data
+                              .sublist(4, 8)
+                              .map((item) => Expanded(
+                                    child: HomePageCard(
+                                      cardColor: Color(
+                                        int.parse("0xff${item.featureColor}"),
+                                      ),
+                                      featureText: item.featureName,
+                                      image: NetworkImage(item.featureIcon),
+                                    ),
+                                  ))
+                              .toList(),
                         ),
-                      ],
+                      ),
+                    ],
+                  );
+                },
+                loading: () => Center(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: List.filled(4, 0, growable: true)
+                                  .sublist(0, 4)
+                                  .map((item) => const Column(
+                                        children: [
+                                          Shimming(
+                                            height: 80,
+                                            width: 80,
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Shimming(
+                                            height: 10,
+                                            width: 60,
+                                          ),
+                                        ],
+                                      ))
+                                  .toList(),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: List.filled(10, 0, growable: true)
+                                  .sublist(3, 7)
+                                  .map((item) => const Column(
+                                        children: [
+                                          Shimming(
+                                            height: 80,
+                                            width: 80,
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Shimming(
+                                            height: 10,
+                                            width: 60,
+                                          ),
+                                        ],
+                                      ))
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                error: (e, s) {
+                  return Text(e.toString());
+                }),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Recent Visitors",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const VisitorsTabsPage()),
+                      );
+                    },
+                    child: const Text(
+                      "See all",
+                      style: TextStyle(color: Color.fromARGB(255, 0, 76, 137)),
                     ),
                   ),
-              error: (e, s) {
-                return Text(e.toString());
-              }),
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15,
+                ],
+              ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Recent Visitors",
-                  style: GoogleFonts.montserrat(fontWeight: FontWeight.bold),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const VisitorsTabsPage()),
-                    );
-                  },
-                  child: Text(
-                    "See all",
-                    style: GoogleFonts.montserrat(
-                        color: const Color.fromARGB(255, 0, 76, 137)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          visitorsData.when(
-              data: (data) => Expanded(
-                    child: Container(
+            visitorsData.when(
+                data: (data) => Container(
                       padding: const EdgeInsets.symmetric(horizontal: 7),
-                      child: ListView(
-                        padding: EdgeInsets.zero,
+                      child: Column(
                         children: data
-                            .map((item) => GestureDetector(
-                                  onTap: () {
-                                    quickDialogue(
-                                      callBack: () {},
-                                      subtitle: item.visitorStatus,
-                                      title: item.visitorName,
-                                      visitorType: item.visitorType,
-                                      context: context,
-                                      inTime: item.visitorEnterTime,
-                                      outTime: item.visitorExitTime ??
-                                          "Still Inside",
-                                      allowedBy: item.visitorApproveBy,
-                                      visitorTypeDetail: item.visitorTypeDetail,
-                                      phoneNo: item.visitorMobile,
-                                      image: NetworkImage(
-                                        item.visitorImage,
-                                      ),
-                                    );
-                                  },
-                                  child: Card(
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 7,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 5),
-                                      child: IntrinsicHeight(
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 1,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  ClipRRect(
+                            .map((item) => Card(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 5,
+                                    vertical: 5,
+                                  ),
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: IntrinsicHeight(
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            HeroPhotoViewRouteWrapper(
+                                                          imageProvider:
+                                                              NetworkImage(
+                                                            item.visitorImage,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: ClipRRect(
                                                     borderRadius:
                                                         const BorderRadius.all(
-                                                            Radius.circular(
-                                                                50)),
+                                                      Radius.circular(
+                                                        50,
+                                                      ),
+                                                    ),
                                                     child: Image(
                                                       image: NetworkImage(
                                                         item.visitorImage,
@@ -486,16 +524,39 @@ class HomePage extends HookConsumerWidget {
                                                       fit: BoxFit.cover,
                                                     ),
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
-                                            const VerticalDivider(
-                                              width: 15,
-                                              thickness: 1,
-                                              color: Colors.grey,
-                                            ),
-                                            Expanded(
-                                              flex: 3,
+                                          ),
+                                          const VerticalDivider(
+                                            width: 15,
+                                            thickness: 1,
+                                            color: Colors.grey,
+                                          ),
+                                          Expanded(
+                                            flex: 3,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                quickDialogue(
+                                                  callBack: () {},
+                                                  subtitle: item.visitorStatus,
+                                                  title: item.visitorName,
+                                                  visitorType: item.visitorType,
+                                                  context: context,
+                                                  inTime: item.visitorEnterTime,
+                                                  outTime:
+                                                      item.visitorExitTime ??
+                                                          "Still Inside",
+                                                  allowedBy:
+                                                      item.visitorApproveBy,
+                                                  visitorTypeDetail:
+                                                      item.visitorTypeDetail,
+                                                  phoneNo: item.visitorMobile,
+                                                  image: NetworkImage(
+                                                    item.visitorImage,
+                                                  ),
+                                                );
+                                              },
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
@@ -543,12 +604,12 @@ class HomePage extends HookConsumerWidget {
                                                           child: Text(
                                                             item.visitorStatus
                                                                 .toUpperCase(),
-                                                            style: GoogleFonts
-                                                                .montserrat(
-                                                                    fontSize:
-                                                                        10,
-                                                                    color: Colors
-                                                                        .white),
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 10,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
                                                           ),
                                                         ),
                                                       ],
@@ -558,7 +619,7 @@ class HomePage extends HookConsumerWidget {
                                                           item.visitorTypeDetail,
                                                       style: const TextStyle(
                                                         fontSize: 14,
-                                                        height: 1,
+                                                        height: 1.2,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -566,14 +627,16 @@ class HomePage extends HookConsumerWidget {
                                                     Text(
                                                       "Allowed by ${item.visitorApproveBy}",
                                                       style: TextStyle(
-                                                        fontSize: 14,
+                                                        fontSize: 13,
+                                                        height: 1,
                                                         color: Colors.grey[600],
                                                       ),
                                                     ),
                                                     Text(
                                                       "Entered at ${item.visitorEnterTime}",
                                                       style: TextStyle(
-                                                        fontSize: 14,
+                                                        fontSize: 13,
+                                                        height: 1.2,
                                                         color: Colors.grey[600],
                                                       ),
                                                     ),
@@ -583,7 +646,8 @@ class HomePage extends HookConsumerWidget {
                                                           ? "Still Inside"
                                                           : "Exit at ${item.visitorExitTime}",
                                                       style: TextStyle(
-                                                        fontSize: 14,
+                                                        fontSize: 13,
+                                                        height: 1.2,
                                                         color: Colors.grey[600],
                                                       ),
                                                     ),
@@ -591,8 +655,8 @@ class HomePage extends HookConsumerWidget {
                                                 ),
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -600,13 +664,9 @@ class HomePage extends HookConsumerWidget {
                             .toList(),
                       ),
                     ),
-                  ),
-              loading: () => Expanded(
-                    child: ListView.builder(
-                      itemCount: 3,
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context, index) {
-                        return const Card(
+                loading: () => const Column(
+                      children: [
+                        Card(
                           margin: EdgeInsets.symmetric(
                             horizontal: 5,
                             vertical: 7,
@@ -686,61 +746,241 @@ class HomePage extends HookConsumerWidget {
                               ),
                             ),
                           ),
-                        );
-                      },
+                        ),
+                        Card(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 7,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: IntrinsicHeight(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CircleSkeleton(
+                                          size: 70,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  VerticalDivider(
+                                    width: 15,
+                                    thickness: 1,
+                                    color: Colors.grey,
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Shimming(
+                                                height: 20,
+                                                width: 170,
+                                              ),
+                                              Shimming(
+                                                height: 10,
+                                                width: 40,
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Shimming(
+                                            height: 15,
+                                            width: 150,
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Shimming(
+                                            height: 15,
+                                            width: 150,
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Shimming(
+                                            height: 15,
+                                            width: 150,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Card(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 7,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: IntrinsicHeight(
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CircleSkeleton(
+                                          size: 70,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  VerticalDivider(
+                                    width: 15,
+                                    thickness: 1,
+                                    color: Colors.grey,
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Shimming(
+                                                height: 20,
+                                                width: 170,
+                                              ),
+                                              Shimming(
+                                                height: 10,
+                                                width: 40,
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Shimming(
+                                            height: 15,
+                                            width: 150,
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Shimming(
+                                            height: 15,
+                                            width: 150,
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Shimming(
+                                            height: 15,
+                                            width: 150,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-              error: (e, s) {
-                return Text(e.toString());
-              }),
-        ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        height: 60,
-        onDestinationSelected: (value) {
-          selectedIndex.value = value;
-        },
-        selectedIndex: selectedIndex.value,
-        destinations: const [
-          NavigationDestination(
-            selectedIcon: Icon(
-              Icons.home,
+                error: (e, s) {
+                  return Text(e.toString());
+                }),
+          ],
+        ),
+        bottomNavigationBar: NavigationBar(
+          height: 60,
+          onDestinationSelected: (value) {
+            selectedIndex.value = value;
+          },
+          selectedIndex: selectedIndex.value,
+          destinations: const [
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.home,
+              ),
+              icon: Icon(
+                Icons.home_outlined,
+              ),
+              label: 'Home',
             ),
-            icon: Icon(
-              Icons.home_outlined,
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.person,
+              ),
+              icon: Icon(
+                Icons.person_outline,
+              ),
+              label: 'Activities',
             ),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(
-              Icons.person,
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.emergency,
+              ),
+              icon: Icon(
+                Icons.emergency_outlined,
+              ),
+              label: 'Emergency',
             ),
-            icon: Icon(
-              Icons.person_outline,
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.settings,
+              ),
+              icon: Icon(
+                Icons.settings_outlined,
+              ),
+              label: 'Settings',
             ),
-            label: 'Activities',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(
-              Icons.emergency,
+          ],
+        ),
+      );
+    } else {
+      return Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: ClipRRect(
+                child: Lottie.asset("assets/no_connection.json"),
+              ),
             ),
-            icon: Icon(
-              Icons.emergency_outlined,
+            const SizedBox(height: 10),
+            const Text(
+              "No Internet Connection!!!",
             ),
-            label: 'Emergency',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(
-              Icons.settings,
-            ),
-            icon: Icon(
-              Icons.settings_outlined,
-            ),
-            label: 'Settings',
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
   }
 }
 
@@ -850,8 +1090,7 @@ Future<void> quickDialogue({
                 ),
                 child: Text(
                   subtitle.toUpperCase(),
-                  style:
-                      GoogleFonts.montserrat(fontSize: 10, color: Colors.white),
+                  style: const TextStyle(fontSize: 10, color: Colors.white),
                 ),
               ),
               const SizedBox(height: 5),
