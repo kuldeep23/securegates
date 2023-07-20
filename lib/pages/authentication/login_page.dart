@@ -117,7 +117,7 @@ class LoginPage extends HookConsumerWidget {
                                       ],
                                     ),
                                   ),
-                                  child: const Row(
+                                  child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(

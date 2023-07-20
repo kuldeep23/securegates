@@ -167,7 +167,10 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                       visitorType: item.visitorType,
                                       context: context,
                                       inTime: item.visitorEnterTime,
+                                      inDate: item.visitorEnterDate,
                                       outTime: item.visitorEnterTime,
+                                      outDate: item.visitorExitDate ??
+                                          "Still Inside",
                                       allowedBy: item.visitorApproveBy,
                                       visitorTypeDetail: item.visitorTypeDetail,
                                       phoneNo: item.visitorMobile,
