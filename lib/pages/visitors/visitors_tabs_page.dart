@@ -203,6 +203,40 @@ class VisitorsTabsPage extends HookConsumerWidget {
           ListView(
             padding: EdgeInsets.zero,
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Wrong Visitors",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    DropdownButton<String>(
+                      underline: const SizedBox(),
+                      focusColor: Colors.redAccent,
+                      style: const TextStyle(color: Colors.redAccent),
+                      value: selectedFilter.value,
+                      items: currentVisitorsOptions.map(
+                        (String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: const TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (String? val) {
+                        selectedFilter.value = val!;
+                      },
+                    ),
+                  ],
+                ),
+              ),
               wrongVisitors.when(
                   data: (data) => Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -346,6 +380,40 @@ class VisitorsTabsPage extends HookConsumerWidget {
           ),
           ListView(
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Denied Visitors",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    DropdownButton<String>(
+                      underline: const SizedBox(),
+                      focusColor: Colors.redAccent,
+                      style: const TextStyle(color: Colors.redAccent),
+                      value: selectedFilter.value,
+                      items: currentVisitorsOptions.map(
+                        (String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: const TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (String? val) {
+                        selectedFilter.value = val!;
+                      },
+                    ),
+                  ],
+                ),
+              ),
               allVisitors.when(
                   data: (data) => Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -489,6 +557,40 @@ class VisitorsTabsPage extends HookConsumerWidget {
           ),
           ListView(
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "All Visitors",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    DropdownButton<String>(
+                      underline: const SizedBox(),
+                      focusColor: Colors.redAccent,
+                      style: const TextStyle(color: Colors.redAccent),
+                      value: selectedFilter.value,
+                      items: currentVisitorsOptions.map(
+                        (String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: const TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                          );
+                        },
+                      ).toList(),
+                      onChanged: (String? val) {
+                        selectedFilter.value = val!;
+                      },
+                    ),
+                  ],
+                ),
+              ),
               allVisitors.when(
                   data: (data) => Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
