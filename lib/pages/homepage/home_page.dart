@@ -530,7 +530,7 @@ class HomePage extends HookConsumerWidget {
                                           ),
                                           const VerticalDivider(
                                             width: 15,
-                                            thickness: 1,
+                                            thickness: 0.5,
                                             color: Colors.grey,
                                           ),
                                           Expanded(
@@ -544,8 +544,12 @@ class HomePage extends HookConsumerWidget {
                                                   visitorType: item.visitorType,
                                                   context: context,
                                                   inTime: item.visitorEnterTime,
+                                                  inDate: item.visitorEnterDate,
                                                   outTime:
                                                       item.visitorExitTime ??
+                                                          "Still Inside",
+                                                  outDate:
+                                                      item.visitorExitDate ??
                                                           "Still Inside",
                                                   allowedBy:
                                                       item.visitorApproveBy,
@@ -560,7 +564,7 @@ class HomePage extends HookConsumerWidget {
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                  horizontal: 8,
+                                                  horizontal: 7,
                                                 ),
                                                 child: Column(
                                                   crossAxisAlignment:
@@ -572,10 +576,10 @@ class HomePage extends HookConsumerWidget {
                                                               .spaceBetween,
                                                       children: [
                                                         Text(
-                                                          item.visitorType,
+                                                          item.visitorName,
                                                           style:
                                                               const TextStyle(
-                                                            fontSize: 18,
+                                                            fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                           ),
@@ -614,42 +618,145 @@ class HomePage extends HookConsumerWidget {
                                                         ),
                                                       ],
                                                     ),
-                                                    Text(
-                                                      item.visitorName +
-                                                          item.visitorTypeDetail,
-                                                      style: const TextStyle(
-                                                        fontSize: 14,
-                                                        height: 1.2,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          padding:
+                                                              EdgeInsets.all(3),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  color: Colors
+                                                                      .blue
+                                                                      .shade200,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                    5,
+                                                                  )),
+                                                          child: Text(
+                                                            item.visitorType,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Container(
+                                                          padding:
+                                                              EdgeInsets.all(2),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  color: Colors
+                                                                      .purple
+                                                                      .shade200,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                    5,
+                                                                  )),
+                                                          child: Text(
+                                                            item.visitorTypeDetail,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 12,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    Text(
-                                                      "Allowed by ${item.visitorApproveBy}",
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        height: 1,
-                                                        color: Colors.grey[600],
-                                                      ),
+                                                    Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .check_circle_outline,
+                                                          size: 12,
+                                                          color:
+                                                              Colors.grey[600],
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 2,
+                                                        ),
+                                                        Text(
+                                                          "Allowed by ${item.visitorApproveBy}",
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    Text(
-                                                      "Entered at ${item.visitorEnterTime}",
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        height: 1.2,
-                                                        color: Colors.grey[600],
-                                                      ),
+                                                    Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.login_outlined,
+                                                          size: 12,
+                                                          color:
+                                                              Colors.grey[600],
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 2,
+                                                        ),
+                                                        Text(
+                                                          item.visitorEnterTime
+                                                                  .toUpperCase() +
+                                                              ", ",
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          item.visitorEnterDate,
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        )
+                                                      ],
                                                     ),
-                                                    Text(
-                                                      item.visitorExitTime!
-                                                              .isEmpty
-                                                          ? "Still Inside"
-                                                          : "Exit at ${item.visitorExitTime}",
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        height: 1.2,
-                                                        color: Colors.grey[600],
-                                                      ),
+                                                    Row(
+                                                      children: [
+                                                        RotatedBox(
+                                                          quarterTurns: 2,
+                                                          child: Icon(
+                                                            Icons.logout,
+                                                            size: 12,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 2,
+                                                        ),
+                                                        Text(
+                                                          item.visitorExitTime!
+                                                                  .isEmpty
+                                                              ? "Still Inside"
+                                                              : "${item.visitorExitTime}, ",
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          item.visitorExitDate!
+                                                                  .isEmpty
+                                                              ? ""
+                                                              : "${item.visitorExitDate}",
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
@@ -996,71 +1103,78 @@ Future<void> quickDialogue({
   required BuildContext context,
   required ImageProvider image,
   required String inTime,
+  required String inDate,
   required String outTime,
+  required String outDate,
   required String allowedBy,
   required String visitorTypeDetail,
   required String phoneNo,
 }) async {
   await showAnimatedDialog(
-    duration: const Duration(milliseconds: 200),
+    duration: const Duration(milliseconds: 600),
     barrierDismissible: true,
-    animationType: DialogTransitionType.fade,
+    barrierColor: Colors.black.withOpacity(0.8),
+    animationType: DialogTransitionType.fadeScale,
     context: context,
     builder: (context) {
       return Theme(
         data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
         child: AlertDialog(
-          contentPadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.all(0.0),
+          //insetPadding: EdgeInsets.all(5),
           titlePadding: const EdgeInsets.all(10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: Column(
-            children: [
-              Transform.translate(
-                offset: const Offset(0, -45),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                    Text(
-                      visitorType,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    const SizedBox(
-                      width: 25,
-                    ),
-                  ],
+          title: Container(
+            width: 800,
+            child: Column(
+              children: [
+                Transform.translate(
+                  offset: const Offset(0, -50),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                      Text(
+                        visitorType,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      const SizedBox(
+                        width: 25,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          HeroPhotoViewRouteWrapper(imageProvider: image),
-                    ),
-                  );
-                },
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(50)),
-                  child: Hero(
-                    tag: image,
-                    child: Image(
-                      image: image,
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            HeroPhotoViewRouteWrapper(imageProvider: image),
+                      ),
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(50)),
+                    child: Hero(
+                      tag: image,
+                      child: Image(
+                        image: image,
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -1077,25 +1191,39 @@ Future<void> quickDialogue({
                 ],
               ),
               const SizedBox(height: 5),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 1,
-                  horizontal: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xff6CB4EE),
-                  borderRadius: BorderRadius.circular(
-                    10,
+              Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 3,
+                      horizontal: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: subtitle == "Inside"
+                          ? const Color(0xffEA7255)
+                          : Colors.grey.shade400,
+                      borderRadius: BorderRadius.circular(
+                        10,
+                      ),
+                    ),
+                    child: Text(
+                      subtitle.toUpperCase(),
+                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                    ),
                   ),
-                ),
-                child: Text(
-                  subtitle.toUpperCase(),
-                  style: const TextStyle(fontSize: 10, color: Colors.white),
-                ),
+                  const SizedBox(height: 5),
+                  Text(
+                    phoneNo,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
               ),
               const SizedBox(height: 5),
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Divider(),
               ),
               const SizedBox(height: 5),
@@ -1110,7 +1238,18 @@ Future<void> quickDialogue({
                     const SizedBox(
                       width: 5,
                     ),
-                    Text(inTime),
+                    Text(
+                      inTime.toUpperCase() + ", ",
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      inDate,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -1128,7 +1267,17 @@ Future<void> quickDialogue({
                     const SizedBox(
                       width: 5,
                     ),
-                    Text(outTime),
+                    Text(
+                        outTime!.isEmpty
+                            ? "Still Inside"
+                            : outTime.toUpperCase() + ", ",
+                        style: const TextStyle(
+                          fontSize: 16,
+                        )),
+                    Text(outDate,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ))
                   ],
                 ),
               ),
@@ -1137,13 +1286,16 @@ Future<void> quickDialogue({
                 child: Row(
                   children: [
                     const Icon(
-                      Icons.person,
+                      Icons.person_outline,
                       size: 15,
                     ),
                     const SizedBox(
                       width: 5,
                     ),
-                    Text("Allowed by $allowedBy"),
+                    Text("Allowed by $allowedBy",
+                        style: const TextStyle(
+                          fontSize: 16,
+                        )),
                   ],
                 ),
               ),
@@ -1158,7 +1310,10 @@ Future<void> quickDialogue({
                     const SizedBox(
                       width: 5,
                     ),
-                    Text(visitorTypeDetail),
+                    Text(visitorTypeDetail,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        )),
                   ],
                 ),
               ),
