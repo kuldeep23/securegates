@@ -738,7 +738,9 @@ class HomePage extends HookConsumerWidget {
                                                           item.visitorExitTime!
                                                                   .isEmpty
                                                               ? "Still Inside"
+
                                                               : "${item.visitorExitTime?.toUpperCase()}, ",
+
                                                           style: TextStyle(
                                                             fontSize: 12,
                                                             color: Colors
@@ -1114,6 +1116,7 @@ Future<void> quickDialogue({
     duration: const Duration(milliseconds: 600),
     barrierDismissible: true,
     barrierColor: Colors.black.withOpacity(0.85),
+
     animationType: DialogTransitionType.fadeScale,
     context: context,
     builder: (context) {

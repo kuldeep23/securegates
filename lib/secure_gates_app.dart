@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/controller/user_controller.dart';
-import 'package:secure_gates_project/pages/authentication/login_page.dart';
-import 'package:secure_gates_project/pages/homepage/home_page.dart';
+import 'package:secure_gates_project/routes/app_routes_config.dart';
 
 class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
@@ -18,7 +17,15 @@ class MyApp extends HookConsumerWidget {
       return null;
     }, []);
 
-    return MaterialApp(
+    return MaterialApp.router(
+      routeInformationParser:
+          MyAppRouterConfig.returnRouter(loginStatus != null)
+              .routeInformationParser,
+      routeInformationProvider:
+          MyAppRouterConfig.returnRouter(loginStatus != null)
+              .routeInformationProvider,
+      routerDelegate:
+          MyAppRouterConfig.returnRouter(loginStatus != null).routerDelegate,
       debugShowCheckedModeBanner: false,
       title: 'Secure Gates',
       theme: ThemeData(
@@ -32,7 +39,7 @@ class MyApp extends HookConsumerWidget {
         fontFamily: "Ubuntu",
         useMaterial3: true,
       ),
-      home: loginStatus != null ? const HomePage() : const LoginPage(),
+      // home: loginStatus != null ? const HomePage() : const LoginPage(),
     );
   }
 }
