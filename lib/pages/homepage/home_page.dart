@@ -5,6 +5,7 @@ import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:secure_gates_project/controller/user_controller.dart';
@@ -18,11 +19,12 @@ import 'package:secure_gates_project/widgets/photo_view_wrapper.dart';
 import 'package:secure_gates_project/widgets/skelton_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../widgets/loading_widgets.dart';
 import '../visitors/visitors_tabs_page.dart';
 
 final carouselDataProvider =
     FutureProvider.autoDispose<List<CarouselItem>>((ref) async {
-  final data = ref.watch(dashboardServiceProvider);
+  final data = ref.read(dashboardServiceProvider);
   final items = data.getCarouselItems();
 
   return items;
@@ -30,7 +32,7 @@ final carouselDataProvider =
 
 final featuresDataProvider =
     FutureProvider.autoDispose<List<HomePageCardItem>>((ref) async {
-  final data = ref.watch(dashboardServiceProvider);
+  final data = ref.read(dashboardServiceProvider);
 
   final cards = data.getHomePageCards();
 
@@ -38,7 +40,7 @@ final featuresDataProvider =
 });
 
 final homePageVisitors = FutureProvider.autoDispose<List<Visitor>>((ref) async {
-  final data = ref.watch(dashboardServiceProvider);
+  final data = ref.read(dashboardServiceProvider);
   final visitors = data.getLastThreeVisitors();
 
   return visitors;
@@ -58,9 +60,11 @@ class HomePage extends HookConsumerWidget {
     final currentCarouselIndex = useState(0);
     final CarouselController carouselController = CarouselController();
     final isConnectedToNetwork = useState(false);
+    final isLoadingNetworkRequest = useState(false);
     final connectivity = Connectivity();
 
     useEffect(() {
+      isLoadingNetworkRequest.value = true;
       final networkSubscription = connectivity.onConnectivityChanged
           .listen((ConnectivityResult result) {
         switch (result) {
@@ -200,721 +204,610 @@ class HomePage extends HookConsumerWidget {
             ),
           ],
         ),
-        body: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 6,
-                vertical: 6,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Welcome to ${userProvider.currentUser!.socName}",
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            carouselData.when(
-                data: (data) {
-                  return Column(
-                    children: [
-                      CarouselSlider(
-                        options: CarouselOptions(
-                            height: 120,
-                            viewportFraction: 0.6,
-                            autoPlay: true,
-                            autoPlayInterval: const Duration(
-                              seconds: 6,
-                            ),
-                            onPageChanged: (index, reason) {
-                              currentCarouselIndex.value = index;
-                            }),
-                        carouselController: carouselController,
-                        items: data.map((item) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          HeroPhotoViewRouteWrapper(
-                                            imageProvider:
-                                                NetworkImage(item.bannerImage),
-                                          )));
-                            },
-                            child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 5.0),
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFF9CC5FF),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      10,
-                                    ),
-                                  ),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: FastCachedImage(
-                                    url: item.bannerImage,
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(Icons.error);
-                                    },
-                                  ),
-                                )),
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: data.asMap().entries.map((entry) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 1.7),
-                            child: Icon(
-                              Icons.circle,
-                              size: 10,
-                              color: currentCarouselIndex.value == entry.key
-                                  ? Colors.grey[600]
-                                  : Colors.grey[300],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  );
-                },
-                loading: () => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Shimming(
-                        height: 120,
-                        width: size.width,
+        body: RefreshIndicator(
+          onRefresh: () async {
+            ref.refresh(carouselDataProvider.future);
+            ref.refresh(featuresDataProvider.future);
+            ref.refresh(homePageVisitors.future);
+          },
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 6,
+                  vertical: 6,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Welcome to ${userProvider.currentUser!.socName}",
+                      style: const TextStyle(
+                        fontSize: 20,
                       ),
                     ),
-                error: (e, s) {
-                  return Text(e.toString());
-                }),
-            // end fo carousel
-            const SizedBox(
-              height: 5,
-            ),
-            // Starting Services
-            const Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10,
+                  ],
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Services",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "See all",
-                    style: TextStyle(color: Color.fromARGB(255, 0, 76, 137)),
-                  ),
-                ],
-              ),
-            ),
-            featureData.when(
-                data: (data) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: data.sublist(0, 4).map((item) {
-                            return Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
+              carouselData.when(
+                  skipLoadingOnRefresh: false,
+                  data: (data) {
+                    return Column(
+                      children: [
+                        CarouselSlider(
+                          options: CarouselOptions(
+                              height: 120,
+                              viewportFraction: 0.6,
+                              autoPlay: true,
+                              autoPlayInterval: const Duration(
+                                seconds: 6,
+                              ),
+                              onPageChanged: (index, reason) {
+                                currentCarouselIndex.value = index;
+                              }),
+                          carouselController: carouselController,
+                          items: data.map((item) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const VisitorsTabsPage(),
+                                        builder: (context) =>
+                                            HeroPhotoViewRouteWrapper(
+                                              imageProvider: NetworkImage(
+                                                  item.bannerImage),
+                                            )));
+                              },
+                              child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 5.0),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xFF9CC5FF),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                        10,
+                                      ),
                                     ),
-                                  );
-                                },
-                                child: HomePageCard(
-                                  cardColor: Color(
-                                      int.parse("0xff${item.featureColor}")),
-                                  featureText: item.featureName,
-                                  image: NetworkImage(item.featureIcon),
-                                ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: FastCachedImage(
+                                      url: item.bannerImage,
+                                      fit: BoxFit.fill,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Icon(Icons.error);
+                                      },
+                                    ),
+                                  )),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: data.asMap().entries.map((entry) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 1.7),
+                              child: Icon(
+                                Icons.circle,
+                                size: 10,
+                                color: currentCarouselIndex.value == entry.key
+                                    ? Colors.grey[600]
+                                    : Colors.grey[300],
                               ),
                             );
                           }).toList(),
                         ),
+                      ],
+                    );
+                  },
+                  loading: () => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Shimming(
+                          height: 120,
+                          width: size.width,
+                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 2),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: data
-                              .sublist(4, 8)
-                              .map((item) => Expanded(
-                                    child: HomePageCard(
-                                      cardColor: Color(
-                                        int.parse("0xff${item.featureColor}"),
+                  error: (e, s) {
+                    return Text(e.toString());
+                  }),
+              // end fo carousel
+              const SizedBox(
+                height: 5,
+              ),
+              // Starting Services
+              const Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Services",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "See all",
+                      style: TextStyle(color: Color.fromARGB(255, 0, 76, 137)),
+                    ),
+                  ],
+                ),
+              ),
+              featureData.when(
+                  skipLoadingOnRefresh: false,
+                  data: (data) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: data.sublist(0, 4).map((item) {
+                              return Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    context.pushNamed(item.featureRoute);
+                                  },
+                                  child: HomePageCard(
+                                    cardColor: Color(
+                                        int.parse("0xff${item.featureColor}")),
+                                    featureText: item.featureName,
+                                    image: NetworkImage(item.featureIcon),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 2),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: data
+                                .sublist(4, 8)
+                                .map((item) => Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          context.pushNamed(item.featureRoute);
+                                        },
+                                        child: HomePageCard(
+                                          cardColor: Color(
+                                            int.parse(
+                                                "0xff${item.featureColor}"),
+                                          ),
+                                          featureText: item.featureName,
+                                          image: NetworkImage(item.featureIcon),
+                                        ),
                                       ),
-                                      featureText: item.featureName,
-                                      image: NetworkImage(item.featureIcon),
+                                    ))
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  loading: () => Center(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 7, vertical: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: List.filled(4, 0, growable: true)
+                                    .sublist(0, 4)
+                                    .map((item) => const Column(
+                                          children: [
+                                            Shimming(
+                                              height: 80,
+                                              width: 80,
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Shimming(
+                                              height: 10,
+                                              width: 60,
+                                            ),
+                                          ],
+                                        ))
+                                    .toList(),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 7, vertical: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: List.filled(10, 0, growable: true)
+                                    .sublist(3, 7)
+                                    .map((item) => const Column(
+                                          children: [
+                                            Shimming(
+                                              height: 80,
+                                              width: 80,
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Shimming(
+                                              height: 10,
+                                              width: 60,
+                                            ),
+                                          ],
+                                        ))
+                                    .toList(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  error: (e, s) {
+                    return Text(e.toString());
+                  }),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Recent Visitors",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const VisitorsTabsPage()),
+                        );
+                      },
+                      child: const Text(
+                        "See all",
+                        style:
+                            TextStyle(color: Color.fromARGB(255, 0, 76, 137)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              visitorsData.when(
+                  skipLoadingOnRefresh: false,
+                  data: (data) => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 7),
+                        child: Column(
+                          children: data
+                              .map((item) => Card(
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                      vertical: 5,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      child: IntrinsicHeight(
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              HeroPhotoViewRouteWrapper(
+                                                            imageProvider:
+                                                                NetworkImage(
+                                                              item.visitorImage,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                              .all(
+                                                        Radius.circular(
+                                                          50,
+                                                        ),
+                                                      ),
+                                                      child: Image(
+                                                        image: NetworkImage(
+                                                          item.visitorImage,
+                                                        ),
+                                                        height: 70,
+                                                        width: 70,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const VerticalDivider(
+                                              width: 15,
+                                              thickness: 0.5,
+                                              color: Colors.grey,
+                                            ),
+                                            Expanded(
+                                              flex: 3,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  quickDialogue(
+                                                    callBack: () {},
+                                                    subtitle:
+                                                        item.visitorStatus,
+                                                    title: item.visitorName,
+                                                    visitorType:
+                                                        item.visitorType,
+                                                    context: context,
+                                                    inTime:
+                                                        item.visitorEnterTime,
+                                                    inDate:
+                                                        item.visitorEnterDate,
+                                                    outTime:
+                                                        item.visitorExitTime ??
+                                                            "Still Inside",
+                                                    outDate:
+                                                        item.visitorExitDate ??
+                                                            "Still Inside",
+                                                    allowedBy:
+                                                        item.visitorApproveBy,
+                                                    visitorTypeDetail:
+                                                        item.visitorTypeDetail,
+                                                    phoneNo: item.visitorMobile,
+                                                    image: NetworkImage(
+                                                      item.visitorImage,
+                                                    ),
+                                                  );
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 7,
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Text(
+                                                            item.visitorName,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              vertical: 1,
+                                                              horizontal: 5,
+                                                            ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: item.visitorStatus ==
+                                                                      "Inside"
+                                                                  ? const Color(
+                                                                      0xffEA7255)
+                                                                  : const Color(
+                                                                      0xff43E36A),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                10,
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              item.visitorStatus
+                                                                  .toUpperCase(),
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 10,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(3),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    color: Colors
+                                                                        .blue
+                                                                        .shade200,
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                      5,
+                                                                    )),
+                                                            child: Text(
+                                                              item.visitorType,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(2),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    color: Colors
+                                                                        .purple
+                                                                        .shade200,
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                      5,
+                                                                    )),
+                                                            child: Text(
+                                                              item.visitorTypeDetail,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .check_circle_outline,
+                                                            size: 12,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 2,
+                                                          ),
+                                                          Text(
+                                                            "Allowed by ${item.visitorApproveBy}",
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .grey[600],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .login_outlined,
+                                                            size: 12,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 2,
+                                                          ),
+                                                          Text(
+                                                            "${item.visitorEnterTime.toUpperCase()}, ",
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .grey[600],
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            item.visitorEnterDate,
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .grey[600],
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          RotatedBox(
+                                                            quarterTurns: 2,
+                                                            child: Icon(
+                                                              Icons.logout,
+                                                              size: 12,
+                                                              color: Colors
+                                                                  .grey[600],
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 2,
+                                                          ),
+                                                          Text(
+                                                            item.visitorExitTime!
+                                                                    .isEmpty
+                                                                ? "Still Inside"
+                                                                : "${item.visitorExitTime}, ",
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .grey[600],
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            item.visitorExitDate!
+                                                                    .isEmpty
+                                                                ? ""
+                                                                : "${item.visitorExitDate}",
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .grey[600],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ))
                               .toList(),
                         ),
                       ),
-                    ],
-                  );
-                },
-                loading: () => Center(
-                      child: Column(
+                  loading: () => const Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 7, vertical: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: List.filled(4, 0, growable: true)
-                                  .sublist(0, 4)
-                                  .map((item) => const Column(
-                                        children: [
-                                          Shimming(
-                                            height: 80,
-                                            width: 80,
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Shimming(
-                                            height: 10,
-                                            width: 60,
-                                          ),
-                                        ],
-                                      ))
-                                  .toList(),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 7, vertical: 5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: List.filled(10, 0, growable: true)
-                                  .sublist(3, 7)
-                                  .map((item) => const Column(
-                                        children: [
-                                          Shimming(
-                                            height: 80,
-                                            width: 80,
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Shimming(
-                                            height: 10,
-                                            width: 60,
-                                          ),
-                                        ],
-                                      ))
-                                  .toList(),
-                            ),
-                          ),
+                          RecentVisitorsLoadingWidget(),
+                          RecentVisitorsLoadingWidget(),
+                          RecentVisitorsLoadingWidget(),
                         ],
                       ),
-                    ),
-                error: (e, s) {
-                  return Text(e.toString());
-                }),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Recent Visitors",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const VisitorsTabsPage()),
-                      );
-                    },
-                    child: const Text(
-                      "See all",
-                      style: TextStyle(color: Color.fromARGB(255, 0, 76, 137)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            visitorsData.when(
-                data: (data) => Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7),
-                      child: Column(
-                        children: data
-                            .map((item) => Card(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 5,
-                                    vertical: 5,
-                                  ),
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    child: IntrinsicHeight(
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            HeroPhotoViewRouteWrapper(
-                                                          imageProvider:
-                                                              NetworkImage(
-                                                            item.visitorImage,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                      Radius.circular(
-                                                        50,
-                                                      ),
-                                                    ),
-                                                    child: Image(
-                                                      image: NetworkImage(
-                                                        item.visitorImage,
-                                                      ),
-                                                      height: 70,
-                                                      width: 70,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const VerticalDivider(
-                                            width: 15,
-                                            thickness: 1,
-                                            color: Colors.grey,
-                                          ),
-                                          Expanded(
-                                            flex: 3,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                quickDialogue(
-                                                  callBack: () {},
-                                                  subtitle: item.visitorStatus,
-                                                  title: item.visitorName,
-                                                  visitorType: item.visitorType,
-                                                  context: context,
-                                                  inTime: item.visitorEnterTime,
-                                                  outTime:
-                                                      item.visitorExitTime ??
-                                                          "Still Inside",
-                                                  allowedBy:
-                                                      item.visitorApproveBy,
-                                                  visitorTypeDetail:
-                                                      item.visitorTypeDetail,
-                                                  phoneNo: item.visitorMobile,
-                                                  image: NetworkImage(
-                                                    item.visitorImage,
-                                                  ),
-                                                );
-                                              },
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: 8,
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          item.visitorType,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            vertical: 1,
-                                                            horizontal: 5,
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: item.visitorStatus ==
-                                                                    "Inside"
-                                                                ? const Color(
-                                                                    0xffEA7255)
-                                                                : const Color(
-                                                                    0xff43E36A),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                              10,
-                                                            ),
-                                                          ),
-                                                          child: Text(
-                                                            item.visitorStatus
-                                                                .toUpperCase(),
-                                                            style:
-                                                                const TextStyle(
-                                                              fontSize: 10,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Text(
-                                                      item.visitorName +
-                                                          item.visitorTypeDetail,
-                                                      style: const TextStyle(
-                                                        fontSize: 14,
-                                                        height: 1.2,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      "Allowed by ${item.visitorApproveBy}",
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        height: 1,
-                                                        color: Colors.grey[600],
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      "Entered at ${item.visitorEnterTime}",
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        height: 1.2,
-                                                        color: Colors.grey[600],
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      item.visitorExitTime!
-                                                              .isEmpty
-                                                          ? "Still Inside"
-                                                          : "Exit at ${item.visitorExitTime}",
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        height: 1.2,
-                                                        color: Colors.grey[600],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
-                      ),
-                    ),
-                loading: () => const Column(
-                      children: [
-                        Card(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 5,
-                            vertical: 7,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            child: IntrinsicHeight(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircleSkeleton(
-                                          size: 70,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  VerticalDivider(
-                                    width: 15,
-                                    thickness: 1,
-                                    color: Colors.grey,
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Shimming(
-                                                height: 20,
-                                                width: 170,
-                                              ),
-                                              Shimming(
-                                                height: 10,
-                                                width: 40,
-                                              )
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 2,
-                                          ),
-                                          Shimming(
-                                            height: 15,
-                                            width: 150,
-                                          ),
-                                          SizedBox(
-                                            height: 2,
-                                          ),
-                                          Shimming(
-                                            height: 15,
-                                            width: 150,
-                                          ),
-                                          SizedBox(
-                                            height: 2,
-                                          ),
-                                          Shimming(
-                                            height: 15,
-                                            width: 150,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Card(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 5,
-                            vertical: 7,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            child: IntrinsicHeight(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircleSkeleton(
-                                          size: 70,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  VerticalDivider(
-                                    width: 15,
-                                    thickness: 1,
-                                    color: Colors.grey,
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Shimming(
-                                                height: 20,
-                                                width: 170,
-                                              ),
-                                              Shimming(
-                                                height: 10,
-                                                width: 40,
-                                              )
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 2,
-                                          ),
-                                          Shimming(
-                                            height: 15,
-                                            width: 150,
-                                          ),
-                                          SizedBox(
-                                            height: 2,
-                                          ),
-                                          Shimming(
-                                            height: 15,
-                                            width: 150,
-                                          ),
-                                          SizedBox(
-                                            height: 2,
-                                          ),
-                                          Shimming(
-                                            height: 15,
-                                            width: 150,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Card(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 5,
-                            vertical: 7,
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            child: IntrinsicHeight(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircleSkeleton(
-                                          size: 70,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  VerticalDivider(
-                                    width: 15,
-                                    thickness: 1,
-                                    color: Colors.grey,
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Shimming(
-                                                height: 20,
-                                                width: 170,
-                                              ),
-                                              Shimming(
-                                                height: 10,
-                                                width: 40,
-                                              )
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 2,
-                                          ),
-                                          Shimming(
-                                            height: 15,
-                                            width: 150,
-                                          ),
-                                          SizedBox(
-                                            height: 2,
-                                          ),
-                                          Shimming(
-                                            height: 15,
-                                            width: 150,
-                                          ),
-                                          SizedBox(
-                                            height: 2,
-                                          ),
-                                          Shimming(
-                                            height: 15,
-                                            width: 150,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                error: (e, s) {
-                  return Text(e.toString());
-                }),
-          ],
+                  error: (e, s) {
+                    return Text(e.toString());
+                  }),
+            ],
+          ),
         ),
         bottomNavigationBar: NavigationBar(
           height: 60,
@@ -964,6 +857,115 @@ class HomePage extends HookConsumerWidget {
       );
     } else {
       return Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          title: GestureDetector(
+            onLongPress: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SimpleDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(25),
+                          child: Column(
+                            children: [
+                              const Text(
+                                "Log Out Confirm ?",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Cancel"),
+                                  ),
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                        Colors.deepPurple,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      await ref
+                                          .read(authServiceProvider)
+                                          .signOut()
+                                          .then((value) =>
+                                              Navigator.pop(context));
+                                    },
+                                    child: const Text(
+                                      "Log Out",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  });
+            },
+            child: AnimatedTextKit(
+              animatedTexts: [
+                TypewriterAnimatedText(
+                  "Hello ${userProvider.currentUser!.ownerFirstName}",
+                  speed: const Duration(milliseconds: 200),
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+              onTap: () {},
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 10,
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 17,
+                    child: GestureDetector(
+                      child: const Icon(
+                        Icons.notifications_outlined,
+                        size: 20,
+                      ),
+                      onTap: () {},
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  CircleAvatar(
+                    radius: 17,
+                    child: Text(userProvider.currentUser!.ownerFirstName
+                        .substring(0, 1)),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -976,6 +978,51 @@ class HomePage extends HookConsumerWidget {
             const SizedBox(height: 10),
             const Text(
               "No Internet Connection!!!",
+            ),
+          ],
+        ),
+        bottomNavigationBar: NavigationBar(
+          height: 60,
+          onDestinationSelected: (value) {
+            selectedIndex.value = value;
+          },
+          selectedIndex: selectedIndex.value,
+          destinations: const [
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.home,
+              ),
+              icon: Icon(
+                Icons.home_outlined,
+              ),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.person,
+              ),
+              icon: Icon(
+                Icons.person_outline,
+              ),
+              label: 'Activities',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.emergency,
+              ),
+              icon: Icon(
+                Icons.emergency_outlined,
+              ),
+              label: 'Emergency',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(
+                Icons.settings,
+              ),
+              icon: Icon(
+                Icons.settings_outlined,
+              ),
+              label: 'Settings',
             ),
           ],
         ),
@@ -996,71 +1043,78 @@ Future<void> quickDialogue({
   required BuildContext context,
   required ImageProvider image,
   required String inTime,
+  required String inDate,
   required String outTime,
+  required String outDate,
   required String allowedBy,
   required String visitorTypeDetail,
   required String phoneNo,
 }) async {
   await showAnimatedDialog(
-    duration: const Duration(milliseconds: 200),
+    duration: const Duration(milliseconds: 600),
     barrierDismissible: true,
-    animationType: DialogTransitionType.fade,
+    barrierColor: Colors.black.withOpacity(0.8),
+    animationType: DialogTransitionType.fadeScale,
     context: context,
     builder: (context) {
       return Theme(
         data: Theme.of(context).copyWith(dialogBackgroundColor: Colors.white),
         child: AlertDialog(
-          contentPadding: EdgeInsets.zero,
+          contentPadding: const EdgeInsets.all(0.0),
+          //insetPadding: EdgeInsets.all(5),
           titlePadding: const EdgeInsets.all(10),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          title: Column(
-            children: [
-              Transform.translate(
-                offset: const Offset(0, -45),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                    Text(
-                      visitorType,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    const SizedBox(
-                      width: 25,
-                    ),
-                  ],
+          title: SizedBox(
+            width: 800,
+            child: Column(
+              children: [
+                Transform.translate(
+                  offset: const Offset(0, -50),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                      Text(
+                        visitorType,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      const SizedBox(
+                        width: 25,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          HeroPhotoViewRouteWrapper(imageProvider: image),
-                    ),
-                  );
-                },
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(50)),
-                  child: Hero(
-                    tag: image,
-                    child: Image(
-                      image: image,
-                      height: 100,
-                      width: 100,
-                      fit: BoxFit.cover,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            HeroPhotoViewRouteWrapper(imageProvider: image),
+                      ),
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(50)),
+                    child: Hero(
+                      tag: image,
+                      child: Image(
+                        image: image,
+                        height: 100,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -1077,25 +1131,39 @@ Future<void> quickDialogue({
                 ],
               ),
               const SizedBox(height: 5),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 1,
-                  horizontal: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xff6CB4EE),
-                  borderRadius: BorderRadius.circular(
-                    10,
+              Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 3,
+                      horizontal: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: subtitle == "Inside"
+                          ? const Color(0xffEA7255)
+                          : Colors.grey.shade400,
+                      borderRadius: BorderRadius.circular(
+                        10,
+                      ),
+                    ),
+                    child: Text(
+                      subtitle.toUpperCase(),
+                      style: const TextStyle(fontSize: 12, color: Colors.white),
+                    ),
                   ),
-                ),
-                child: Text(
-                  subtitle.toUpperCase(),
-                  style: const TextStyle(fontSize: 10, color: Colors.white),
-                ),
+                  const SizedBox(height: 5),
+                  Text(
+                    phoneNo,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
               ),
               const SizedBox(height: 5),
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Divider(),
               ),
               const SizedBox(height: 5),
@@ -1110,7 +1178,18 @@ Future<void> quickDialogue({
                     const SizedBox(
                       width: 5,
                     ),
-                    Text(inTime),
+                    Text(
+                      "${inTime.toUpperCase()}, ",
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      inDate,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -1128,7 +1207,17 @@ Future<void> quickDialogue({
                     const SizedBox(
                       width: 5,
                     ),
-                    Text(outTime),
+                    Text(
+                        outTime.isEmpty
+                            ? "Still Inside"
+                            : "${outTime.toUpperCase()}, ",
+                        style: const TextStyle(
+                          fontSize: 16,
+                        )),
+                    Text(outDate,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ))
                   ],
                 ),
               ),
@@ -1137,13 +1226,16 @@ Future<void> quickDialogue({
                 child: Row(
                   children: [
                     const Icon(
-                      Icons.person,
+                      Icons.person_outline,
                       size: 15,
                     ),
                     const SizedBox(
                       width: 5,
                     ),
-                    Text("Allowed by $allowedBy"),
+                    Text("Allowed by $allowedBy",
+                        style: const TextStyle(
+                          fontSize: 16,
+                        )),
                   ],
                 ),
               ),
@@ -1158,7 +1250,10 @@ Future<void> quickDialogue({
                     const SizedBox(
                       width: 5,
                     ),
-                    Text(visitorTypeDetail),
+                    Text(visitorTypeDetail,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        )),
                   ],
                 ),
               ),

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-class HomePageCard extends StatelessWidget {
-  const HomePageCard({
+class DirectoryMenuWidget extends StatelessWidget {
+  const DirectoryMenuWidget({
     super.key,
+    required this.cardColor,
     required this.featureText,
     required this.image,
-    required this.cardColor,
-    required,
   });
 
   final ImageProvider image;
@@ -21,8 +19,8 @@ class HomePageCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            height: 80,
-            width: 80,
+            height: 150,
+            width: 150,
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: cardColor,

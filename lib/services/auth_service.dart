@@ -8,7 +8,7 @@ import 'package:secure_gates_project/services/login_presistence_service.dart';
 import '../custom_exception.dart';
 
 final authServiceProvider = Provider<AuthenticationService>((ref) {
-  return AuthenticationService(Dio(), ref);
+  return AuthenticationService(ref);
 });
 
 abstract class BaseAuthenticationService {
@@ -17,10 +17,10 @@ abstract class BaseAuthenticationService {
 }
 
 class AuthenticationService implements BaseAuthenticationService {
-  final Dio _dio;
+  final Dio _dio = Dio();
   final Ref ref;
 
-  const AuthenticationService(this._dio, this.ref);
+  AuthenticationService(this.ref);
 
   @override
   Future<void> signInWithEmail(String email, String password) async {
