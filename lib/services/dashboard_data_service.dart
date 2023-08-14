@@ -7,7 +7,7 @@ import 'package:secure_gates_project/entities/visitor.dart';
 import '../custom_exception.dart';
 
 final dashboardServiceProvider = Provider<DashboardDataService>((ref) {
-  return DashboardDataService(Dio());
+  return DashboardDataService();
 });
 
 abstract class BaseDashboardDataService {
@@ -17,9 +17,7 @@ abstract class BaseDashboardDataService {
 }
 
 class DashboardDataService implements BaseDashboardDataService {
-  final Dio _dio;
-
-  const DashboardDataService(this._dio);
+  final Dio _dio = Dio();
 
   @override
   Future<List<CarouselItem>> getCarouselItems() async {

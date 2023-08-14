@@ -20,10 +20,12 @@ dependencies:
   flutter_animated_dialog: ^2.0.1
   flutter_hooks: ^0.18.6
   fluttertoast: ^8.2.2
+  flutter_image_compress: ^2.0.4
   font_awesome_flutter: ^10.4.0
-  go_router: ^9.1.0
+  go_router: ^10.0.0
   google_fonts: ^4.0.4
   hooks_riverpod: ^2.3.6
+  image_picker: ^1.0.1
   lottie: ^2.4.0
   photo_view: ^0.14.0
   rive: ^0.11.2
@@ -43,6 +45,8 @@ flutter:
     - assets/RiveAssets/
     - assets/image_assets/
     - assets/no_connection.json
+    - assets/mt_list.json
+    - assets/local_contacts.jpg
 
   fonts:
     - family: Ubuntu

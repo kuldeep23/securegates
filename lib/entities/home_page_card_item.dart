@@ -6,12 +6,14 @@ class HomePageCardItem {
   final String featureName;
   final String featureIcon;
   final String featureSoc;
+  final String featureRoute;
   final String featureColor;
   HomePageCardItem({
     required this.uid,
     required this.featureName,
     required this.featureIcon,
     required this.featureSoc,
+    required this.featureRoute,
     required this.featureColor,
   });
 
@@ -20,6 +22,7 @@ class HomePageCardItem {
     String? featureName,
     String? featureIcon,
     String? featureSoc,
+    String? featureRoute,
     String? featureColor,
   }) {
     return HomePageCardItem(
@@ -27,6 +30,7 @@ class HomePageCardItem {
       featureName: featureName ?? this.featureName,
       featureIcon: featureIcon ?? this.featureIcon,
       featureSoc: featureSoc ?? this.featureSoc,
+      featureRoute: featureRoute ?? this.featureRoute,
       featureColor: featureColor ?? this.featureColor,
     );
   }
@@ -37,6 +41,7 @@ class HomePageCardItem {
       'featureName': featureName,
       'featureIcon': featureIcon,
       'featureSoc': featureSoc,
+      'featureRoute': featureRoute,
       'featureColor': featureColor,
     };
   }
@@ -47,6 +52,7 @@ class HomePageCardItem {
       featureName: map['feature_name'] as String,
       featureIcon: map['feature_icon'] as String,
       featureSoc: map['feature_soc'] as String,
+      featureRoute: map['feature_route'] as String,
       featureColor: map['feature_color'] as String,
     );
   }
@@ -58,7 +64,7 @@ class HomePageCardItem {
 
   @override
   String toString() {
-    return 'HomePageCardItem(uid: $uid, featureName: $featureName, featureIcon: $featureIcon, featureSoc: $featureSoc, featureColor: $featureColor)';
+    return 'HomePageCardItem(uid: $uid, featureName: $featureName, featureIcon: $featureIcon, featureSoc: $featureSoc, featureRoute: $featureRoute, featureColor: $featureColor)';
   }
 
   @override
@@ -69,6 +75,7 @@ class HomePageCardItem {
         other.featureName == featureName &&
         other.featureIcon == featureIcon &&
         other.featureSoc == featureSoc &&
+        other.featureRoute == featureRoute &&
         other.featureColor == featureColor;
   }
 
@@ -78,6 +85,7 @@ class HomePageCardItem {
         featureName.hashCode ^
         featureIcon.hashCode ^
         featureSoc.hashCode ^
+        featureRoute.hashCode ^
         featureColor.hashCode;
   }
 }
