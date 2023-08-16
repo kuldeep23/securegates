@@ -280,6 +280,10 @@ class DirectoryHomePage extends HookConsumerWidget {
                                                   isLoading.value = false;
                                                   return false;
                                                 });
+                                                ref.refresh(
+                                                    emergencyContactsProvider(
+                                                            "Local")
+                                                        .future);
                                                 // ignore: use_build_context_synchronously
                                                 context.pop();
                                                 isLoading.value = false;
@@ -353,6 +357,7 @@ class DirectoryHomePage extends HookConsumerWidget {
                 ),
               ),
               localDirectoryContacts.when(
+                  skipLoadingOnRefresh: false,
                   data: (data) => data.isEmpty
                       ? Center(
                           child: Column(
