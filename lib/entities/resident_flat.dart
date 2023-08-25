@@ -44,7 +44,7 @@ class ResidentFlat {
   factory ResidentFlat.fromMap(Map<String, dynamic> map) {
     return ResidentFlat(
       uid: map['UID'] as String,
-      socCode: map['Soc_Code'] as String,
+      socCode: map['Soc_Name'] as String,
       flatBlock: map['Flat_Block'] as String,
       flatNumber: map['Flat_Number'] as String,
       flatFloor: map['Flat_Floor'] as String,
