@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:secure_gates_project/entities/resident.dart';
 
 import 'package:secure_gates_project/pages/authentication/login_page.dart';
 import 'package:secure_gates_project/pages/authentication/signup_page.dart';
+import 'package:secure_gates_project/pages/directory/block_resident_details_page.dart';
 import 'package:secure_gates_project/pages/directory/block_resident_page.dart';
 import 'package:secure_gates_project/pages/directory/directory_page.dart';
 import 'package:secure_gates_project/pages/domesticStaff/domestic_staff_page.dart';
@@ -65,6 +67,16 @@ class MyAppRouterConfig {
           final blockName = state.extra! as String;
           return BlockResidentPage(
             blockName: blockName,
+          );
+        },
+      ),
+      GoRoute(
+        name: MyAppRoutes.blockResidentDetailsPage,
+        path: "/block-resident-details-page",
+        builder: (context, state) {
+          final resident = state.extra! as Resident;
+          return BlockResidentDetailsPage(
+            residentData: resident,
           );
         },
       ),

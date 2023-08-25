@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/controller/user_controller.dart';
-import 'package:secure_gates_project/entities/resident_flat.dart';
+import 'package:secure_gates_project/entities/resident.dart';
+
+import '../../routes/app_routes_constants.dart';
 
 final residentFlatsProvider = FutureProvider.autoDispose
-    .family<List<ResidentFlat>, String>((ref, blockName) async {
+    .family<List<Resident>, String>((ref, blockName) async {
   final socCode = ref.read(userControllerProvider).currentUser!.socCode;
 
   final data = FormData.fromMap({
@@ -21,11 +24,11 @@ final residentFlatsProvider = FutureProvider.autoDispose
 
   final results = List<Map<String, dynamic>>.from(response.data['data']);
 
-  List<ResidentFlat> flats = results
-      .map((residentData) => ResidentFlat.fromMap(residentData))
+  List<Resident> residents = results
+      .map((residentData) => Resident.fromMap(residentData))
       .toList(growable: false);
 
-  return flats;
+  return residents;
 });
 
 class BlockResidentPage extends HookConsumerWidget {
@@ -63,7 +66,12 @@ class BlockResidentPage extends HookConsumerWidget {
                           // .where((e) => e.flatFloor == "FIRST")
                           .map(
                             (item) => GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                context.pushNamed(
+                                  MyAppRoutes.blockResidentDetailsPage,
+                                  extra: item,
+                                );
+                              },
                               child: Card(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,15 +88,24 @@ class BlockResidentPage extends HookConsumerWidget {
                                       ),
                                     ),
                                     const Divider(),
-                                    const Padding(
-                                      padding: EdgeInsets.symmetric(
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
                                         horizontal: 15,
-                                        vertical: 5,
+                                        vertical: 10,
                                       ),
                                       child: Row(
                                         children: [
-                                          CircleAvatar(),
-                                          SizedBox(
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            child: Image.network(
+                                              item.ownerImage,
+                                              fit: BoxFit.cover,
+                                              height: 65,
+                                              width: 65,
+                                            ),
+                                          ),
+                                          const SizedBox(
                                             width: 10,
                                           ),
                                           Expanded(
@@ -97,22 +114,22 @@ class BlockResidentPage extends HookConsumerWidget {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "Type",
-                                                  style: TextStyle(
+                                                  item.ownerTenant,
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w300,
                                                   ),
                                                 ),
                                                 Text(
-                                                  "Resident Name",
-                                                  style: TextStyle(
+                                                  "${item.ownerFirstName} ${item.ownerLastName}",
+                                                  style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w400,
                                                   ),
                                                 ),
                                                 Text(
-                                                  "Profession",
-                                                  style: TextStyle(
+                                                  item.profession,
+                                                  style: const TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.w300,
                                                   ),
@@ -120,7 +137,7 @@ class BlockResidentPage extends HookConsumerWidget {
                                               ],
                                             ),
                                           ),
-                                          Icon(
+                                          const Icon(
                                             Icons.chevron_right,
                                           )
                                         ],

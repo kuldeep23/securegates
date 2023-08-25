@@ -95,7 +95,7 @@ class Resident {
       ownerLastName: map['Owner_Last_Name'] as String,
       ownerImage: map['Owner_Image'] as String,
       contactNumber: map['Contact_Number'] as String,
-      homeTownAddress: map['Home_Town_Address'] as String,
+      homeTownAddress: map['HomeTown_Address'] as String,
       gender: map['Gender'] as String,
       profession: map['Profession'] as String,
       professionDetails: map['Profession_Details'] as String,

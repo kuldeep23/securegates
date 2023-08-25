@@ -67,6 +67,7 @@ class DirectoryHomePage extends HookConsumerWidget {
     final tabController = useTabController(initialLength: 5);
     final blockData = ref.watch(residentBlockProvider);
     final emergencyContacts = ref.watch(emergencyContactsProvider("Emergency"));
+    final committeeContacts = ref.watch(emergencyContactsProvider("Committee"));
     final localDirectoryContacts =
         ref.watch(emergencyContactsProvider("Local"));
     final categoryTextController = useTextEditingController();
@@ -484,7 +485,15 @@ class DirectoryHomePage extends HookConsumerWidget {
                                       ),
                                       child: Row(
                                         children: [
-                                          const CircleAvatar(),
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: Image.network(
+                                              item.icon,
+                                              height: 60,
+                                              width: 60,
+                                            ),
+                                          ),
                                           const SizedBox(
                                             width: 10,
                                           ),
@@ -529,7 +538,90 @@ class DirectoryHomePage extends HookConsumerWidget {
                   }),
             ],
           ),
-          const Text("data"),
+          ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Committee Contacts",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ],
+                ),
+              ),
+              committeeContacts.when(
+                  data: (data) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          children: data
+                              .map(
+                                (item) => GestureDetector(
+                                  onTap: () {},
+                                  child: Card(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 15,
+                                        vertical: 15,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: Image.network(
+                                              item.icon,
+                                              height: 60,
+                                              width: 60,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  item.personName,
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w300,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  item.personNumber,
+                                                  style: const TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const Icon(
+                                            Icons.phone,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (e, s) {
+                    return Text(e.toString());
+                  }),
+            ],
+          ),
         ],
       ),
     );

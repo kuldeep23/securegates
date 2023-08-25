@@ -7,6 +7,7 @@ class EmergencyDirectoryContact {
   final String directoryType;
   final String personName;
   final String personNumber;
+  final String icon;
   final String isActive;
   EmergencyDirectoryContact({
     required this.uid,
@@ -14,6 +15,7 @@ class EmergencyDirectoryContact {
     required this.directoryType,
     required this.personName,
     required this.personNumber,
+    required this.icon,
     required this.isActive,
   });
 
@@ -23,6 +25,7 @@ class EmergencyDirectoryContact {
     String? directoryType,
     String? personName,
     String? personNumber,
+    String? icon,
     String? isActive,
   }) {
     return EmergencyDirectoryContact(
@@ -31,6 +34,7 @@ class EmergencyDirectoryContact {
       directoryType: directoryType ?? this.directoryType,
       personName: personName ?? this.personName,
       personNumber: personNumber ?? this.personNumber,
+      icon: icon ?? this.icon,
       isActive: isActive ?? this.isActive,
     );
   }
@@ -42,6 +46,7 @@ class EmergencyDirectoryContact {
       'directoryType': directoryType,
       'personName': personName,
       'personNumber': personNumber,
+      'icon': icon,
       'isActive': isActive,
     };
   }
@@ -52,6 +57,7 @@ class EmergencyDirectoryContact {
       socCode: map['soc_code'] as String,
       directoryType: map['directory_type'] as String,
       personName: map['person_name'] as String,
+      icon: map['image'] as String,
       personNumber: map['person_number'] as String,
       isActive: map['is_active'] as String,
     );
@@ -65,7 +71,7 @@ class EmergencyDirectoryContact {
 
   @override
   String toString() {
-    return 'EmergencyContact(uid: $uid, socCode: $socCode, directoryType: $directoryType, personName: $personName, personNumber: $personNumber, isActive: $isActive)';
+    return 'EmergencyDirectoryContact(uid: $uid, socCode: $socCode, directoryType: $directoryType, personName: $personName, personNumber: $personNumber, icon: $icon, isActive: $isActive)';
   }
 
   @override
@@ -77,6 +83,7 @@ class EmergencyDirectoryContact {
         other.directoryType == directoryType &&
         other.personName == personName &&
         other.personNumber == personNumber &&
+        other.icon == icon &&
         other.isActive == isActive;
   }
 
@@ -87,6 +94,7 @@ class EmergencyDirectoryContact {
         directoryType.hashCode ^
         personName.hashCode ^
         personNumber.hashCode ^
+        icon.hashCode ^
         isActive.hashCode;
   }
 }
