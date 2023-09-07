@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/entities/staff_list.dart';
 
 import '../../controller/user_controller.dart';
+import '../../routes/app_routes_constants.dart';
 
 final staffListProvider =
     FutureProvider.autoDispose<List<StaffList>>((ref) async {
@@ -26,8 +28,8 @@ final staffListProvider =
   return staffList;
 });
 
-class DomesticStaffPage extends HookConsumerWidget {
-  const DomesticStaffPage({super.key});
+class DomesticStaffListPage extends HookConsumerWidget {
+  const DomesticStaffListPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,11 +58,26 @@ class DomesticStaffPage extends HookConsumerWidget {
                             (item) => Column(
                               children: [
                                 GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    context.pushNamed(
+                                      MyAppRoutes.domesticStaffMembersPage,
+                                      extra: item.staffType,
+                                    );
+                                  },
                                   child: ListTile(
-                                    title: Text(item.staffName),
-                                    trailing:
-                                        const Icon(Icons.arrow_forward_ios),
+                                    title: Text(item.staffType),
+                                    trailing: Wrap(
+                                      spacing: 15,
+                                      children: [
+                                        Text(
+                                          item.count,
+                                          style: const TextStyle(fontSize: 20),
+                                        ),
+                                        const Icon(
+                                          Icons.arrow_forward_ios,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 const Divider(

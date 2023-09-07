@@ -208,6 +208,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                         );
                                       },
                                       child: VisitorCard(
+                                        visitorId: item.visitorId,
                                         visitorApproveBy: item.visitorApproveBy,
                                         visitorEnterTime: item.visitorEnterTime,
                                         visitorExitTime: item
@@ -244,197 +245,208 @@ class VisitorsTabsPage extends HookConsumerWidget {
               ],
             ),
           ),
-          ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Wrong Visitors",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    DropdownButton<String>(
-                      underline: const SizedBox(),
-                      focusColor: Colors.redAccent,
-                      style: const TextStyle(color: Colors.redAccent),
-                      value: selectedFilter.value,
-                      items: currentVisitorsOptions.map(
-                        (String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: const TextStyle(
-                                color: Colors.black,
+          RefreshIndicator(
+            onRefresh: () async {
+              ref.refresh(wrongVisitorsProvider.future);
+            },
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Wrong Visitors",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      DropdownButton<String>(
+                        underline: const SizedBox(),
+                        focusColor: Colors.redAccent,
+                        style: const TextStyle(color: Colors.redAccent),
+                        value: selectedFilter.value,
+                        items: currentVisitorsOptions.map(
+                          (String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          },
+                        ).toList(),
+                        onChanged: (String? val) {
+                          selectedFilter.value = val!;
                         },
-                      ).toList(),
-                      onChanged: (String? val) {
-                        selectedFilter.value = val!;
-                      },
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              wrongVisitors.when(
-                  skipLoadingOnRefresh: false,
-                  data: (data) => data.isEmpty
-                      ? Center(
-                          child: Column(
-                            children: [
-                              // const Text("This is an empty list"),
-                              Lottie.asset("assets/mt_list.json"),
-                            ],
-                          ),
-                        )
-                      : Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Column(
-                            children: data
-                                .map((item) => Card(
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 5,
-                                        vertical: 10,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 10),
-                                        child: IntrinsicHeight(
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 1,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        vertical: 1,
-                                                        horizontal: 5,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color: const Color(
-                                                            0xff6CB4EE),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                          10,
-                                                        ),
-                                                      ),
-                                                      child: Text(
-                                                        item.visitorStatus
-                                                            .toUpperCase(),
-                                                        style: GoogleFonts
-                                                            .montserrat(
-                                                                fontSize: 10,
-                                                                color: Colors
-                                                                    .white),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 15,
-                                                    ),
-                                                    CircleAvatar(
-                                                      radius: 25,
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                        item.visitorImage,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const VerticalDivider(
-                                                width: 15,
-                                                thickness: 1.5,
-                                                color: Colors.grey,
-                                              ),
-                                              Expanded(
-                                                flex: 3,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 8,
-                                                  ),
+                wrongVisitors.when(
+                    skipLoadingOnRefresh: false,
+                    data: (data) => data.isEmpty
+                        ? Center(
+                            child: Column(
+                              children: [
+                                // const Text("This is an empty list"),
+                                Lottie.asset("assets/mt_list.json"),
+                              ],
+                            ),
+                          )
+                        : Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              children: data
+                                  .map((item) => Card(
+                                        margin: const EdgeInsets.symmetric(
+                                          horizontal: 5,
+                                          vertical: 10,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: IntrinsicHeight(
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  flex: 1,
                                                   child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
-                                                      Text(
-                                                        item.visitorType,
-                                                        style: const TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                      Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          vertical: 1,
+                                                          horizontal: 5,
                                                         ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Text(
-                                                        item.visitorName,
-                                                        style: const TextStyle(
-                                                          fontSize: 14,
-                                                          height: 0.8,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: const Color(
+                                                              0xff6CB4EE),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                            10,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Text(
-                                                        item.visitorTypeDetail,
-                                                        style: const TextStyle(
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        "Allowed by ${item.visitorApproveBy}",
-                                                        style: TextStyle(
-                                                          fontSize: 14,
-                                                          color:
-                                                              Colors.grey[600],
-                                                          height: 0.9,
+                                                        child: Text(
+                                                          item.visitorStatus
+                                                              .toUpperCase(),
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                                  fontSize: 10,
+                                                                  color: Colors
+                                                                      .white),
                                                         ),
                                                       ),
                                                       const SizedBox(
                                                         height: 15,
                                                       ),
-                                                      Text(
-                                                        "Entered at ${item.visitorEnterTime}",
-                                                        style: TextStyle(
-                                                          fontSize: 14,
-                                                          color:
-                                                              Colors.grey[600],
-                                                          height: 0.9,
+                                                      CircleAvatar(
+                                                        radius: 25,
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                          item.visitorImage,
                                                         ),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                                const VerticalDivider(
+                                                  width: 15,
+                                                  thickness: 1.5,
+                                                  color: Colors.grey,
+                                                ),
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      horizontal: 8,
+                                                    ),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          item.visitorType,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        Text(
+                                                          item.visitorName,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 14,
+                                                            height: 0.8,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          item.visitorTypeDetail,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 14,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "Allowed by ${item.visitorApproveBy}",
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors
+                                                                .grey[600],
+                                                            height: 0.9,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        Text(
+                                                          "Entered at ${item.visitorEnterTime}",
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: Colors
+                                                                .grey[600],
+                                                            height: 0.9,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ))
-                                .toList(),
+                                      ))
+                                  .toList(),
+                            ),
                           ),
-                        ),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (e, s) {
-                    return Text(e.toString());
-                  }),
-            ],
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (e, s) {
+                      return Text(e.toString());
+                    }),
+              ],
+            ),
           ),
           ListView(
             children: [

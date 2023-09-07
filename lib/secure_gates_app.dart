@@ -18,9 +18,18 @@ class MyApp extends HookConsumerWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xffFF6663),
         ),
+        cardTheme: const CardTheme(
+          color: Colors.white,
+          surfaceTintColor: Colors.white,
+        ),
+        scaffoldBackgroundColor: Colors.grey[100],
         appBarTheme: const AppBarTheme(
           iconTheme: IconThemeData(color: Colors.white),
           color: Color(0xffFF6663),
+        ),
+        dialogTheme: const DialogTheme(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
         ),
         fontFamily: "Ubuntu",
         useMaterial3: true,

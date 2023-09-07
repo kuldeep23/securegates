@@ -4,6 +4,9 @@ class MyAppRoutes {
   static const signupPage = 'signupPage';
   static const visitorsPage = 'visitors';
   static const domesticStaffPage = 'domesticStaff';
+  static const domesticStaffMembersPage = 'domesticStaffMembers';
+  static const domesticStaffMembersDetailsPage =
+      'domesticStaffMembersDetailsPage';
   static const directory = 'directory';
   static const blockResidentPage = 'blockResidentPage';
   static const blockResidentDetailsPage = 'blockResidentDetailsPage';
