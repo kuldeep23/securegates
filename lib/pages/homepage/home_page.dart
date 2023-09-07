@@ -1107,64 +1107,63 @@ class HomePage extends HookConsumerWidget {
           title: GestureDetector(
             onLongPress: () {
               showDialog(
-                  context: context,
-                  builder: (context) {
-                    return SimpleDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(25),
-                          child: Column(
-                            children: [
-                              const Text(
-                                "Log Out Confirm ?",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                context: context,
+                builder: (context) {
+                  return SimpleDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(25),
+                        child: Column(
+                          children: [
+                            const Text(
+                              "Log Out Confirm ?",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                               ),
-                              const SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text("Cancel"),
-                                  ),
-                                  ElevatedButton(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                        Colors.deepPurple,
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      await ref
-                                          .read(authServiceProvider)
-                                          .signOut()
-                                          .then((value) =>
-                                              Navigator.pop(context));
-                                    },
-                                    child: const Text(
-                                      "Log Out",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Cancel"),
+                                ),
+                                ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                      Colors.deepPurple,
                                     ),
                                   ),
-                                ],
-                              )
-                            ],
-                          ),
+                                  onPressed: () async {
+                                    await ref
+                                        .read(authServiceProvider)
+                                        .signOut()
+                                        .then(
+                                            (value) => Navigator.pop(context));
+                                  },
+                                  child: const Text(
+                                    "Log Out",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                      ],
-                    );
-                  });
+                      ),
+                    ],
+                  );
+                },
+              );
             },
             child: AnimatedTextKit(
               animatedTexts: [
@@ -1211,20 +1210,20 @@ class HomePage extends HookConsumerWidget {
             ),
           ],
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ClipRRect(
-                child: Lottie.asset("assets/no_connection.json"),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ClipRRect(
+                  child: Lottie.asset("assets/no_connection.json"),
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              "No Internet Connection!!!",
-            ),
-          ],
+              const SizedBox(height: 10),
+              const CircularProgressIndicator(),
+            ],
+          ),
         ),
         bottomNavigationBar: NavigationBar(
           height: 60,

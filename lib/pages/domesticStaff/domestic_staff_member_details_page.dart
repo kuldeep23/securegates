@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:secure_gates_project/entities/staff.dart';
 
-import '../../entities/resident.dart';
+class DomesticStaffMemberDetailsPage extends StatelessWidget {
+  const DomesticStaffMemberDetailsPage({super.key, required this.staffMember});
 
-class BlockResidentDetailsPage extends StatelessWidget {
-  const BlockResidentDetailsPage({
-    super.key,
-    required this.residentData,
-  });
-
-  final Resident residentData;
+  final StaffMember staffMember;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Resident",
-          style: TextStyle(
+        title: Text(
+          "${staffMember.staffType} Profile",
+          style: const TextStyle(
             color: Colors.white,
           ),
         ),
@@ -63,7 +59,7 @@ class BlockResidentDetailsPage extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(50),
                     child: Image.network(
-                      residentData.ownerImage,
+                      staffMember.staffIcon,
                       fit: BoxFit.cover,
                       height: 85,
                       width: 85,
@@ -113,7 +109,7 @@ class BlockResidentDetailsPage extends StatelessWidget {
               horizontal: 10,
             ),
             child: Text(
-              "${residentData.ownerFirstName} ${residentData.ownerLastName}",
+              staffMember.staffName,
               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
             ),
           ),
@@ -129,7 +125,7 @@ class BlockResidentDetailsPage extends StatelessWidget {
                   size: 30,
                 ),
                 Text(
-                  residentData.flatNumber,
+                  staffMember.staffRating,
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(
@@ -140,10 +136,10 @@ class BlockResidentDetailsPage extends StatelessWidget {
                   color: Colors.grey,
                   size: 30,
                 ),
-                Text(
-                  residentData.ownerTenant,
-                  style: const TextStyle(fontSize: 18),
-                ),
+                // Text(
+                //   residentData.ownerTenant,
+                //   style: const TextStyle(fontSize: 18),
+                // ),
               ],
             ),
           ),

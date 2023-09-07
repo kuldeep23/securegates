@@ -4,30 +4,30 @@ import 'dart:convert';
 class StaffList {
   final String uid;
   final String socCode;
-  final String staffName;
+  final String staffType;
   final String staffIcon;
-  final String staffIsActive;
+  final String count;
   StaffList({
     required this.uid,
     required this.socCode,
-    required this.staffName,
+    required this.staffType,
     required this.staffIcon,
-    required this.staffIsActive,
+    required this.count,
   });
 
   StaffList copyWith({
     String? uid,
     String? socCode,
-    String? staffName,
+    String? staffType,
     String? staffIcon,
-    String? staffIsActive,
+    String? count,
   }) {
     return StaffList(
       uid: uid ?? this.uid,
       socCode: socCode ?? this.socCode,
-      staffName: staffName ?? this.staffName,
+      staffType: staffType ?? this.staffType,
       staffIcon: staffIcon ?? this.staffIcon,
-      staffIsActive: staffIsActive ?? this.staffIsActive,
+      count: count ?? this.count,
     );
   }
 
@@ -35,9 +35,9 @@ class StaffList {
     return <String, dynamic>{
       'uid': uid,
       'socCode': socCode,
-      'staffName': staffName,
+      'staffType': staffType,
       'staffIcon': staffIcon,
-      'staffIsActive': staffIsActive,
+      'count': count,
     };
   }
 
@@ -45,9 +45,9 @@ class StaffList {
     return StaffList(
       uid: map['uid'] as String,
       socCode: map['soc_code'] as String,
-      staffName: map['staff_name'] as String,
+      staffType: map['staff_type'] as String,
       staffIcon: map['staff_icon'] as String,
-      staffIsActive: map['staff_is_active'] as String,
+      count: map['count'] as String,
     );
   }
 
@@ -58,7 +58,7 @@ class StaffList {
 
   @override
   String toString() {
-    return 'StaffList(uid: $uid, socCode: $socCode, staffName: $staffName, staffIcon: $staffIcon, staffIsActive: $staffIsActive)';
+    return 'StaffList(uid: $uid, socCode: $socCode, staffType: $staffType, staffIcon: $staffIcon, count: $count)';
   }
 
   @override
@@ -67,17 +67,17 @@ class StaffList {
 
     return other.uid == uid &&
         other.socCode == socCode &&
-        other.staffName == staffName &&
+        other.staffType == staffType &&
         other.staffIcon == staffIcon &&
-        other.staffIsActive == staffIsActive;
+        other.count == count;
   }
 
   @override
   int get hashCode {
     return uid.hashCode ^
         socCode.hashCode ^
-        staffName.hashCode ^
+        staffType.hashCode ^
         staffIcon.hashCode ^
-        staffIsActive.hashCode;
+        count.hashCode;
   }
 }

@@ -3,18 +3,21 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/entities/resident.dart';
+import 'package:secure_gates_project/entities/staff.dart';
 
 import 'package:secure_gates_project/pages/authentication/login_page.dart';
 import 'package:secure_gates_project/pages/authentication/signup_page.dart';
 import 'package:secure_gates_project/pages/directory/block_resident_details_page.dart';
 import 'package:secure_gates_project/pages/directory/block_resident_page.dart';
 import 'package:secure_gates_project/pages/directory/directory_page.dart';
+import 'package:secure_gates_project/pages/domesticStaff/domestic_staff_member_details_page.dart';
 import 'package:secure_gates_project/pages/domesticStaff/domestic_staff_page.dart';
 import 'package:secure_gates_project/pages/homepage/home_page.dart';
 import 'package:secure_gates_project/pages/visitors/visitors_tabs_page.dart';
 import 'package:secure_gates_project/routes/app_routes_constants.dart';
 
 import '../controller/user_controller.dart';
+import '../pages/domesticStaff/domestic_staff_members_page.dart';
 import '../pages/error/error_page.dart';
 
 class MyAppRouterConfig {
@@ -53,7 +56,7 @@ class MyAppRouterConfig {
       GoRoute(
         name: MyAppRoutes.domesticStaffPage,
         path: "/domestic-staff",
-        builder: (context, state) => const DomesticStaffPage(),
+        builder: (context, state) => const DomesticStaffListPage(),
       ),
       GoRoute(
         name: MyAppRoutes.directory,
@@ -80,6 +83,25 @@ class MyAppRouterConfig {
           );
         },
       ),
+      GoRoute(
+        name: MyAppRoutes.domesticStaffMembersDetailsPage,
+        path: "/domestic-staff-members-details",
+        builder: (context, state) {
+          final staffMember = state.extra! as StaffMember;
+          return DomesticStaffMemberDetailsPage(
+            staffMember: staffMember,
+          );
+        },
+      ),
+      GoRoute(
+          name: MyAppRoutes.domesticStaffMembersPage,
+          path: "/domestic-staff-members",
+          builder: (context, state) {
+            final staffType = state.extra! as String;
+            return DomesticStaffMembersPage(
+              staffType: staffType,
+            );
+          }),
       GoRoute(
         name: MyAppRoutes.loginPage,
         path: "/login-page",
