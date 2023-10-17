@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -19,6 +22,7 @@ import 'package:secure_gates_project/widgets/photo_view_wrapper.dart';
 import 'package:secure_gates_project/widgets/skelton_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../services/notification_service.dart';
 import '../visitors/visitors_tabs_page.dart';
 
 final carouselDataProvider =
@@ -44,6 +48,19 @@ final homePageVisitors = FutureProvider.autoDispose<List<Visitor>>((ref) async {
 
   return visitors;
 });
+
+// class HomePage extends StatefulHookConsumerWidget {
+//   const HomePage({super.key});
+
+//   @override
+//   ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
+// }
+// class _HomePageState extends ConsumerState<HomePage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container();
+//   }
+// }
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
@@ -87,6 +104,48 @@ class HomePage extends HookConsumerWidget {
         }
       });
 
+      FirebaseMessaging.instance.getInitialMessage().then(
+        (message) {
+          log("FirebaseMessaging.instance.getInitialMessage");
+          if (message != null) {
+            log(message.data.toString());
+            if (message.data['id'] != null) {
+              log("message.data11 ${message.data}");
+              NotificationService.createanddisplaynotification(message);
+              // respo.logOpenViaNotification(message.data);
+              // throwToTheScreens(
+              //     context, message.data['id'], message.data['type']);
+            }
+          }
+        },
+      );
+
+      // 2. This method only call when App in forground it mean app must be opened
+      FirebaseMessaging.onMessage.listen(
+        (message) {
+          log("FirebaseMessaging.onMessage.listen");
+          if (message.notification != null) {
+            log("message.data11 ${message.data}");
+            NotificationService.createanddisplaynotification(message);
+          }
+        },
+      );
+
+      // 3. This method only call when App in background and not terminated(not closed)
+      FirebaseMessaging.onMessageOpenedApp.listen(
+        (message) {
+          log("FirebaseMessaging.onMessageOpenedApp.listen");
+          if (message.notification != null) {
+            log("message.data22 ${message.data}");
+            NotificationService.createanddisplaynotification(message);
+            if (message.data['id'] != null) {
+              // respo.logOpenViaNotification(message.data);
+              // throwToTheScreens(
+              //     context, message.data['id'], message.data['type']);
+            }
+          }
+        },
+      );
       return () {
         networkSubscription.cancel();
       };

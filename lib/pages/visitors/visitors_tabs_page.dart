@@ -117,13 +117,13 @@ class VisitorsTabsPage extends HookConsumerWidget {
           "Visitor's Page",
           style: TextStyle(color: Colors.white),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-              ))
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {},
+        //       icon: const Icon(
+        //         Icons.search,
+        //       ))
+        // ],
       ),
       body: TabBarView(
         controller: tabController,
