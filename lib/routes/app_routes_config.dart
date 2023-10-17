@@ -7,6 +7,7 @@ import 'package:secure_gates_project/entities/staff.dart';
 
 import 'package:secure_gates_project/pages/authentication/login_page.dart';
 import 'package:secure_gates_project/pages/authentication/signup_page.dart';
+import 'package:secure_gates_project/pages/complaints/complaints_page.dart';
 import 'package:secure_gates_project/pages/directory/block_resident_details_page.dart';
 import 'package:secure_gates_project/pages/directory/block_resident_page.dart';
 import 'package:secure_gates_project/pages/directory/directory_page.dart';
@@ -106,6 +107,11 @@ class MyAppRouterConfig {
         name: MyAppRoutes.loginPage,
         path: "/login-page",
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        name: MyAppRoutes.complaints,
+        path: "/complaints-page",
+        builder: (context, state) => const ComplaintsPage(),
       ),
       GoRoute(
         name: MyAppRoutes.signupPage,

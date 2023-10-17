@@ -8,6 +8,7 @@ class MyAppRoutes {
   static const domesticStaffMembersDetailsPage =
       'domesticStaffMembersDetailsPage';
   static const directory = 'directory';
+  static const complaints = 'complaints';
   static const blockResidentPage = 'blockResidentPage';
   static const blockResidentDetailsPage = 'blockResidentDetailsPage';
   static const splashScreen = 'splashScreen';
