@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -20,7 +22,6 @@ import 'package:secure_gates_project/services/dashboard_data_service.dart';
 import 'package:secure_gates_project/widgets/home_page_card.dart';
 import 'package:secure_gates_project/widgets/photo_view_wrapper.dart';
 import 'package:secure_gates_project/widgets/skelton_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../services/notification_service.dart';
 import '../visitors/visitors_tabs_page.dart';
@@ -621,6 +622,8 @@ class HomePage extends HookConsumerWidget {
                                                       subtitle:
                                                           item.visitorStatus,
                                                       title: item.visitorName,
+                                                      visitormobile:
+                                                          item.visitorMobile,
                                                       visitorType:
                                                           item.visitorType,
                                                       context: context,
@@ -1348,6 +1351,7 @@ Future<void> quickDialogue({
   required String inTime,
   required String inDate,
   required String outTime,
+  required String visitormobile,
   required String outDate,
   required String allowedBy,
   required String visitorTypeDetail,
@@ -1562,15 +1566,21 @@ Future<void> quickDialogue({
               ),
               const SizedBox(height: 7),
               InkWell(
-                onTap: () async {
-                  Uri phoneno = Uri.parse('tel:+91$phoneNo');
-                  // Uri phoneno = Uri.parse('https://flutter.dev');
-                  if (await canLaunchUrl(phoneno)) {
-                    await launchUrl(phoneno);
-                  } else {
-                    print("cannot launch this url");
-                  }
-                },
+                onTap: () => AwesomeDialog(
+                  context: context,
+                  transitionAnimationDuration:
+                      const Duration(milliseconds: 400),
+                  dialogType: DialogType.question,
+                  animType: AnimType.scale,
+                  title: "Call Visitor",
+                  desc: "Do you really want to call visitor ?",
+                  btnCancelOnPress: () {},
+                  btnCancelText: "No",
+                  btnOkOnPress: () {
+                    FlutterPhoneDirectCaller.callNumber('+91$visitormobile');
+                  },
+                  btnOkText: "Yes",
+                ).show(),
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: const BoxDecoration(

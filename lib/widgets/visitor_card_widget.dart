@@ -1,13 +1,16 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:secure_gates_project/pages/visitors/visitors_tabs_page.dart';
 import 'package:secure_gates_project/widgets/responsive_wrap.dart';
 import 'package:secure_gates_project/widgets/vertical_divider_widget.dart';
+
+import '../pages/visitors/visitors_tabs_page.dart';
 
 class VisitorCard extends HookConsumerWidget {
   const VisitorCard({
@@ -22,6 +25,7 @@ class VisitorCard extends HookConsumerWidget {
     required this.visitorType,
     required this.visitorEnterDate,
     required this.visitorTypeDetail,
+    required this.visitormobile,
   });
 
   final String visitorImage,
@@ -33,11 +37,13 @@ class VisitorCard extends HookConsumerWidget {
       visitorApproveBy,
       visitorEnterTime,
       visitorEnterDate,
+      visitormobile,
       visitorExitTime;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = useState(false);
+    final feedbackController = useTextEditingController();
 
     return Card(
       margin: const EdgeInsets.symmetric(
@@ -64,6 +70,24 @@ class VisitorCard extends HookConsumerWidget {
                             visitorImage,
                           ),
                         ),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 1,
+                            horizontal: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff6CB4EE),
+                            borderRadius: BorderRadius.circular(
+                              10,
+                            ),
+                          ),
+                          child: Text(
+                            visitorStatus.toUpperCase(),
+                            style: GoogleFonts.montserrat(
+                                fontSize: 10, color: Colors.white),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -85,27 +109,16 @@ class VisitorCard extends HookConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "$visitorTypeDetail, $visitorName",
+                                visitorName,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 1,
-                                  horizontal: 5,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff6CB4EE),
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
-                                ),
-                                child: Text(
-                                  visitorStatus.toUpperCase(),
-                                  style: GoogleFonts.montserrat(
-                                      fontSize: 10, color: Colors.white),
+                              Text(
+                                "#$visitorId",
+                                style: const TextStyle(
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
@@ -204,25 +217,73 @@ class VisitorCard extends HookConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(
-                  width: Responsive.width(context) * 0.28,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.refresh_outlined,
-                        size: 19,
-                      ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      Text(
-                        "Give Feedback",
-                        style: TextStyle(
-                          fontSize: Responsive.getFontSize(12),
+                GestureDetector(
+                  // ignore: avoid_print
+                  onTap: () => AwesomeDialog(
+                    body: TextField(
+                      maxLines: 4,
+                      maxLength: 100,
+                      controller: feedbackController,
+                      decoration: InputDecoration(
+                          hintText: "Type your feedback",
+                          labelStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 10),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade200, width: 2),
+                              borderRadius: BorderRadius.circular(10)),
+                          floatingLabelStyle: const TextStyle(
+                              color: Color(0xffFF6663), fontSize: 18),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Color(0xffFF6663), width: 1.5),
+                              borderRadius: BorderRadius.circular(10))),
+                    ),
+                    context: context,
+                    transitionAnimationDuration:
+                        const Duration(milliseconds: 400),
+                    dialogType: DialogType.warning,
+                    animType: AnimType.scale,
+                    btnCancelOnPress: () {},
+                    btnOkOnPress: () async {
+                      // await ref
+                      //     .read(visitorServiceProvider)
+                      //     .visitorreview(
+                      //       visitorid,
+                      //       feedbackController.text.trim(),
+                      //     )
+                      //     .catchError((e, st) {});
+                    },
+                    btnOkText: "Submit",
+                  ).show(),
+                  child: SizedBox(
+                    width: Responsive.width(context) * 0.28,
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.refresh_outlined,
+                          color: Color.fromARGB(255, 31, 118, 142),
+                          size: 19,
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          width: 2,
+                        ),
+                        Text(
+                          "Feedback",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 31, 118, 142),
+                            height: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const VerticallyDivider(
@@ -341,25 +402,46 @@ class VisitorCard extends HookConsumerWidget {
                   width: 2,
                   color: Colors.grey,
                 ),
-                SizedBox(
-                  width: Responsive.width(context) * 0.28,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.call,
-                        size: 19,
-                      ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      Text(
-                        "Call",
-                        style: TextStyle(
-                          fontSize: Responsive.getFontSize(12),
+                GestureDetector(
+                  onTap: () => AwesomeDialog(
+                    context: context,
+                    transitionAnimationDuration:
+                        const Duration(milliseconds: 400),
+                    dialogType: DialogType.question,
+                    animType: AnimType.scale,
+                    title: "Call Visitor",
+                    desc: "Do you really want to call visitor ?",
+                    btnCancelOnPress: () {},
+                    btnCancelText: "No",
+                    btnOkOnPress: () {
+                      FlutterPhoneDirectCaller.callNumber('+91$visitormobile');
+                    },
+                    btnOkText: "Yes",
+                  ).show(),
+                  child: SizedBox(
+                    width: Responsive.width(context) * 0.28,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.call,
+                          size: 19,
+                          color: Colors.red,
                         ),
-                      ),
-                    ],
+                        const SizedBox(
+                          width: 2,
+                        ),
+                        Text(
+                          "Call",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red[600],
+                            height: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
