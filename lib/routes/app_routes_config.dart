@@ -106,7 +106,7 @@ class MyAppRouterConfig {
       GoRoute(
         name: MyAppRoutes.loginPage,
         path: "/login-page",
-        builder: (context, state) => const LoginPage(),
+        builder: (context, state) => LoginPage(),
       ),
       GoRoute(
         name: MyAppRoutes.complaints,
@@ -152,7 +152,7 @@ class SplashScreen extends HookConsumerWidget {
     if (loginStatus != null) {
       return const HomePage();
     } else {
-      return const LoginPage();
+      return LoginPage();
     }
   }
 }
