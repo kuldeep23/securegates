@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "996167489860",
+    "project_id": "test--gates",
+    "storage_bucket": "test--gates.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996167489860:android:d8ddd2445e891ce7b5df11",
+        "android_client_info": {
+          "package_name": "com.example.secure_gates_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBekppVh8BWK0u_JdoxcLjYATmLpQ2Aik4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
