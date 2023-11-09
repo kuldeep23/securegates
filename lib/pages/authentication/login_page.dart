@@ -1,8 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
+import 'package:secure_gates_project/routes/app_routes_constants.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
@@ -11,11 +13,10 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key});
   @override
   Widget build(BuildContext context) {
-    // final TapGestureRecognizer _gestureRecognizer = TapGestureRecognizer()
-    //   ..onTap = () {
-    //     Navigator.push(
-    //         context, MaterialPageRoute(builder: (context) => SignupPage()));
-    //   };
+    final TapGestureRecognizer gestureRecognizer = TapGestureRecognizer()
+      ..onTap = () {
+        context.pushNamed(MyAppRoutes.signupPage);
+      };
     bool passwordVisible = false;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -23,16 +24,7 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            size: 20,
-            color: Colors.black,
-          ),
-        ),
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -214,18 +206,20 @@ class LoginPage extends StatelessWidget {
                     duration: const Duration(milliseconds: 1500),
                     child: Center(
                       child: RichText(
-                        text: const TextSpan(
+                        text: TextSpan(
                             text: "Don't have an Account ? ",
-                            style: TextStyle(color: Colors.black, fontSize: 14),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 14),
                             children: [
-                              // TextSpan(
-                              //     text: "Register",
-                              //     style: const TextStyle(
-                              //       color: Colors.red,
-                              //       fontSize: 17,
-                              //       fontWeight: FontWeight.bold,
-                              //     ),
-                              //     recognizer: _gestureRecognizer)
+                              TextSpan(
+                                text: "Register",
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                recognizer: gestureRecognizer,
+                              ),
                             ]),
                       ),
                     ))
