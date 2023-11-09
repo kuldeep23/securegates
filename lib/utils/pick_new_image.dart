@@ -1,55 +1,55 @@
-// import 'dart:developer';
-// import 'dart:io';
-// import 'package:fluttertoast/fluttertoast.dart';
-// import 'package:image_picker/image_picker.dart';
+import 'dart:developer';
+import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 
-// Future<File> pickNewImage(bool gallery) async {
-//   File? primeImage;
-//   ImagePicker picker = ImagePicker();
-//   PickedFile? pickedFile;
+import 'compress_image.dart';
 
-//   if (gallery) {
-//     pickedFile = await picker.getImage(
-//       source: ImageSource.gallery,
-//     );
-//   } else {
-//     pickedFile = await picker.getImage(
-//       source: ImageSource.camera,
-//     );
-//   }
+Future<File> pickNewImage(bool gallery) async {
+  File? primeImage;
+  ImagePicker picker = ImagePicker();
+  XFile? pickedFile;
 
-//   if (pickedFile != null) {
-//     var bytes = File(pickedFile.path);
-//     var enc = await bytes.readAsBytes();
-//     log("${enc.lengthInBytes} 5555555555555555555555");
-//     if (enc.lengthInBytes > 37000) {
-//       File t = await getCompressedImage(
-//           File(pickedFile.path), "${pickedFile.path}kk.jpeg");
-//       primeImage = t;
-//       Fluttertoast.showToast(
-//           msg: "Selected successfully",
-//           toastLength: Toast.LENGTH_SHORT,
-//           gravity: ToastGravity.BOTTOM,
-//           timeInSecForIosWeb: 1,
-//           fontSize: 16.0);
-//     } else {
-//       primeImage = File(pickedFile.path);
-//       Fluttertoast.showToast(
-//           msg: "Selected successfully",
-//           toastLength: Toast.LENGTH_SHORT,
-//           gravity: ToastGravity.BOTTOM,
-//           timeInSecForIosWeb: 1,
-//           fontSize: 16.0);
-//     }
-//   } else {
-//     Fluttertoast.showToast(
-//         msg: "No Image Selected!",
-//         toastLength: Toast.LENGTH_SHORT,
-//         gravity: ToastGravity.BOTTOM,
-//         timeInSecForIosWeb: 1,
-//         fontSize: 16.0);
-//   }
-//   return primeImage!;
-// }
+  if (gallery) {
+    pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+  } else {
+    pickedFile = await picker.pickImage(
+      source: ImageSource.camera,
+    );
+  }
 
-// class ImagePicker {}
+  if (pickedFile != null) {
+    var bytes = File(pickedFile.path);
+    var enc = await bytes.readAsBytes();
+    log("${enc.lengthInBytes} 5555555555555555555555");
+    if (enc.lengthInBytes > 37000) {
+      File t = await getCompressedImage(
+          File(pickedFile.path), "${pickedFile.path}kk.jpeg");
+      primeImage = t;
+      Fluttertoast.showToast(
+          msg: "Selected successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
+    } else {
+      primeImage = File(pickedFile.path);
+      Fluttertoast.showToast(
+          msg: "Selected successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
+    }
+  } else {
+    Fluttertoast.showToast(
+        msg: "No Image Selected!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        fontSize: 16.0);
+  }
+  return primeImage!;
+}

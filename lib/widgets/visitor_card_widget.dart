@@ -47,8 +47,8 @@ class VisitorCard extends HookConsumerWidget {
 
     return Card(
       margin: const EdgeInsets.symmetric(
-        horizontal: 5,
-        vertical: 10,
+        horizontal: 2.5,
+        vertical: 5,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
