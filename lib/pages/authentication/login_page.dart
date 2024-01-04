@@ -6,11 +6,28 @@ import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
 import 'package:secure_gates_project/routes/app_routes_constants.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController nameController = TextEditingController();
+
   final TextEditingController pwdController = TextEditingController();
 
-  LoginPage({super.key});
+  final TextEditingController emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    pwdController.dispose();
+    emailController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final TapGestureRecognizer gestureRecognizer = TapGestureRecognizer()
@@ -98,9 +115,9 @@ class LoginPage extends StatelessWidget {
                         delay: const Duration(milliseconds: 300),
                         duration: const Duration(milliseconds: 1500),
                         child: TextField(
-                          controller: nameController,
+                          controller: emailController,
                           decoration: InputDecoration(
-                              labelText: "Name",
+                              labelText: "Email",
                               labelStyle: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -186,7 +203,7 @@ class LoginPage extends StatelessWidget {
                         child: MaterialButton(
                           minWidth: double.infinity,
                           height: 60,
-                          onPressed: () {},
+                          onPressed: () async {},
                           color: const Color(0xffFF6663),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
