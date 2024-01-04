@@ -55,6 +55,7 @@ flutter:
     - assets/no_connection.json
     - assets/mt_list.json
     - assets/local_contacts.jpg
+    - assets/waiting_animation.json
 
   fonts:
     - family: Ubuntu

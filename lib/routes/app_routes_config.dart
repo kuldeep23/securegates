@@ -7,6 +7,7 @@ import 'package:secure_gates_project/entities/staff.dart';
 
 import 'package:secure_gates_project/pages/authentication/login_page.dart';
 import 'package:secure_gates_project/pages/authentication/signup_page.dart';
+import 'package:secure_gates_project/pages/authentication/staging_page.dart';
 import 'package:secure_gates_project/pages/complaints/complaints_page.dart';
 import 'package:secure_gates_project/pages/directory/block_resident_details_page.dart';
 import 'package:secure_gates_project/pages/directory/block_resident_page.dart';
@@ -106,7 +107,12 @@ class MyAppRouterConfig {
       GoRoute(
         name: MyAppRoutes.loginPage,
         path: "/login-page",
-        builder: (context, state) => LoginPage(),
+        builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        name: MyAppRoutes.stagingScreen,
+        path: "/stagin-page",
+        builder: (context, state) => const StagingPage(),
       ),
       GoRoute(
         name: MyAppRoutes.complaints,
@@ -152,7 +158,7 @@ class SplashScreen extends HookConsumerWidget {
     if (loginStatus != null) {
       return const HomePage();
     } else {
-      return LoginPage();
+      return const LoginPage();
     }
   }
 }
