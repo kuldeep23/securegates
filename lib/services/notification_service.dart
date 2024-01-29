@@ -62,7 +62,7 @@ class NotificationService {
   // final Ref _ref;
   // NotificationService(this._ref);
 
-  Future<void> sendNotification(
+  static Future<void> sendNotification(
       {required String title,
       required String subject,
       required String topic,
