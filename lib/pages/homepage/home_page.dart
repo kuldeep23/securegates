@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -128,6 +129,9 @@ class HomePage extends HookConsumerWidget {
           if (message.notification != null) {
             log("message.data11 ${message.data}");
             NotificationService.createanddisplaynotification(message);
+            Fluttertoast.showToast(
+                msg: message.notification!.title!,
+                toastLength: Toast.LENGTH_LONG);
           }
         },
       );
@@ -247,7 +251,17 @@ class HomePage extends HookConsumerWidget {
                           Icons.notifications_outlined,
                           size: 20,
                         ),
-                        onTap: () {},
+                        onTap: () async {
+                          await NotificationService.sendNotification(
+                            title: "Test Notification",
+                            subject: "Test Notification",
+                            topic: "testingNotificaions",
+                            type: "warning",
+                            id: "696969",
+                            tojen:
+                                "fKXK-BieQkStC5EE9GJPM9:APA91bEHTbcudzc3DbxgVNNjPK0-peVUFc9xC2VGQNJ68rOMnM_HeQlpSSNE5cr8SrrkaMGXFB4qOXLvnGaOCzVf2O7U6LvhnD0FKCTXfidfbAn_HG30T_5PlLweKIKBmsZwMMG18aFO",
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(

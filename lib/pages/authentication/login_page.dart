@@ -1,18 +1,25 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
 import 'package:secure_gates_project/routes/app_routes_constants.dart';
 
-class LoginPage extends StatelessWidget {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController pwdController = TextEditingController();
+import '../../services/auth_service.dart';
 
-  LoginPage({super.key});
+class LoginPage extends HookConsumerWidget {
+  const LoginPage({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final nameController = useTextEditingController();
+    final pwdController = useTextEditingController();
+    final emailController = useTextEditingController();
+    final isLoading = useState(false);
+
     final TapGestureRecognizer gestureRecognizer = TapGestureRecognizer()
       ..onTap = () {
         context.pushNamed(MyAppRoutes.signupPage);
@@ -98,9 +105,9 @@ class LoginPage extends StatelessWidget {
                         delay: const Duration(milliseconds: 300),
                         duration: const Duration(milliseconds: 1500),
                         child: TextField(
-                          controller: nameController,
+                          controller: emailController,
                           decoration: InputDecoration(
-                              labelText: "Name",
+                              labelText: "Email",
                               labelStyle: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -186,7 +193,21 @@ class LoginPage extends StatelessWidget {
                         child: MaterialButton(
                           minWidth: double.infinity,
                           height: 60,
-                          onPressed: () {},
+                          onPressed: () async {
+                            isLoading.value = true;
+
+                            await ref
+                                .read(authServiceProvider)
+                                .signInWithEmail(
+                                  emailController.text.trim(),
+                                  pwdController.text.trim(),
+                                )
+                                .catchError((e, st) {
+                              isLoading.value = false;
+                            });
+
+                            isLoading.value = false;
+                          },
                           color: const Color(0xffFF6663),
                           elevation: 0,
                           shape: RoundedRectangleBorder(

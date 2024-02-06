@@ -5,10 +5,12 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:iconsax/iconsax.dart';
 import 'package:secure_gates_project/utils/pick_new_image.dart';
 
+import '../../routes/app_routes_constants.dart';
 import '../../widgets/rouned_square_button.dart';
 
 class SignupPage extends StatefulWidget {
@@ -433,7 +435,9 @@ class _SignupPageState extends State<SignupPage> {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         height: 60,
-                        onPressed: () {},
+                        onPressed: () {
+                          context.pushNamed(MyAppRoutes.stagingScreen);
+                        },
                         color: const Color(0xffFF6663),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
