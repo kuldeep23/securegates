@@ -19,10 +19,10 @@ class CurrentVisitorLoadingWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            IntrinsicHeight(
+            const IntrinsicHeight(
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     flex: 1,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -30,10 +30,17 @@ class CurrentVisitorLoadingWidget extends StatelessWidget {
                         CircleSkeleton(
                           size: 70,
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Shimming(
+                          height: 15,
+                          width: 50,
+                        ),
                       ],
                     ),
                   ),
-                  const VerticalDivider(
+                  VerticalDivider(
                     width: 15,
                     thickness: 1.5,
                     color: Colors.grey,
@@ -41,7 +48,7 @@ class CurrentVisitorLoadingWidget extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 8,
                       ),
                       child: Column(
@@ -50,101 +57,53 @@ class CurrentVisitorLoadingWidget extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Shimming(
+                              Shimming(
                                 height: 20,
+                                width: 75,
+                              ),
+                              Shimming(
+                                height: 20,
+                                width: 75,
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Shimming(
+                            height: 20,
+                            width: 75,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Shimming(
+                                height: 15,
                                 width: 150,
                               ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 1,
-                                  horizontal: 5,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff6CB4EE),
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
-                                ),
-                                child: const Shimming(
-                                  height: 15,
-                                  width: 20,
-                                ),
-                              ),
                             ],
                           ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 3,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xff6CB4EE),
-                              borderRadius: BorderRadius.circular(
-                                5,
-                              ),
-                            ),
-                            child: const Shimming(
-                              height: 20,
-                              width: 40,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.check_circle_outline,
-                                size: 18,
-                                color: Colors.grey[600],
-                              ),
-                              const SizedBox(
-                                width: 2,
-                              ),
-                              const Shimming(
-                                height: 15,
-                                width: 80,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
+                          SizedBox(
                             height: 3,
                           ),
                           Row(
                             children: [
-                              Icon(
-                                Icons.schedule_outlined,
-                                size: 18,
-                                color: Colors.grey[600],
-                              ),
-                              const SizedBox(
-                                width: 2,
-                              ),
-                              const Shimming(
+                              Shimming(
                                 height: 15,
-                                width: 80,
+                                width: 150,
                               ),
                             ],
                           ),
-                          const SizedBox(
+                          SizedBox(
                             height: 3,
                           ),
                           Row(
                             children: [
-                              Icon(
-                                Icons.calendar_month_outlined,
-                                size: 18,
-                                color: Colors.grey[600],
-                              ),
-                              const SizedBox(
-                                width: 2,
-                              ),
-                              const Shimming(
+                              Shimming(
                                 height: 15,
-                                width: 80,
+                                width: 150,
                               ),
                             ],
                           ),
@@ -161,21 +120,12 @@ class CurrentVisitorLoadingWidget extends StatelessWidget {
               children: [
                 SizedBox(
                   width: Responsive.width(context) * 0.28,
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.refresh_outlined,
-                        size: 19,
-                      ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      Text(
-                        "Give Feedback",
-                        style: TextStyle(
-                          fontSize: Responsive.getFontSize(12),
-                        ),
+                      Shimming(
+                        height: 20,
+                        width: 75,
                       ),
                     ],
                   ),
@@ -186,21 +136,12 @@ class CurrentVisitorLoadingWidget extends StatelessWidget {
                 ),
                 SizedBox(
                   width: Responsive.width(context) * 0.28,
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.cancel_outlined,
-                        size: 19,
-                      ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      Text(
-                        "Wrong Entry",
-                        style: TextStyle(
-                          fontSize: Responsive.getFontSize(12),
-                        ),
+                      Shimming(
+                        height: 20,
+                        width: 75,
                       ),
                     ],
                   ),
@@ -211,21 +152,12 @@ class CurrentVisitorLoadingWidget extends StatelessWidget {
                 ),
                 SizedBox(
                   width: Responsive.width(context) * 0.28,
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.call,
-                        size: 19,
-                      ),
-                      const SizedBox(
-                        width: 2,
-                      ),
-                      Text(
-                        "Call",
-                        style: TextStyle(
-                          fontSize: Responsive.getFontSize(12),
-                        ),
+                      Shimming(
+                        height: 20,
+                        width: 75,
                       ),
                     ],
                   ),

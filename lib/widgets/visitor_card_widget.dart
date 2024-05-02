@@ -47,7 +47,7 @@ class VisitorCard extends HookConsumerWidget {
 
     return Card(
       margin: const EdgeInsets.symmetric(
-        horizontal: 2.5,
+        horizontal: 2,
         vertical: 5,
       ),
       child: Padding(
@@ -65,7 +65,7 @@ class VisitorCard extends HookConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                          radius: 35,
+                          radius: 40,
                           backgroundImage: NetworkImage(
                             visitorImage,
                           ),
@@ -92,8 +92,8 @@ class VisitorCard extends HookConsumerWidget {
                     ),
                   ),
                   const VerticalDivider(
-                    width: 15,
-                    thickness: 1.5,
+                    width: 10,
+                    thickness: 0.5,
                     color: Colors.grey,
                   ),
                   Expanded(
@@ -116,35 +116,63 @@ class VisitorCard extends HookConsumerWidget {
                                 ),
                               ),
                               Text(
-                                "#$visitorId",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                ),
+                                "ID:$visitorId",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                    height: 0.9),
                               ),
                             ],
                           ),
                           const SizedBox(
                             height: 5,
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 3,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xff6CB4EE),
-                              borderRadius: BorderRadius.circular(
-                                5,
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 3,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff6CB4EE),
+                                  borderRadius: BorderRadius.circular(
+                                    5,
+                                  ),
+                                ),
+                                child: Text(
+                                  visitorType,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              visitorType,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.white,
+                              const SizedBox(
+                                width: 5,
                               ),
-                            ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 3,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff6CB4EE),
+                                  borderRadius: BorderRadius.circular(
+                                    5,
+                                  ),
+                                ),
+                                child: Text(
+                                  visitorTypeDetail,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(
                             height: 5,
@@ -267,8 +295,9 @@ class VisitorCard extends HookConsumerWidget {
                       children: [
                         Icon(
                           Icons.refresh_outlined,
-                          color: Color.fromARGB(255, 31, 118, 142),
-                          size: 19,
+                          weight: 15,
+                          color: Color.fromARGB(255, 242, 162, 1),
+                          size: 16,
                         ),
                         SizedBox(
                           width: 2,
@@ -276,9 +305,8 @@ class VisitorCard extends HookConsumerWidget {
                         Text(
                           "Feedback",
                           style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 31, 118, 142),
+                            fontSize: 14,
+                            color: Color.fromARGB(255, 242, 162, 1),
                             height: 1.2,
                           ),
                         ),
@@ -297,7 +325,8 @@ class VisitorCard extends HookConsumerWidget {
                     children: [
                       const Icon(
                         Icons.cancel_outlined,
-                        size: 19,
+                        color: Colors.red,
+                        size: 15,
                       ),
                       const SizedBox(
                         width: 2,
@@ -388,12 +417,12 @@ class VisitorCard extends HookConsumerWidget {
                             },
                           );
                         },
-                        child: Text(
-                          "Wrong Entry",
-                          style: TextStyle(
-                            fontSize: Responsive.getFontSize(12),
-                          ),
-                        ),
+                        child: const Text("Wrong Entry",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.red,
+                              height: 1.2,
+                            )),
                       ),
                     ],
                   ),
@@ -425,8 +454,8 @@ class VisitorCard extends HookConsumerWidget {
                       children: [
                         const Icon(
                           Icons.call,
-                          size: 19,
-                          color: Colors.red,
+                          size: 15,
+                          color: Colors.green,
                         ),
                         const SizedBox(
                           width: 2,
@@ -434,9 +463,8 @@ class VisitorCard extends HookConsumerWidget {
                         Text(
                           "Call",
                           style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red[600],
+                            fontSize: 14,
+                            color: Colors.green[600],
                             height: 1.2,
                           ),
                         ),

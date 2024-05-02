@@ -65,6 +65,24 @@ class VisitorCardSecond extends HookConsumerWidget {
                             visitorImage,
                           ),
                         ),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 1,
+                            horizontal: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff6CB4EE),
+                            borderRadius: BorderRadius.circular(
+                              10,
+                            ),
+                          ),
+                          child: Text(
+                            visitorStatus.toUpperCase(),
+                            style: GoogleFonts.montserrat(
+                                fontSize: 10, color: Colors.white),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -86,53 +104,70 @@ class VisitorCardSecond extends HookConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "$visitorTypeDetail, $visitorName",
+                                visitorName,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 1,
-                                  horizontal: 5,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff6CB4EE),
-                                  borderRadius: BorderRadius.circular(
-                                    10,
-                                  ),
-                                ),
-                                child: Text(
-                                  visitorStatus.toUpperCase(),
-                                  style: GoogleFonts.montserrat(
-                                      fontSize: 10, color: Colors.white),
-                                ),
+                              Text(
+                                "ID:$visitorId",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                    height: 0.9),
                               ),
                             ],
                           ),
                           const SizedBox(
                             height: 5,
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 3,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xff6CB4EE),
-                              borderRadius: BorderRadius.circular(
-                                5,
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 3,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff6CB4EE),
+                                  borderRadius: BorderRadius.circular(
+                                    5,
+                                  ),
+                                ),
+                                child: Text(
+                                  visitorType,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
-                            ),
-                            child: Text(
-                              visitorType,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.white,
+                              const SizedBox(
+                                width: 5,
                               ),
-                            ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 3,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff6CB4EE),
+                                  borderRadius: BorderRadius.circular(
+                                    5,
+                                  ),
+                                ),
+                                child: Text(
+                                  visitorTypeDetail,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(
                             height: 5,
@@ -224,20 +259,23 @@ class VisitorCardSecond extends HookConsumerWidget {
               children: [
                 SizedBox(
                   width: Responsive.width(context) * 0.28,
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.refresh_outlined,
-                        size: 19,
+                        size: 13,
+                        color: Colors.red,
                       ),
-                      const SizedBox(
+                      SizedBox(
                         width: 2,
                       ),
                       Text(
                         "Give Feedback",
                         style: TextStyle(
-                          fontSize: Responsive.getFontSize(12),
+                          fontSize: 14,
+                          color: Color.fromARGB(255, 242, 162, 1),
+                          height: 1,
                         ),
                       ),
                     ],
@@ -249,20 +287,19 @@ class VisitorCardSecond extends HookConsumerWidget {
                 ),
                 SizedBox(
                   width: Responsive.width(context) * 0.28,
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
-                        Icons.call,
-                        size: 19,
-                      ),
-                      const SizedBox(
+                      Icon(Icons.call, size: 14, color: Colors.green),
+                      SizedBox(
                         width: 2,
                       ),
                       Text(
                         "Call",
                         style: TextStyle(
-                          fontSize: Responsive.getFontSize(12),
+                          fontSize: 14,
+                          color: Colors.green,
+                          height: 1,
                         ),
                       ),
                     ],

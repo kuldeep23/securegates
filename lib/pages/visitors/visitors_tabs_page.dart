@@ -130,7 +130,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
           ],
         ),
         title: Text(
-          "${currentTabName.value} Page",
+          "${currentTabName.value} Visitors",
           style: const TextStyle(color: Colors.white),
         ),
         // actions: [
@@ -156,7 +156,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 15),
+                        horizontal: 10, vertical: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
