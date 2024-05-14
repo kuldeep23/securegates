@@ -21,6 +21,7 @@ import 'package:secure_gates_project/routes/app_routes_constants.dart';
 import '../controller/user_controller.dart';
 import '../pages/domesticStaff/domestic_staff_members_page.dart';
 import '../pages/error/error_page.dart';
+import '../pages/notification/notification_response_page.dart';
 
 class MyAppRouterConfig {
   static final GlobalKey<NavigatorState> rootNavigatorKey =
@@ -118,6 +119,17 @@ class MyAppRouterConfig {
         name: MyAppRoutes.complaints,
         path: "/complaints-page",
         builder: (context, state) => const ComplaintsPage(),
+      ),
+      GoRoute(
+        name: MyAppRoutes.notificationResponsePage,
+        path: "/notification-response-page",
+        builder: (context, state) {
+          final visitorName = state.extra! as String;
+          return NotificationResponsePage(
+            visitorImage: "visitorName",
+            visitorName: visitorName,
+          );
+        },
       ),
       GoRoute(
         name: MyAppRoutes.signupPage,
