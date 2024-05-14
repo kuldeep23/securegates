@@ -527,219 +527,237 @@ class VisitorsTabsPage extends HookConsumerWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Past Visitors",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 15,
-                                        vertical: 20,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Past Visitors",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Padding(
+                                      padding:
+                                          MediaQuery.of(context).viewInsets,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 15,
+                                          vertical: 20,
+                                        ),
+                                        height: 250,
+                                        child: GridView.count(
+                                          crossAxisCount: 4,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value =
+                                                    "Delivery";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.amber,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child: const Icon(
+                                                        Icons.electric_bike),
+                                                  ),
+                                                  const Text("Delivery")
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value = "Cab";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.redAccent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child: const Icon(
+                                                        Icons.directions_car),
+                                                  ),
+                                                  const Text("Cab")
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value = "Guest";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.blue,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child: const Icon(Icons
+                                                        .person_2_outlined),
+                                                  ),
+                                                  const Text("Guest")
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value =
+                                                    "Services";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.cyanAccent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child:
+                                                        const Icon(Icons.list),
+                                                  ),
+                                                  const Text("Sercices")
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value = "Parcel";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.greenAccent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child: const Icon(Icons
+                                                        .inventory_2_outlined),
+                                                  ),
+                                                  const Text("Parcel")
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value = "Others";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.orange,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child: const Icon(
+                                                        Icons.summarize),
+                                                  ),
+                                                  const Text("Others")
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      height: 250,
-                                      child: GridView.count(
-                                        crossAxisCount: 4,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Delivery";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.amber,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(
-                                                      Icons.electric_bike),
-                                                ),
-                                                const Text("Delivery")
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Cab";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.redAccent,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(
-                                                      Icons.directions_car),
-                                                ),
-                                                const Text("Cab")
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Guest";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.blue,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(
-                                                      Icons.person_2_outlined),
-                                                ),
-                                                const Text("Guest")
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Services";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.cyanAccent,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(Icons.list),
-                                                ),
-                                                const Text("Sercices")
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Parcel";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.greenAccent,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(Icons
-                                                      .inventory_2_outlined),
-                                                ),
-                                                const Text("Parcel")
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Others";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.orange,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(
-                                                      Icons.summarize),
-                                                ),
-                                                const Text("Others")
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(7),
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 5),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.tune),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        selectedFilter.value,
+                                        style: const TextStyle(fontSize: 18),
                                       ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(7),
-                                border: Border.all(color: Colors.grey),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 5),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.tune),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      selectedFilter.value,
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    const Icon(Icons.arrow_drop_down),
-                                  ],
+                                      const SizedBox(width: 5),
+                                      const Icon(Icons.arrow_drop_down),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 15),
-                          const Icon(
-                            Icons.refresh,
-                            color: Colors.blueGrey,
-                          ),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(width: 15),
+                            const Icon(
+                              Icons.refresh,
+                              color: Colors.blueGrey,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 allVisitors.when(
@@ -796,219 +814,237 @@ class VisitorsTabsPage extends HookConsumerWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Wrong Visitors",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Padding(
-                                    padding: MediaQuery.of(context).viewInsets,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 15,
-                                        vertical: 20,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Wrong Visitors",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Padding(
+                                      padding:
+                                          MediaQuery.of(context).viewInsets,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 15,
+                                          vertical: 20,
+                                        ),
+                                        height: 250,
+                                        child: GridView.count(
+                                          crossAxisCount: 4,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value =
+                                                    "Delivery";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.amber,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child: const Icon(
+                                                        Icons.electric_bike),
+                                                  ),
+                                                  const Text("Delivery")
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value = "Cab";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.redAccent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child: const Icon(
+                                                        Icons.directions_car),
+                                                  ),
+                                                  const Text("Cab")
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value = "Guest";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.blue,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child: const Icon(Icons
+                                                        .person_2_outlined),
+                                                  ),
+                                                  const Text("Guest")
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value =
+                                                    "Services";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.cyanAccent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child:
+                                                        const Icon(Icons.list),
+                                                  ),
+                                                  const Text("Sercices")
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value = "Parcel";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.greenAccent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child: const Icon(Icons
+                                                        .inventory_2_outlined),
+                                                  ),
+                                                  const Text("Parcel")
+                                                ],
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                selectedFilter.value = "Others";
+                                                context.pop();
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            15),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.orange,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                    ),
+                                                    child: const Icon(
+                                                        Icons.summarize),
+                                                  ),
+                                                  const Text("Others")
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      height: 250,
-                                      child: GridView.count(
-                                        crossAxisCount: 4,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Delivery";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.amber,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(
-                                                      Icons.electric_bike),
-                                                ),
-                                                const Text("Delivery")
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Cab";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.redAccent,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(
-                                                      Icons.directions_car),
-                                                ),
-                                                const Text("Cab")
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Guest";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.blue,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(
-                                                      Icons.person_2_outlined),
-                                                ),
-                                                const Text("Guest")
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Services";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.cyanAccent,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(Icons.list),
-                                                ),
-                                                const Text("Sercices")
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Parcel";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.greenAccent,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(Icons
-                                                      .inventory_2_outlined),
-                                                ),
-                                                const Text("Parcel")
-                                              ],
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              selectedFilter.value = "Others";
-                                              context.pop();
-                                            },
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(15),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.orange,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                  ),
-                                                  child: const Icon(
-                                                      Icons.summarize),
-                                                ),
-                                                const Text("Others")
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(7),
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 5),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.tune),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        selectedFilter.value,
+                                        style: const TextStyle(fontSize: 18),
                                       ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(7),
-                                border: Border.all(color: Colors.grey),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 5),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.tune),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      selectedFilter.value,
-                                      style: const TextStyle(fontSize: 18),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    const Icon(Icons.arrow_drop_down),
-                                  ],
+                                      const SizedBox(width: 5),
+                                      const Icon(Icons.arrow_drop_down),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 15),
-                          const Icon(
-                            Icons.refresh,
-                            color: Colors.blueGrey,
-                          ),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(width: 15),
+                            const Icon(
+                              Icons.refresh,
+                              color: Colors.blueGrey,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 wrongVisitors.when(

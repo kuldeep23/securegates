@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -24,6 +23,7 @@ import 'package:secure_gates_project/widgets/home_page_card.dart';
 import 'package:secure_gates_project/widgets/photo_view_wrapper.dart';
 import 'package:secure_gates_project/widgets/skelton_widget.dart';
 
+import '../../routes/app_routes_constants.dart';
 import '../../services/notification_service.dart';
 import '../visitors/visitors_tabs_page.dart';
 
@@ -111,13 +111,16 @@ class HomePage extends HookConsumerWidget {
           log("FirebaseMessaging.instance.getInitialMessage");
           if (message != null) {
             log(message.data.toString());
-            if (message.data['id'] != null) {
-              log("message.data11 ${message.data}");
-              NotificationService.createanddisplaynotification(message);
-              // respo.logOpenViaNotification(message.data);
-              // throwToTheScreens(
-              //     context, message.data['id'], message.data['type']);
-            }
+
+            // if (message.data['id'] != null) {
+            //   log("message.data11 ${message.data}");
+            //   context.pushNamed(MyAppRoutes.notificationResponsePage,
+            //       extra: message.data['name']);
+
+            //   // respo.logOpenViaNotification(message.data);
+            //   // throwToTheScreens(
+            //   //     context, message.data['id'], message.data['type']);
+            // }
           }
         },
       );
@@ -127,15 +130,16 @@ class HomePage extends HookConsumerWidget {
         (message) {
           log("FirebaseMessaging.onMessage.listen");
           if (message.notification != null) {
-            log("message.data11 ${message.data}");
-            NotificationService.createanddisplaynotification(message);
-            Fluttertoast.showToast(
-                msg: message.notification!.title!,
-                toastLength: Toast.LENGTH_LONG);
+            // log("message.data11 ${message.data}");
+            // NotificationService.createanddisplaynotification(message);
+            // Fluttertoast.showToast(
+            //     msg: message.notification!.title!,
+            //     toastLength: Toast.LENGTH_LONG);
+            // context.pushNamed(MyAppRoutes.notificationResponsePage,
+            //     extra: message.data["name"]);
           }
         },
       );
-
       // 3. This method only call when App in background and not terminated(not closed)
       FirebaseMessaging.onMessageOpenedApp.listen(
         (message) {
@@ -143,6 +147,8 @@ class HomePage extends HookConsumerWidget {
           if (message.notification != null) {
             log("message.data22 ${message.data}");
             NotificationService.createanddisplaynotification(message);
+            context.pushNamed(MyAppRoutes.notificationResponsePage,
+                extra: message.data["name"]);
             if (message.data['id'] != null) {
               // respo.logOpenViaNotification(message.data);
               // throwToTheScreens(
@@ -256,9 +262,7 @@ class HomePage extends HookConsumerWidget {
                             title: "Test Notification",
                             subject: "Test Notification",
                             topic: "testingNotificaions",
-                            type: "warning",
-                            id: "696969",
-                            tojen:
+                            fbID:
                                 "fKXK-BieQkStC5EE9GJPM9:APA91bEHTbcudzc3DbxgVNNjPK0-peVUFc9xC2VGQNJ68rOMnM_HeQlpSSNE5cr8SrrkaMGXFB4qOXLvnGaOCzVf2O7U6LvhnD0FKCTXfidfbAn_HG30T_5PlLweKIKBmsZwMMG18aFO",
                           );
                         },
