@@ -12,6 +12,7 @@ dependencies:
   animate_do: ^3.0.2
   animated_text_kit: ^4.2.2
   awesome_dialog: ^3.1.0
+  bulleted_list: ^0.0.1+0.1a
   carousel_slider: ^4.2.1
   connectivity_plus: ^4.0.1
   cupertino_icons: ^1.0.2
