@@ -164,7 +164,7 @@ class NotificationService {
         message.notification!.title,
         message.notification!.body,
         notificationDetails,
-        payload: message.data['id'],
+        payload: message.data['name'],
       );
     } on Exception catch (e) {
       log(e.toString());

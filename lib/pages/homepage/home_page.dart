@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -17,6 +18,7 @@ import 'package:secure_gates_project/controller/user_controller.dart';
 import 'package:secure_gates_project/entities/carousel_item.dart';
 import 'package:secure_gates_project/entities/home_page_card_item.dart';
 import 'package:secure_gates_project/entities/visitor.dart';
+import 'package:secure_gates_project/entities/visitor_from_notification.dart';
 import 'package:secure_gates_project/services/auth_service.dart';
 import 'package:secure_gates_project/services/dashboard_data_service.dart';
 import 'package:secure_gates_project/widgets/home_page_card.dart';
@@ -80,6 +82,7 @@ class HomePage extends HookConsumerWidget {
     final isConnectedToNetwork = useState(false);
     final isLoadingNetworkRequest = useState(false);
     final connectivity = Connectivity();
+    final notificationRecieved = useState(false);
 
     useEffect(() {
       isLoadingNetworkRequest.value = true;
@@ -112,15 +115,16 @@ class HomePage extends HookConsumerWidget {
           if (message != null) {
             log(message.data.toString());
 
-            // if (message.data['id'] != null) {
-            //   log("message.data11 ${message.data}");
-            //   context.pushNamed(MyAppRoutes.notificationResponsePage,
-            //       extra: message.data['name']);
+            context.pushNamed(MyAppRoutes.notificationResponsePage,
+                extra: VisitorFromNotification.fromMap(message.data));
+            NotificationService.createanddisplaynotification(message);
+            if (message.data['id'] != null) {
+              log("message.data11 ${message.data}");
 
-            //   // respo.logOpenViaNotification(message.data);
-            //   // throwToTheScreens(
-            //   //     context, message.data['id'], message.data['type']);
-            // }
+              // respo.logOpenViaNotification(message.data);
+              // throwToTheScreens(
+              //     context, message.data['id'], message.data['type']);
+            }
           }
         },
       );
@@ -129,14 +133,14 @@ class HomePage extends HookConsumerWidget {
       FirebaseMessaging.onMessage.listen(
         (message) {
           log("FirebaseMessaging.onMessage.listen");
+          context.pushNamed(MyAppRoutes.notificationResponsePage,
+              extra: VisitorFromNotification.fromMap(message.data));
           if (message.notification != null) {
-            // log("message.data11 ${message.data}");
-            // NotificationService.createanddisplaynotification(message);
-            // Fluttertoast.showToast(
-            //     msg: message.notification!.title!,
-            //     toastLength: Toast.LENGTH_LONG);
-            // context.pushNamed(MyAppRoutes.notificationResponsePage,
-            //     extra: message.data["name"]);
+            log("message.data11 ${message.data}");
+            NotificationService.createanddisplaynotification(message);
+            Fluttertoast.showToast(
+                msg: message.notification!.title!,
+                toastLength: Toast.LENGTH_LONG);
           }
         },
       );
@@ -146,14 +150,13 @@ class HomePage extends HookConsumerWidget {
           log("FirebaseMessaging.onMessageOpenedApp.listen");
           if (message.notification != null) {
             log("message.data22 ${message.data}");
-            NotificationService.createanddisplaynotification(message);
             context.pushNamed(MyAppRoutes.notificationResponsePage,
-                extra: message.data["name"]);
-            if (message.data['id'] != null) {
-              // respo.logOpenViaNotification(message.data);
-              // throwToTheScreens(
-              //     context, message.data['id'], message.data['type']);
-            }
+                extra: VisitorFromNotification.fromMap(message.data));
+            // if (message.data['id'] != null) {
+            //   respo.logOpenViaNotification(message.data);
+            //   throwToTheScreens(
+            //       context, message.data['id'], message.data['type']);
+            // }
           }
         },
       );
