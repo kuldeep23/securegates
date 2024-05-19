@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/controller/user_controller.dart';
@@ -19,6 +20,8 @@ class NotificationResponsePage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
     final socName = ref.read(userControllerProvider).currentUser!.socName;
+
+    useEffect(() => null);
 
     return Scaffold(
       body: Column(
@@ -152,7 +155,7 @@ class NotificationResponsePage extends HookConsumerWidget {
             ),
           ),
           const Padding(
-            padding: EdgeInsets.only(top: 80),
+            padding: EdgeInsets.only(top: 100),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -201,35 +204,6 @@ class NotificationResponsePage extends HookConsumerWidget {
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    CircularButton(
-                      color: Colors.orangeAccent,
-                      child: Icon(
-                        Icons.check,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      "Leave at the gate",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.orangeAccent,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          )
         ],
       ),
     );

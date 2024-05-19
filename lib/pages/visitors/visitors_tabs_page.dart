@@ -424,7 +424,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                           outTime: item.visitorEnterTime,
                                           outDate: item.visitorExitDate ??
                                               "Still Inside",
-                                          allowedBy: item.visitorApproveBy,
+                                          allowedBy: item.visitorAppRejBy,
                                           visitorTypeDetail:
                                               item.visitorTypeDetail,
                                           phoneNo: item.visitorMobile,
@@ -436,7 +436,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                       child: VisitorCard(
                                         visitormobile: item.visitorMobile,
                                         visitorId: item.visitorId,
-                                        visitorApproveBy: item.visitorApproveBy,
+                                        visitorApproveBy: item.visitorAppRejBy,
                                         visitorEnterTime: item.visitorEnterTime,
                                         visitorExitTime: item
                                                 .visitorExitTime!.isEmpty
@@ -470,7 +470,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                           outTime: item.visitorEnterTime,
                                           outDate: item.visitorExitDate ??
                                               "Still Inside",
-                                          allowedBy: item.visitorApproveBy,
+                                          allowedBy: item.visitorAppRejBy,
                                           visitorTypeDetail:
                                               item.visitorTypeDetail,
                                           phoneNo: item.visitorMobile,
@@ -482,7 +482,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                       child: VisitorCard(
                                         visitormobile: item.visitorMobile,
                                         visitorId: item.visitorId,
-                                        visitorApproveBy: item.visitorApproveBy,
+                                        visitorApproveBy: item.visitorAppRejBy,
                                         visitorEnterTime: item.visitorEnterTime,
                                         visitorExitTime: item
                                                 .visitorExitTime!.isEmpty
@@ -779,7 +779,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                     (item) => VisitorCardSecond(
                                       isDenied: false,
                                       visitorId: item.visitorId,
-                                      visitorApproveBy: item.visitorApproveBy,
+                                      visitorApproveBy: item.visitorAppRejBy,
                                       visitorEnterTime: item.visitorEnterTime,
                                       visitorExitDate: item.visitorExitDate!,
                                       visitorExitTime:
@@ -1066,7 +1066,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                     (item) => VisitorCardSecond(
                                       isDenied: false,
                                       visitorId: item.visitorId,
-                                      visitorApproveBy: item.visitorApproveBy,
+                                      visitorApproveBy: item.visitorAppRejBy,
                                       visitorEnterTime: item.visitorEnterTime,
                                       visitorExitDate: item.visitorExitDate!,
                                       visitorExitTime: item
@@ -1316,7 +1316,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                   isDenied: true,
                                   visitorExitDate: item.visitorExitDate!,
                                   visitorId: item.visitorId,
-                                  visitorApproveBy: item.visitorApproveBy,
+                                  visitorApproveBy: item.visitorAppRejBy,
                                   visitorEnterTime: item.visitorEnterTime,
                                   visitorExitTime: item.visitorExitTime!.isEmpty
                                       ? "Still Inside"
