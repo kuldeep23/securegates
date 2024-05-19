@@ -215,16 +215,12 @@ class LoginPage extends HookConsumerWidget {
                             });
 
                             isLoading.value = false;
-                            final currentUserUID = ref
-                                .read(userControllerProvider)
-                                .currentUser!
-                                .uid;
+                            final currentUser =
+                                ref.read(userControllerProvider).currentUser!;
 
                             if (token != null) {
                               await NotificationService.updateFBID(
-                                  token:
-                                      "fKXK-BieQkStC5EE9GJPM9:APA91bEHTbcudzc3DbxgVNNjPK0-peVUFc9xC2VGQNJ68rOMnM_HeQlpSSNE5cr8SrrkaMGXFB4qOXLvnGaOCzVf2O7U6LvhnD0FKCTXfidfbAn_HG30T_5PlLweKIKBmsZwMMG18aFO",
-                                  uid: currentUserUID);
+                                  token: token, uid: currentUser.uid);
                             }
                           },
                           color: const Color(0xffFF6663),

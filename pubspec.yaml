@@ -14,6 +14,7 @@ dependencies:
   awesome_dialog: ^3.1.0
   bulleted_list: ^0.0.1+0.1a
   carousel_slider: ^4.2.1
+  circular_countdown_timer: ^0.2.3
   connectivity_plus: ^4.0.1
   cupertino_icons: ^1.0.2
   dio: ^5.1.2
@@ -23,7 +24,6 @@ dependencies:
   firebase_messaging: ^14.6.7
   flutter:
     sdk: flutter
-  flutter_animated_dialog: ^2.0.1
   flutter_hooks: ^0.18.6
   flutter_image_compress: ^2.0.4
   flutter_local_notifications: ^15.1.1

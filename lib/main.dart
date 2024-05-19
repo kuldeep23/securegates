@@ -49,9 +49,9 @@ Future<void> main() async {
     sound: true,
   );
 
-  // final token = await FirebaseMessaging.instance.getToken();
+  final token = await FirebaseMessaging.instance.getToken();
 
-  // log(token.toString());
+  log(token.toString());
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await LoginPresistenceService.init();
   await FastCachedImageConfig.init(clearCacheAfter: const Duration(days: 15));
