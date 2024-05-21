@@ -1,4 +1,9 @@
+import 'dart:async';
+import 'dart:ffi';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,6 +12,8 @@ import 'package:secure_gates_project/widgets/circular_button.dart';
 import 'package:secure_gates_project/widgets/vertical_divider_widget.dart';
 
 import '../../entities/visitor_from_notification.dart';
+
+// late Timer? _timer;
 
 class NotificationResponsePage extends HookConsumerWidget {
   final VisitorFromNotification notificationVisitor;
@@ -19,9 +26,28 @@ class NotificationResponsePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
-    final socName = ref.read(userControllerProvider).currentUser!.socName;
+    final currentUser = ref.read(userControllerProvider).currentUser!;
+    final remainingTime = useState<int>(15);
+    final timer = useState<Timer?>(null);
 
-    useEffect(() => null);
+    useEffect(() {
+      void tick(Timer timer) {
+        if (remainingTime.value > 1) {
+          remainingTime.value -= 1;
+        } else {
+          timer.cancel();
+          if (Navigator.canPop(context)) {
+            Navigator.of(context).pop();
+          }
+        }
+      }
+
+      timer.value = Timer.periodic(const Duration(seconds: 1), tick);
+
+      return () {
+        timer.value?.cancel();
+      };
+    }, []);
 
     return Scaffold(
       body: Column(
@@ -142,7 +168,7 @@ class NotificationResponsePage extends HookConsumerWidget {
                     ),
                     child: Center(
                       child: Text(
-                        socName,
+                        currentUser.socName,
                         style: const TextStyle(
                           fontSize: 25,
                           color: Colors.redAccent,
@@ -154,24 +180,45 @@ class NotificationResponsePage extends HookConsumerWidget {
               ],
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 100),
+          Padding(
+            padding: const EdgeInsets.only(top: 100),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Column(
                   children: [
-                    CircularButton(
-                      color: Colors.redAccent,
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.white,
+                    GestureDetector(
+                      onTap: () async {
+                        final data = FormData.fromMap({
+                          "uid": notificationVisitor.visitorId,
+                          "visitor_app_rej": "Denied",
+                          "visitor_app_rej_by": "Owner",
+                          "visitor_app_rej_by_name": currentUser.ownerFirstName,
+                        });
+
+                        final Dio dio = Dio();
+                        final response = await dio.post(
+                          "https://gatesadmin.000webhostapp.com/visitor_app_rej_update.php",
+                          data: data,
+                        );
+                        if (context.mounted) {
+                          context.pop();
+                        }
+
+                        print(response.data["msg"]);
+                      },
+                      child: const CircularButton(
+                        color: Colors.redAccent,
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
-                    Text(
+                    const Text(
                       "Deny Visitor",
                       style: TextStyle(
                         fontSize: 16,
@@ -182,17 +229,37 @@ class NotificationResponsePage extends HookConsumerWidget {
                 ),
                 Column(
                   children: [
-                    CircularButton(
-                      color: Colors.lightGreen,
-                      child: Icon(
-                        Icons.check,
-                        color: Colors.white,
+                    GestureDetector(
+                      onTap: () async {
+                        final data = FormData.fromMap({
+                          "uid": notificationVisitor.visitorId,
+                          "visitor_app_rej": "Allowed",
+                          "visitor_app_rej_by": "Owner",
+                          "visitor_app_rej_by_name": currentUser.ownerFirstName,
+                        });
+
+                        final Dio dio = Dio();
+                        final response = await dio.post(
+                          "https://gatesadmin.000webhostapp.com/visitor_app_rej_update.php",
+                          data: data,
+                        );
+                        if (context.mounted) {
+                          context.pop();
+                        }
+                        print(response.data["msg"]);
+                      },
+                      child: const CircularButton(
+                        color: Colors.lightGreen,
+                        child: Icon(
+                          Icons.check,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
-                    Text(
+                    const Text(
                       "Accept Visitor",
                       style: TextStyle(
                         fontSize: 16,
@@ -202,6 +269,18 @@ class NotificationResponsePage extends HookConsumerWidget {
                   ],
                 ),
               ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 100,
+            ),
+            child: Text(
+              "This page will pop after ${remainingTime.value} seconds",
+              style: const TextStyle(
+                fontSize: 20,
+                color: Colors.red,
+              ),
             ),
           ),
         ],

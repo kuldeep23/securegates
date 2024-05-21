@@ -116,7 +116,7 @@ class HomePage extends HookConsumerWidget {
 
             // context.pushNamed(MyAppRoutes.notificationResponsePage,
             //     extra: VisitorFromNotification.fromMap(message.data));
-            NotificationService.createanddisplaynotification(message);
+            // NotificationService.createanddisplaynotification(message);
             if (message.data['id'] != null) {
               log("message.data11 ${message.data}");
 
@@ -151,6 +151,7 @@ class HomePage extends HookConsumerWidget {
             log("message.data22 ${message.data}");
             context.pushNamed(MyAppRoutes.notificationResponsePage,
                 extra: VisitorFromNotification.fromMap(message.data));
+            // NotificationService.createanddisplaynotification(message);
             // if (message.data['id'] != null) {
             //   respo.logOpenViaNotification(message.data);
             //   throwToTheScreens(
