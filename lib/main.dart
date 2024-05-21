@@ -17,7 +17,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
-  NotificationService.createanddisplaynotification(message);
+  // NotificationService.createanddisplaynotification(message);
   log("Handling a background message: ${message.messageId}");
 }
 
