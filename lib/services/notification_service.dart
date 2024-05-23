@@ -6,7 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Future<void> didRecieveNotification(details) async {
   log("onSelectNotification");
-  if (details.actionId!.isNotEmpty) {
+  if (details.actionId != null && details.actionId!.isNotEmpty) {
     log("Router Value1234 ${details.actionId}");
   }
 }

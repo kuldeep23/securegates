@@ -67,6 +67,11 @@ final homePageVisitors = FutureProvider.autoDispose<List<Visitor>>((ref) async {
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
+  void _handleMessage(RemoteMessage? message, BuildContext ctxt) {
+    // ctxt.pushNamed(MyAppRoutes.notificationResponsePage,
+    //     extra: VisitorFromNotification.fromMap(message.data));
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
@@ -110,10 +115,11 @@ class HomePage extends HookConsumerWidget {
         (message) {
           log("FirebaseMessaging.instance.getInitialMessage");
           if (message != null) {
+            _handleMessage(message, context);
             log(message.data.toString());
             if (message.data['id'] != null) {
               log("message.data11 ${message.data}");
-              NotificationService.createanddisplaynotification(message);
+              // NotificationService.createanddisplaynotification(message);
               // respo.logOpenViaNotification(message.data);
               // throwToTheScreens(
               //     context, message.data['id'], message.data['type']);
@@ -126,9 +132,12 @@ class HomePage extends HookConsumerWidget {
       FirebaseMessaging.onMessage.listen(
         (message) {
           log("FirebaseMessaging.onMessage.listen");
+
+          _handleMessage(message, context);
+
           if (message.notification != null) {
             log("message.data11 ${message.data}");
-            NotificationService.createanddisplaynotification(message);
+            // NotificationService.createanddisplaynotification(message);
             Fluttertoast.showToast(
                 msg: message.notification!.title!,
                 toastLength: Toast.LENGTH_LONG);
@@ -141,8 +150,10 @@ class HomePage extends HookConsumerWidget {
         (message) {
           log("FirebaseMessaging.onMessageOpenedApp.listen");
           if (message.notification != null) {
+            _handleMessage(message, context);
+
             log("message.data22 ${message.data}");
-            NotificationService.createanddisplaynotification(message);
+            // NotificationService.createanddisplaynotification(message);
             if (message.data['id'] != null) {
               // respo.logOpenViaNotification(message.data);
               // throwToTheScreens(
