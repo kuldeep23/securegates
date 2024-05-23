@@ -37,7 +37,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await NotificationService.initialise();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await FlutterLocalNotificationsPlugin()
       .resolvePlatformSpecificImplementation<
@@ -51,7 +51,12 @@ Future<void> main() async {
 
   // final token = await FirebaseMessaging.instance.getToken();
 
-  // log(token.toString());
+// <<<<<<< feature/handle_notif_cases
+//   print(token);
+//   print("++++++++++++++++++++++++++++++++++++++++");
+// =======
+//   // log(token.toString());
+// >>>>>>> main
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await LoginPresistenceService.init();
   await FastCachedImageConfig.init(clearCacheAfter: const Duration(days: 15));
