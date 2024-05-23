@@ -13,4 +13,5 @@ class MyAppRoutes {
   static const blockResidentDetailsPage = 'blockResidentDetailsPage';
   static const splashScreen = 'splashScreen';
   static const stagingScreen = 'stagingScreen';
+  static const notificationResponsePage = 'notificationResponsePage';
 }

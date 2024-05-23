@@ -6,7 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
+import 'package:secure_gates_project/controller/user_controller.dart';
+import 'package:secure_gates_project/general_providers.dart';
 import 'package:secure_gates_project/routes/app_routes_constants.dart';
+import 'package:secure_gates_project/services/notification_service.dart';
 
 import '../../services/auth_service.dart';
 
@@ -15,7 +18,7 @@ class LoginPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final nameController = useTextEditingController();
+    // final nameController = useTextEditingController();
     final pwdController = useTextEditingController();
     final emailController = useTextEditingController();
     final isLoading = useState(false);
@@ -67,39 +70,39 @@ class LoginPage extends HookConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: Column(
                     children: <Widget>[
-                      FadeInUp(
-                        delay: const Duration(milliseconds: 300),
-                        duration: const Duration(milliseconds: 1500),
-                        child: TextField(
-                          controller: nameController,
-                          decoration: InputDecoration(
-                              labelText: "Name",
-                              labelStyle: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400),
-                              prefixIcon: const Icon(
-                                Iconsax.user,
-                                color: Colors.black,
-                                size: 18,
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 0, horizontal: 10),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.grey.shade200, width: 2),
-                                  borderRadius: BorderRadius.circular(10)),
-                              floatingLabelStyle: const TextStyle(
-                                  color: Color(0xffFF6663), fontSize: 18),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Color(0xffFF6663), width: 1.5),
-                                  borderRadius: BorderRadius.circular(10))),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 2,
-                      ),
+                      // FadeInUp(
+                      //   delay: const Duration(milliseconds: 300),
+                      //   duration: const Duration(milliseconds: 1500),
+                      //   child: TextField(
+                      //     controller: nameController,
+                      //     decoration: InputDecoration(
+                      //         labelText: "Name",
+                      //         labelStyle: const TextStyle(
+                      //             color: Colors.black,
+                      //             fontSize: 14,
+                      //             fontWeight: FontWeight.w400),
+                      //         prefixIcon: const Icon(
+                      //           Iconsax.user,
+                      //           color: Colors.black,
+                      //           size: 18,
+                      //         ),
+                      //         contentPadding: const EdgeInsets.symmetric(
+                      //             vertical: 0, horizontal: 10),
+                      //         enabledBorder: OutlineInputBorder(
+                      //             borderSide: BorderSide(
+                      //                 color: Colors.grey.shade200, width: 2),
+                      //             borderRadius: BorderRadius.circular(10)),
+                      //         floatingLabelStyle: const TextStyle(
+                      //             color: Color(0xffFF6663), fontSize: 18),
+                      //         focusedBorder: OutlineInputBorder(
+                      //             borderSide: const BorderSide(
+                      //                 color: Color(0xffFF6663), width: 1.5),
+                      //             borderRadius: BorderRadius.circular(10))),
+                      //   ),
+                      // ),
+                      // const SizedBox(
+                      //   height: 2,
+                      // ),
                       //Username
                       FadeInUp(
                         delay: const Duration(milliseconds: 300),
@@ -195,6 +198,11 @@ class LoginPage extends HookConsumerWidget {
                           height: 60,
                           onPressed: () async {
                             isLoading.value = true;
+                            String? token = await ref
+                                .read(firebaseMessagingProvider)
+                                .getToken();
+
+                            print(token);
 
                             await ref
                                 .read(authServiceProvider)
@@ -207,6 +215,13 @@ class LoginPage extends HookConsumerWidget {
                             });
 
                             isLoading.value = false;
+                            final currentUser =
+                                ref.read(userControllerProvider).currentUser!;
+
+                            if (token != null) {
+                              await NotificationService.updateFBID(
+                                  token: token, uid: currentUser.uid);
+                            }
                           },
                           color: const Color(0xffFF6663),
                           elevation: 0,

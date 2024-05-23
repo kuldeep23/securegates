@@ -17,7 +17,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
-
+  // NotificationService.createanddisplaynotification(message);
   log("Handling a background message: ${message.messageId}");
 }
 
@@ -49,10 +49,14 @@ Future<void> main() async {
     sound: true,
   );
 
-  final token = await FirebaseMessaging.instance.getToken();
+  // final token = await FirebaseMessaging.instance.getToken();
 
-  print(token);
-  print("++++++++++++++++++++++++++++++++++++++++");
+// <<<<<<< feature/handle_notif_cases
+//   print(token);
+//   print("++++++++++++++++++++++++++++++++++++++++");
+// =======
+//   // log(token.toString());
+// >>>>>>> main
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await LoginPresistenceService.init();
   await FastCachedImageConfig.init(clearCacheAfter: const Duration(days: 15));

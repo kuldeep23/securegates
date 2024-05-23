@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:secure_gates_project/controller/user_controller.dart';
 import 'package:secure_gates_project/entities/carousel_item.dart';
 import 'package:secure_gates_project/entities/home_page_card_item.dart';
 import 'package:secure_gates_project/entities/visitor.dart';
@@ -7,7 +8,7 @@ import 'package:secure_gates_project/entities/visitor.dart';
 import '../custom_exception.dart';
 
 final dashboardServiceProvider = Provider<DashboardDataService>((ref) {
-  return DashboardDataService();
+  return DashboardDataService(ref);
 });
 
 abstract class BaseDashboardDataService {
@@ -18,6 +19,9 @@ abstract class BaseDashboardDataService {
 
 class DashboardDataService implements BaseDashboardDataService {
   final Dio _dio = Dio();
+  final Ref ref;
+
+  DashboardDataService(this.ref);
 
   @override
   Future<List<CarouselItem>> getCarouselItems() async {
@@ -53,7 +57,7 @@ class DashboardDataService implements BaseDashboardDataService {
           .toList(growable: false);
 
       return cards;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw CustomExeption(message: e.message);
     }
   }
@@ -61,9 +65,10 @@ class DashboardDataService implements BaseDashboardDataService {
   @override
   Future<List<Visitor>> getLastThreeVisitors() async {
     try {
+      final currentUser = ref.read(userControllerProvider).currentUser!;
       final data = FormData.fromMap({
-        'soc_code': 'CP',
-        'flat_no': '360',
+        'soc_code': currentUser.socCode,
+        'flat_no': currentUser.flatNumber,
       });
       final response = await _dio.post(
         "https://gatesadmin.000webhostapp.com/last_three_visitors.php",
@@ -77,7 +82,7 @@ class DashboardDataService implements BaseDashboardDataService {
           .toList(growable: false);
 
       return visitors;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw CustomExeption(message: e.message);
     }
   }

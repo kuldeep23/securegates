@@ -66,23 +66,23 @@ class NotificationService {
       {required String title,
       required String subject,
       required String topic,
-      required String type,
-      required String id,
+      // required String type,
+      // required String id,
+      required String fbID,
       String? tojen}) async {
     String postUrl = "https://fcm.googleapis.com/fcm/send";
     // log(topic);
-    String toParams = "/topics/$topic";
+
     // log(toParams);
 
     final data = FormData.fromMap({
       "notification": {"body": subject, "title": title},
       "priority": "high",
       "data": {
-        "type": type,
-        "id": id,
+        "name": "ninja hatori",
         "sound": 'default',
       },
-      "to": toParams // tojen
+      "to": fbID // tojen
       // ?? toParams
     });
 
@@ -102,6 +102,24 @@ class NotificationService {
     } else {
       log("send respo: false");
     }
+  }
+
+  static Future<void> updateFBID(
+      {required String token, required String uid}) async {
+    String apiUrl = "https://gatesadmin.000webhostapp.com/user_firebase_id.php";
+    final data = FormData.fromMap({
+      "uid": uid,
+      "fb_id": token,
+    });
+    final headers = {
+      'content-type': 'application/json',
+    };
+    final response = await Dio().post(
+      apiUrl,
+      data: data,
+      options: Options(headers: headers),
+    );
+    print(response.data["status"]);
   }
 
   // static Future<void> requestNotificationPermission() async {
@@ -146,7 +164,7 @@ class NotificationService {
         message.notification!.title,
         message.notification!.body,
         notificationDetails,
-        payload: message.data['id'],
+        payload: message.data['name'],
       );
     } on Exception catch (e) {
       log(e.toString());
