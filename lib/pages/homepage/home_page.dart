@@ -9,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +19,7 @@ import 'package:secure_gates_project/controller/user_controller.dart';
 import 'package:secure_gates_project/entities/carousel_item.dart';
 import 'package:secure_gates_project/entities/home_page_card_item.dart';
 import 'package:secure_gates_project/entities/visitor.dart';
+import 'package:secure_gates_project/main.dart';
 import 'package:secure_gates_project/services/auth_service.dart';
 import 'package:secure_gates_project/services/dashboard_data_service.dart';
 import 'package:secure_gates_project/widgets/home_page_card.dart';
@@ -69,7 +71,12 @@ class HomePage extends HookConsumerWidget {
 
   void _handleMessage(RemoteMessage? message, BuildContext ctxt) {
     // ctxt.pushNamed(MyAppRoutes.notificationResponsePage,
-    //     extra: VisitorFromNotification.fromMap(message.data));
+    //     extra: VistorFromNotification.fromMap(message!.data));
+    // Navigator.push(
+    //   ctxt,
+    //   MaterialPageRoute(builder: (context) => const VisitorsTabsPage()),
+    // );
+    print("notification recieved");
   }
 
   @override
@@ -85,6 +92,22 @@ class HomePage extends HookConsumerWidget {
     final isConnectedToNetwork = useState(false);
     final isLoadingNetworkRequest = useState(false);
     final connectivity = Connectivity();
+
+    useEffect(() {
+      localNotif.getNotificationAppLaunchDetails().then((an) {
+        bool notifLaunchedApp = an!.didNotificationLaunchApp;
+
+        if (notifLaunchedApp) {
+          print(
+              "===============================================================");
+          print(an.notificationResponse!.payload);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const VisitorsTabsPage()),
+          );
+        }
+      });
+    }, []);
 
     useEffect(() {
       isLoadingNetworkRequest.value = true;
@@ -114,6 +137,7 @@ class HomePage extends HookConsumerWidget {
       FirebaseMessaging.instance.getInitialMessage().then(
         (message) {
           log("FirebaseMessaging.instance.getInitialMessage");
+          print("+++++++++++++++++GET INITIAL MESSAGE++++++++++++++");
           if (message != null) {
             _handleMessage(message, context);
             log(message.data.toString());
@@ -148,10 +172,10 @@ class HomePage extends HookConsumerWidget {
       // 3. This method only call when App in background and not terminated(not closed)
       FirebaseMessaging.onMessageOpenedApp.listen(
         (message) {
+          print("+++++++++++++++++On Message Opened App++++++++++++++");
           log("FirebaseMessaging.onMessageOpenedApp.listen");
+          _handleMessage(message, context);
           if (message.notification != null) {
-            _handleMessage(message, context);
-
             log("message.data22 ${message.data}");
             // NotificationService.createanddisplaynotification(message);
             if (message.data['id'] != null) {
@@ -1281,7 +1305,9 @@ class HomePage extends HookConsumerWidget {
                         Icons.notifications_outlined,
                         size: 20,
                       ),
-                      onTap: () {},
+                      onTap: () async {
+                        print(await FirebaseMessaging.instance.getToken());
+                      },
                     ),
                   ),
                   const SizedBox(
