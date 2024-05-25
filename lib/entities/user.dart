@@ -15,6 +15,7 @@ class User {
   final String hometownAddress;
   final String member;
   final String gender;
+  final String fbID;
   final String dob;
   final String bloodGroup;
   final String profession;
@@ -47,6 +48,7 @@ class User {
     required this.hometownAddress,
     required this.member,
     required this.gender,
+    required this.fbID,
     required this.dob,
     required this.bloodGroup,
     required this.profession,
@@ -81,6 +83,7 @@ class User {
     String? hometownAddress,
     String? member,
     String? gender,
+    String? fbID,
     String? dob,
     String? bloodGroup,
     String? profession,
@@ -114,6 +117,7 @@ class User {
       hometownAddress: hometownAddress ?? this.hometownAddress,
       member: member ?? this.member,
       gender: gender ?? this.gender,
+      fbID: fbID ?? this.fbID,
       dob: dob ?? this.dob,
       bloodGroup: bloodGroup ?? this.bloodGroup,
       profession: profession ?? this.profession,
@@ -150,6 +154,7 @@ class User {
       'hometownAddress': hometownAddress,
       'member': member,
       'gender': gender,
+      'fbID': fbID,
       'dob': dob,
       'bloodGroup': bloodGroup,
       'profession': profession,
@@ -187,6 +192,7 @@ class User {
       member: map['Member'] as String,
       gender: map['Gender'] as String,
       dob: map['DOB'] as String,
+      fbID: map['FB_Id'] as String,
       bloodGroup: map['Blood_Group'] as String,
       profession: map['Profession'] as String,
       professionDetails: map['Profession_Details'] as String,
@@ -214,7 +220,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(uid: $uid, socCode: $socCode, socName: $socName, ownerTenant: $ownerTenant, ownerFirstName: $ownerFirstName, ownerLastName: $ownerLastName, ownerImage: $ownerImage, contactNumber: $contactNumber, email: $email, password: $password, hometownAddress: $hometownAddress, member: $member, gender: $gender, dob: $dob, bloodGroup: $bloodGroup, profession: $profession, professionDetails: $professionDetails, flatNumber: $flatNumber, flatBlock: $flatBlock, flatFloor: $flatFloor, flatType: $flatType, parkingType: $parkingType, parkingNumber: $parkingNumber, petType: $petType, petName: $petName, twoWheelerType: $twoWheelerType, twoWheelerNumber: $twoWheelerNumber, fourWheelerBrand: $fourWheelerBrand, fourWheelerNumber: $fourWheelerNumber, creationDate: $creationDate, isActive: $isActive)';
+    return 'User(uid: $uid, socCode: $socCode, socName: $socName, ownerTenant: $ownerTenant, ownerFirstName: $ownerFirstName, ownerLastName: $ownerLastName, ownerImage: $ownerImage, contactNumber: $contactNumber, email: $email, password: $password, hometownAddress: $hometownAddress, member: $member, gender: $gender, fbID: $fbID, dob: $dob, bloodGroup: $bloodGroup, profession: $profession, professionDetails: $professionDetails, flatNumber: $flatNumber, flatBlock: $flatBlock, flatFloor: $flatFloor, flatType: $flatType, parkingType: $parkingType, parkingNumber: $parkingNumber, petType: $petType, petName: $petName, twoWheelerType: $twoWheelerType, twoWheelerNumber: $twoWheelerNumber, fourWheelerBrand: $fourWheelerBrand, fourWheelerNumber: $fourWheelerNumber, creationDate: $creationDate, isActive: $isActive)';
   }
 
   @override
@@ -234,6 +240,7 @@ class User {
         other.hometownAddress == hometownAddress &&
         other.member == member &&
         other.gender == gender &&
+        other.fbID == fbID &&
         other.dob == dob &&
         other.bloodGroup == bloodGroup &&
         other.profession == profession &&
@@ -269,6 +276,7 @@ class User {
         hometownAddress.hashCode ^
         member.hashCode ^
         gender.hashCode ^
+        fbID.hashCode ^
         dob.hashCode ^
         bloodGroup.hashCode ^
         profession.hashCode ^

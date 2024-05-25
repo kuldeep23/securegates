@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/entities/resident.dart';
 import 'package:secure_gates_project/entities/staff.dart';
+import 'package:secure_gates_project/entities/visitor_from_notification.dart';
 
 import 'package:secure_gates_project/pages/authentication/login_page.dart';
 import 'package:secure_gates_project/pages/authentication/signup_page.dart';
@@ -21,6 +22,7 @@ import 'package:secure_gates_project/routes/app_routes_constants.dart';
 import '../controller/user_controller.dart';
 import '../pages/domesticStaff/domestic_staff_members_page.dart';
 import '../pages/error/error_page.dart';
+import '../pages/notification/notification_response_page.dart';
 
 class MyAppRouterConfig {
   static final GlobalKey<NavigatorState> rootNavigatorKey =
@@ -118,6 +120,17 @@ class MyAppRouterConfig {
         name: MyAppRoutes.complaints,
         path: "/complaints-page",
         builder: (context, state) => const ComplaintsPage(),
+      ),
+      GoRoute(
+        name: MyAppRoutes.notificationResponsePage,
+        path: "/notification-response-page",
+        builder: (context, state) {
+          final visitorFromNotification =
+              state.extra! as VisitorFromNotification;
+          return NotificationResponsePage(
+            notificationVisitor: visitorFromNotification,
+          );
+        },
       ),
       GoRoute(
         name: MyAppRoutes.signupPage,
