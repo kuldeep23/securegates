@@ -69,42 +69,23 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // await NotificationService.initialise();
+  await NotificationService.initialise();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings("@mipmap/launcher_icon");
-
-  const InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-  );
-  await localNotif.initialize(
-    initializationSettings,
-    // onDidReceiveNotificationResponse:
-    //     (NotificationResponse notificationResponse) {
-    //   print(
-    //       "++++++++++++++++++++++++++++ON DID RECEIVE NOTIF RESPONSE++++++++++++++++++++");
-    //   // notificationTapBackground(notificationResponse);
-    // },
-    // onDidReceiveBackgroundNotificationResponse: (nr) {
-    //   print(
-    //       "++++++++++++++++++++++++++++ON DID RECEIVE NOTIF BACKGROUND++++++++++++++++++++");
-    // },
-  );
-
-  localNotif.initialize(initializationSettings);
-
-  // await localNotif
-  //     .resolvePlatformSpecificImplementation<
-  //         AndroidFlutterLocalNotificationsPlugin>()
-  //     ?.createNotificationChannel(channel);
-
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
     sound: true,
   );
 
+//   final token = await FirebaseMessaging.instance.getToken();
+
+// <<<<<<< feature/handle_notif_cases
+//   print(token);
+//   print("++++++++++++++++++++++++++++++++++++++++");
+// =======
+//   log(token.toString());
+// >>>>>>> main
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   final token = await FirebaseMessaging.instance.getToken();
 
   print(token);

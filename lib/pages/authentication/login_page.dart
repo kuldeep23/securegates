@@ -198,7 +198,7 @@ class LoginPage extends HookConsumerWidget {
                           height: 60,
                           onPressed: () async {
                             isLoading.value = true;
-                            String? token = await ref
+                            final token = await ref
                                 .read(firebaseMessagingProvider)
                                 .getToken();
 
