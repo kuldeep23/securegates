@@ -65,13 +65,14 @@ final homePageVisitors = FutureProvider.autoDispose<List<Visitor>>((ref) async {
 //   }
 // }
 
+void _handleMessage(RemoteMessage? message, BuildContext ctxt) {
+  ctxt.pushNamed(MyAppRoutes.notificationResponsePage,
+      extra: VisitorFromNotification.fromMap(message!.data));
+  print("notification recieved");
+}
+
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
-
-  void _handleMessage(RemoteMessage? message, BuildContext ctxt) {
-    // ctxt.pushNamed(MyAppRoutes.notificationResponsePage,
-    //     extra: VisitorFromNotification.fromMap(message.data));
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -122,7 +123,7 @@ class HomePage extends HookConsumerWidget {
 
             // context.pushNamed(MyAppRoutes.notificationResponsePage,
             //     extra: VisitorFromNotification.fromMap(message.data));
-            // NotificationService.createanddisplaynotification(message);
+            NotificationService.createanddisplaynotification(message);
             if (message.data['id'] != null) {
               log("message.data11 ${message.data}");
               // NotificationService.createanddisplaynotification(message);
