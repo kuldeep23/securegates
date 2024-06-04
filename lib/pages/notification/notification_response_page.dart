@@ -99,21 +99,21 @@ class NotificationResponsePage extends HookConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 30),
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(
-                      90,
-                    ),
-                  ),
-                  child: Image(
-                    image: NetworkImage(
-                      notificationVisitor.visitorImage,
-                    ),
-                    height: 150,
-                    width: 150,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                // ClipRRect(
+                // borderRadius: const BorderRadius.all(
+                //   Radius.circular(
+                //     90,
+                //   ),
+                // ),
+                //   child: Image(
+                //     image: NetworkImage(
+                //       notificationVisitor.visitorImage,
+                //     ),
+                //     height: 150,
+                //     width: 150,
+                //     fit: BoxFit.cover,
+                //   ),
+                // ),
                 const SizedBox(height: 20),
                 Text(
                   notificationVisitor.visitorName,
@@ -194,6 +194,7 @@ class NotificationResponsePage extends HookConsumerWidget {
                           "visitor_app_rej": "Denied",
                           "visitor_app_rej_by": "Owner",
                           "visitor_app_rej_by_name": currentUser.ownerFirstName,
+                          "status": "NA",
                         });
 
                         final Dio dio = Dio();
@@ -236,6 +237,7 @@ class NotificationResponsePage extends HookConsumerWidget {
                           "visitor_app_rej": "Allowed",
                           "visitor_app_rej_by": "Owner",
                           "visitor_app_rej_by_name": currentUser.ownerFirstName,
+                          "status": "Inside",
                         });
 
                         final Dio dio = Dio();
