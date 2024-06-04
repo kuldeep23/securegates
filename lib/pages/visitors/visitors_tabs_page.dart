@@ -33,7 +33,7 @@ final allVisitorProvider =
 final currentVisitorsProvider =
     FutureProvider.autoDispose<List<Visitor>>((ref) async {
   final data = FormData.fromMap(
-      {'soc': 'CP', 'visitor_is_valid': '1', 'visitor_flat_no': '360'});
+      {'soc': 'CP', 'visitor_is_valid': '1', 'visitor_flat_no': '306'});
   final response = await Dio().post(
     "https://gatesadmin.000webhostapp.com/get_inside_visitors.php",
     data: data,

@@ -16,7 +16,7 @@ class Visitor {
   final String? visitorExitTime;
   final String visitorStatus;
   final String visitorIsValidUpdate;
-  final String visitorApprovReject;
+  final String? visitorApprovReject;
   final String visitorAppRejBy;
   final String visitorRejByName;
   final String? guardName;
@@ -130,7 +130,9 @@ class Visitor {
       visitorEnterTime: map['visitor_enter_time'] as String,
       visitorAppRejBy: map['visitor_app_rej_by'] as String,
       visitorRejByName: map['visitor_app_rej_by_name'] as String,
-      visitorApprovReject: map['visitor_approve_reject'] as String,
+      visitorApprovReject: map['visitor_approve_reject'] != null
+          ? map['visitor_approve_reject'] as String
+          : null,
       visitorIsValidUpdate: map['visitor_is_valid_update'] as String,
       guardName: map['guard_name'] != null ? map['guard_name'] as String : null,
       visitorExitDate: map['visitor_exit_date'] != null

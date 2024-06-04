@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -67,24 +69,8 @@ final homePageVisitors = FutureProvider.autoDispose<List<Visitor>>((ref) async {
 //   }
 // }
 
-void _handleMessage(RemoteMessage? message, BuildContext ctxt) {
-  ctxt.pushNamed(MyAppRoutes.notificationResponsePage,
-      extra: VisitorFromNotification.fromMap(message!.data));
-  print("notification recieved");
-}
-
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
-
-  void _handleMessage(RemoteMessage? message, BuildContext ctxt) {
-    // ctxt.pushNamed(MyAppRoutes.notificationResponsePage,
-    //     extra: VistorFromNotification.fromMap(message!.data));
-    // Navigator.push(
-    //   ctxt,
-    //   MaterialPageRoute(builder: (context) => const VisitorsTabsPage()),
-    // );
-    print("notification recieved");
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -99,23 +85,20 @@ class HomePage extends HookConsumerWidget {
     final isConnectedToNetwork = useState(false);
     final isLoadingNetworkRequest = useState(false);
     final connectivity = Connectivity();
-    final notificationRecieved = useState(false);
 
-    useEffect(() {
-      localNotif.getNotificationAppLaunchDetails().then((an) {
-        bool notifLaunchedApp = an!.didNotificationLaunchApp;
-
-        if (notifLaunchedApp) {
-          print(
-              "===============================================================");
-          print(an.notificationResponse!.payload);
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const VisitorsTabsPage()),
-          );
-        }
-      });
-    }, []);
+    Future<void> getTappedFunction() async {
+      var details = await FlutterLocalNotificationsPlugin()
+          .getNotificationAppLaunchDetails();
+      if (details != null && details.didNotificationLaunchApp) {
+        // Fluttertoast.showToast(
+        //     msg: "${details.payload!} : toast message payload");
+        context.pushNamed(MyAppRoutes.notificationResponsePage,
+            extra: VisitorFromNotification.fromMap(
+                jsonDecode(details.notificationResponse!.payload!)));
+      } else {
+        // Fluttertoast.showToast(msg: "not launched from notification");
+      }
+    }
 
     useEffect(() {
       isLoadingNetworkRequest.value = true;
@@ -142,61 +125,68 @@ class HomePage extends HookConsumerWidget {
         }
       });
 
-      FirebaseMessaging.instance.getInitialMessage().then(
-        (message) {
-          log("FirebaseMessaging.instance.getInitialMessage");
-          print("+++++++++++++++++GET INITIAL MESSAGE++++++++++++++");
-          if (message != null) {
-            _handleMessage(message, context);
-            log(message.data.toString());
+      getTappedFunction();
+      if (Platform.isAndroid) {
+        FirebaseMessaging.instance.getInitialMessage().then(
+          (message) {
+            log("FirebaseMessaging.instance.getInitialMessage ${message?.data}");
+            Fluttertoast.showToast(
+                msg:
+                    "FirebaseMessaging.instance.getInitialMessage${message?.data}");
+            print("+++++++++++++++++GET INITIAL MESSAGE++++++++++++++");
+
+            // context.pushNamed(MyAppRoutes.notificationResponsePage,
+            //     extra: VisitorFromNotification.fromMap(message!.data));
+            // log(message?.data["title"]);
 
             // context.pushNamed(MyAppRoutes.notificationResponsePage,
             //     extra: VisitorFromNotification.fromMap(message.data));
-            NotificationService.createanddisplaynotification(message);
-            if (message.data['id'] != null) {
-              log("message.data11 ${message.data}");
-              // NotificationService.createanddisplaynotification(message);
-              // respo.logOpenViaNotification(message.data);
-              // throwToTheScreens(
-              //     context, message.data['id'], message.data['type']);
-            }
-          }
-        },
-      );
+            // NotificationService.createanddisplaynotification(message);
+            // if (message.data['id'] != null) {
+            //   log("message.data11 ${message.data}");
+            //   NotificationService.createanddisplaynotification(message);
+            //   respo.logOpenViaNotification(message.data);
+            //   throwToTheScreens(
+            //       context, message.data['id'], message.data['type']);
+            // }
+          },
+        );
 
-      // 2. This method only call when App in forground it mean app must be opened
-      FirebaseMessaging.onMessage.listen(
-        (message) {
-          log("FirebaseMessaging.onMessage.listen");
+        // 2. This method only call when App in forground it mean app must be opened
+        FirebaseMessaging.onMessage.listen(
+          (message) {
+            log("FirebaseMessaging.onMessage.listen ${message.data}");
+            Fluttertoast.showToast(msg: "FirebaseMessaging.onMessage.listen");
 
-          _handleMessage(message, context);
+            context.pushNamed(MyAppRoutes.notificationResponsePage,
+                extra: VisitorFromNotification.fromMap(message.data));
 
-          if (message.notification != null) {
+            // if (message.notification != null) {
             log("message.data11 ${message.data}");
             // NotificationService.createanddisplaynotification(message);
+            // Fluttertoast.showToast(
+            //     msg: message.notification!.title!,
+            //     toastLength: Toast.LENGTH_LONG);
+            // }
+          },
+        );
+        // 3. This method only call when App in background and not terminated(not closed)
+        FirebaseMessaging.onMessageOpenedApp.listen(
+          (message) {
+            print("+++++++++++++++++On Message Opened App++++++++++++++ ");
+            log("FirebaseMessaging.onMessageOpenedApp.listen ${message.data}");
             Fluttertoast.showToast(
-                msg: message.notification!.title!,
-                toastLength: Toast.LENGTH_LONG);
-          }
-        },
-      );
-      // 3. This method only call when App in background and not terminated(not closed)
-      FirebaseMessaging.onMessageOpenedApp.listen(
-        (message) {
-          print("+++++++++++++++++On Message Opened App++++++++++++++");
-          log("FirebaseMessaging.onMessageOpenedApp.listen");
-          _handleMessage(message, context);
-          if (message.notification != null) {
-            log("message.data22 ${message.data}");
-            // NotificationService.createanddisplaynotification(message);
-            if (message.data['id'] != null) {
-              // respo.logOpenViaNotification(message.data);
-              // throwToTheScreens(
-              //     context, message.data['id'], message.data['type']);
-            }
-          }
-        },
-      );
+                msg: "FirebaseMessaging.onMessageOpenedApp.listen");
+            context.pushNamed(MyAppRoutes.notificationResponsePage,
+                extra: VisitorFromNotification.fromMap(message.data));
+            NotificationService.createanddisplaynotification(message);
+            // if (message.notification != null) {
+            //   log("message.data22 ${message.data}");
+            //   NotificationService.createanddisplaynotification(message);
+            // }
+          },
+        );
+      }
       return () {
         networkSubscription.cancel();
       };

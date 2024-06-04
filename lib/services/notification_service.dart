@@ -1,18 +1,38 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:secure_gates_project/entities/visitor_from_notification.dart';
+import 'package:secure_gates_project/general_providers.dart';
+import 'package:secure_gates_project/routes/app_routes_config.dart';
+import 'package:secure_gates_project/routes/app_routes_constants.dart';
 
-Future<void> didRecieveNotification(details) async {
-  log("onSelectNotification");
+///Handle Clicks
+Future<void> didRecieveNotification(NotificationResponse details) async {
+  log("onSelectNotification ${details.payload}");
+  MyAppRouterConfig.rootNavigatorKey.currentContext?.pushNamed(
+      MyAppRoutes.notificationResponsePage,
+      extra: VisitorFromNotification.fromMap(jsonDecode(details.payload!)));
   if (details.actionId != null && details.actionId!.isNotEmpty) {
     log("Router Value1234 ${details.actionId}");
   }
 }
 
-Future<void> didRecieveBackgroudNotification(details) async {
-  log("onSelectNotification");
+///[iOS]-Displays notification in foreground and background
+///Then calls [didRecieveNotification] for handling the clicks on [iOS]
+///[Android] displays the notification while app is killed
+///Then calls [didNotificationLaunchDetails] on homescreen to redirect
+@pragma('vm:entry-point')
+Future<void> notificationTappedBackground(NotificationResponse details) async {
+  NotificationService.createanddisplaynotification(
+      jsonDecode(details.payload!));
+  // Fluttertoast.showToast(msg: "Notificiaton Received");
+  log("onBackground");
   if (details.actionId!.isNotEmpty) {
     log("Router Value1234 ${details.actionId}");
   }
@@ -32,9 +52,10 @@ class NotificationService {
     );
     _notificationsPlugin.initialize(
       initializationSettings,
+      //Handle Clicks
       onDidReceiveNotificationResponse: didRecieveNotification,
-      onDidReceiveBackgroundNotificationResponse:
-          didRecieveBackgroudNotification,
+      //
+      onDidReceiveBackgroundNotificationResponse: notificationTappedBackground,
       // onSelectNotification: (String? id) async {
       //   log("onSelectNotification");
       //   if (id!.isNotEmpty) {
@@ -161,10 +182,10 @@ class NotificationService {
 
       await _notificationsPlugin.show(
         id,
-        message.notification!.title,
-        message.notification!.body,
+        message.data["title"],
+        message.data["body"],
         notificationDetails,
-        payload: message.data['name'],
+        payload: jsonEncode(message.data),
       );
     } on Exception catch (e) {
       log(e.toString());
