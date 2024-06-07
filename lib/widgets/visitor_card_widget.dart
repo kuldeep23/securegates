@@ -366,7 +366,7 @@ class VisitorCard extends HookConsumerWidget {
                                             ElevatedButton(
                                               style: ButtonStyle(
                                                 backgroundColor:
-                                                    MaterialStateProperty.all(
+                                                    WidgetStateProperty.all(
                                                   Colors.redAccent,
                                                 ),
                                               ),

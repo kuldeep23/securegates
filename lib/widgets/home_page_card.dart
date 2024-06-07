@@ -38,6 +38,10 @@ class HomePageCard extends StatelessWidget {
             child: Image(
               image: image,
               fit: BoxFit.contain,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                return Center(child: child);
+              },
             ),
           ),
           const SizedBox(

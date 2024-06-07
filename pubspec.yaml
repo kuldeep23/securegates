@@ -13,6 +13,7 @@ dependencies:
   animated_text_kit: ^4.2.2
   awesome_dialog: ^3.1.0
   bulleted_list: ^0.0.1+0.1a
+  calendar_date_picker2: ^1.0.3
   carousel_slider: ^4.2.1
   circular_countdown_timer: ^0.2.3
   connectivity_plus: ^4.0.1
