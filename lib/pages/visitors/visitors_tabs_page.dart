@@ -80,6 +80,7 @@ final wrongVisitorsProvider =
     "https://gatesadmin.000webhostapp.com/get_wrong_visitors.php",
     data: data,
   );
+  ref.keepAlive();
 
   if (response.data["code"] == "100") {
     final results = List<Map<String, dynamic>>.from(response.data["data"]);
@@ -105,6 +106,7 @@ final deniedVisitorsProvider =
     "https://gatesadmin.000webhostapp.com/get_denied_visitors.php",
     data: data,
   );
+  ref.keepAlive();
 
   if (response.data["code"] == "100") {
     final results = List<Map<String, dynamic>>.from(response.data["data"]);
@@ -499,51 +501,63 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                     );
                                   }).toList()
                                 : data
-                                    .where((e) =>
-                                        e.visitorType == selectedFilter.value)
-                                    .map((item) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        quickDialogue(
-                                          callBack: () {},
-                                          subtitle: item.visitorStatus,
-                                          title: item.visitorName,
-                                          visitorType: item.visitorType,
-                                          context: context,
-                                          visitormobile: item.visitorMobile,
-                                          inTime: item.visitorEnterTime,
-                                          inDate: item.visitorEnterDate,
-                                          outTime: item.visitorEnterTime,
-                                          outDate: item.visitorExitDate ??
-                                              "Still Inside",
-                                          allowedBy: item.visitorAppRejBy,
-                                          visitorTypeDetail:
-                                              item.visitorTypeDetail,
-                                          phoneNo: item.visitorMobile,
-                                          image: NetworkImage(
-                                            item.visitorImage,
+                                        .where((e) =>
+                                            e.visitorType ==
+                                            selectedFilter.value)
+                                        .isNotEmpty
+                                    ? data
+                                        .where((e) =>
+                                            e.visitorType ==
+                                            selectedFilter.value)
+                                        .map((item) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            quickDialogue(
+                                              callBack: () {},
+                                              subtitle: item.visitorStatus,
+                                              title: item.visitorName,
+                                              visitorType: item.visitorType,
+                                              context: context,
+                                              visitormobile: item.visitorMobile,
+                                              inTime: item.visitorEnterTime,
+                                              inDate: item.visitorEnterDate,
+                                              outTime: item.visitorEnterTime,
+                                              outDate: item.visitorExitDate ??
+                                                  "Still Inside",
+                                              allowedBy: item.visitorAppRejBy,
+                                              visitorTypeDetail:
+                                                  item.visitorTypeDetail,
+                                              phoneNo: item.visitorMobile,
+                                              image: NetworkImage(
+                                                item.visitorImage,
+                                              ),
+                                            );
+                                          },
+                                          child: VisitorCard(
+                                            visitormobile: item.visitorMobile,
+                                            visitorId: item.visitorId,
+                                            visitorApproveBy:
+                                                item.visitorAppRejBy,
+                                            visitorEnterTime:
+                                                item.visitorEnterTime,
+                                            visitorExitTime: item
+                                                    .visitorExitTime!.isEmpty
+                                                ? "Still Inside"
+                                                : "Exited at${item.visitorExitTime!}",
+                                            visitorImage: item.visitorImage,
+                                            visitorName: item.visitorName,
+                                            visitorEnterDate:
+                                                item.visitorEnterDate,
+                                            visitorStatus: item.visitorStatus,
+                                            visitorType: item.visitorType,
+                                            visitorTypeDetail:
+                                                item.visitorTypeDetail,
                                           ),
                                         );
-                                      },
-                                      child: VisitorCard(
-                                        visitormobile: item.visitorMobile,
-                                        visitorId: item.visitorId,
-                                        visitorApproveBy: item.visitorAppRejBy,
-                                        visitorEnterTime: item.visitorEnterTime,
-                                        visitorExitTime: item
-                                                .visitorExitTime!.isEmpty
-                                            ? "Still Inside"
-                                            : "Exited at${item.visitorExitTime!}",
-                                        visitorImage: item.visitorImage,
-                                        visitorName: item.visitorName,
-                                        visitorEnterDate: item.visitorEnterDate,
-                                        visitorStatus: item.visitorStatus,
-                                        visitorType: item.visitorType,
-                                        visitorTypeDetail:
-                                            item.visitorTypeDetail,
-                                      ),
-                                    );
-                                  }).toList(),
+                                      }).toList()
+                                    : [
+                                        Lottie.asset("assets/mt_list.json"),
+                                      ],
                           ),
                         );
                       }
@@ -585,7 +599,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          "Past Visitors",
+                          "Filters",
                           style: TextStyle(fontSize: 20),
                         ),
                         Row(
@@ -814,118 +828,137 @@ class VisitorsTabsPage extends HookConsumerWidget {
                 ),
                 allVisitors.when(
                     skipLoadingOnRefresh: false,
-                    data: (data) => data.isEmpty
-                        ? Center(
-                            child: Column(
-                              children: [
-                                // const Text("This is an empty list"),
-                                Lottie.asset("assets/mt_list.json"),
-                              ],
-                            ),
-                          )
-                        : Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Column(
-                              children: selectedFilter.value == "All"
-                                  ? data.map((item) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          quickDialogue(
-                                            callBack: () {},
-                                            subtitle: item.visitorStatus,
-                                            title: item.visitorName,
-                                            visitorType: item.visitorType,
-                                            context: context,
-                                            visitormobile: item.visitorMobile,
-                                            inTime: item.visitorEnterTime,
-                                            inDate: item.visitorEnterDate,
-                                            outTime: item.visitorEnterTime,
-                                            outDate: item.visitorExitDate ??
-                                                "Still Inside",
-                                            allowedBy: item.visitorAppRejBy,
-                                            visitorTypeDetail:
-                                                item.visitorTypeDetail,
-                                            phoneNo: item.visitorMobile,
-                                            image: NetworkImage(
-                                              item.visitorImage,
-                                            ),
-                                          );
-                                        },
-                                        child: VisitorCard(
-                                          visitormobile: item.visitorMobile,
-                                          visitorId: item.visitorId,
-                                          visitorApproveBy:
-                                              item.visitorAppRejBy,
-                                          visitorEnterTime:
-                                              item.visitorEnterTime,
-                                          visitorExitTime: item
-                                                  .visitorExitTime!.isEmpty
-                                              ? "Still Inside"
-                                              : "Exited at${item.visitorExitTime!}",
-                                          visitorImage: item.visitorImage,
-                                          visitorName: item.visitorName,
-                                          visitorEnterDate:
-                                              item.visitorEnterDate,
-                                          visitorStatus: item.visitorStatus,
-                                          visitorType: item.visitorType,
-                                          visitorTypeDetail:
-                                              item.visitorTypeDetail,
-                                        ),
-                                      );
-                                    }).toList()
-                                  : data
-                                      .where((e) =>
-                                          e.visitorType == selectedFilter.value)
-                                      .map((item) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          quickDialogue(
-                                            callBack: () {},
-                                            subtitle: item.visitorStatus,
-                                            title: item.visitorName,
-                                            visitorType: item.visitorType,
-                                            context: context,
-                                            visitormobile: item.visitorMobile,
-                                            inTime: item.visitorEnterTime,
-                                            inDate: item.visitorEnterDate,
-                                            outTime: item.visitorEnterTime,
-                                            outDate: item.visitorExitDate ??
-                                                "Still Inside",
-                                            allowedBy: item.visitorAppRejBy,
-                                            visitorTypeDetail:
-                                                item.visitorTypeDetail,
-                                            phoneNo: item.visitorMobile,
-                                            image: NetworkImage(
-                                              item.visitorImage,
-                                            ),
-                                          );
-                                        },
-                                        child: VisitorCard(
-                                          visitormobile: item.visitorMobile,
-                                          visitorId: item.visitorId,
-                                          visitorApproveBy:
-                                              item.visitorAppRejBy,
-                                          visitorEnterTime:
-                                              item.visitorEnterTime,
-                                          visitorExitTime: item
-                                                  .visitorExitTime!.isEmpty
-                                              ? "Still Inside"
-                                              : "Exited at${item.visitorExitTime!}",
-                                          visitorImage: item.visitorImage,
-                                          visitorName: item.visitorName,
-                                          visitorEnterDate:
-                                              item.visitorEnterDate,
-                                          visitorStatus: item.visitorStatus,
-                                          visitorType: item.visitorType,
-                                          visitorTypeDetail:
-                                              item.visitorTypeDetail,
-                                        ),
-                                      );
-                                    }).toList(),
-                            ),
+                    data: (data) {
+                      if (data.isEmpty) {
+                        return Center(
+                          child: Column(
+                            children: [
+                              // const Text("This is an empty list"),
+                              Lottie.asset("assets/mt_list.json"),
+                            ],
                           ),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                        );
+                      } else {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            children: selectedFilter.value == "All"
+                                ? data.map((item) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        quickDialogue(
+                                          callBack: () {},
+                                          subtitle: item.visitorStatus,
+                                          title: item.visitorName,
+                                          visitorType: item.visitorType,
+                                          context: context,
+                                          visitormobile: item.visitorMobile,
+                                          inTime: item.visitorEnterTime,
+                                          inDate: item.visitorEnterDate,
+                                          outTime: item.visitorEnterTime,
+                                          outDate: item.visitorExitDate ??
+                                              "Still Inside",
+                                          allowedBy: item.visitorAppRejBy,
+                                          visitorTypeDetail:
+                                              item.visitorTypeDetail,
+                                          phoneNo: item.visitorMobile,
+                                          image: NetworkImage(
+                                            item.visitorImage,
+                                          ),
+                                        );
+                                      },
+                                      child: VisitorCard(
+                                        visitormobile: item.visitorMobile,
+                                        visitorId: item.visitorId,
+                                        visitorApproveBy: item.visitorAppRejBy,
+                                        visitorEnterTime: item.visitorEnterTime,
+                                        visitorExitTime: item
+                                                .visitorExitTime!.isEmpty
+                                            ? "Still Inside"
+                                            : "Exited at${item.visitorExitTime!}",
+                                        visitorImage: item.visitorImage,
+                                        visitorName: item.visitorName,
+                                        visitorEnterDate: item.visitorEnterDate,
+                                        visitorStatus: item.visitorStatus,
+                                        visitorType: item.visitorType,
+                                        visitorTypeDetail:
+                                            item.visitorTypeDetail,
+                                      ),
+                                    );
+                                  }).toList()
+                                : data
+                                        .where((e) =>
+                                            e.visitorType ==
+                                            selectedFilter.value)
+                                        .isNotEmpty
+                                    ? data
+                                        .where((e) =>
+                                            e.visitorType ==
+                                            selectedFilter.value)
+                                        .map((item) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            quickDialogue(
+                                              callBack: () {},
+                                              subtitle: item.visitorStatus,
+                                              title: item.visitorName,
+                                              visitorType: item.visitorType,
+                                              context: context,
+                                              visitormobile: item.visitorMobile,
+                                              inTime: item.visitorEnterTime,
+                                              inDate: item.visitorEnterDate,
+                                              outTime: item.visitorEnterTime,
+                                              outDate: item.visitorExitDate ??
+                                                  "Still Inside",
+                                              allowedBy: item.visitorAppRejBy,
+                                              visitorTypeDetail:
+                                                  item.visitorTypeDetail,
+                                              phoneNo: item.visitorMobile,
+                                              image: NetworkImage(
+                                                item.visitorImage,
+                                              ),
+                                            );
+                                          },
+                                          child: VisitorCard(
+                                            visitormobile: item.visitorMobile,
+                                            visitorId: item.visitorId,
+                                            visitorApproveBy:
+                                                item.visitorAppRejBy,
+                                            visitorEnterTime:
+                                                item.visitorEnterTime,
+                                            visitorExitTime: item
+                                                    .visitorExitTime!.isEmpty
+                                                ? "Still Inside"
+                                                : "Exited at${item.visitorExitTime!}",
+                                            visitorImage: item.visitorImage,
+                                            visitorName: item.visitorName,
+                                            visitorEnterDate:
+                                                item.visitorEnterDate,
+                                            visitorStatus: item.visitorStatus,
+                                            visitorType: item.visitorType,
+                                            visitorTypeDetail:
+                                                item.visitorTypeDetail,
+                                          ),
+                                        );
+                                      }).toList()
+                                    : [
+                                        Lottie.asset("assets/mt_list.json"),
+                                      ],
+                          ),
+                        );
+                      }
+                    },
+                    loading: () => const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            children: [
+                              CurrentVisitorLoadingWidget(),
+                              CurrentVisitorLoadingWidget(),
+                              CurrentVisitorLoadingWidget(),
+                              CurrentVisitorLoadingWidget(),
+                            ],
+                          ),
+                        ),
                     error: (e, s) {
                       return Text(e.toString());
                     }),
@@ -953,7 +986,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          "Wrong Visitors",
+                          "Filters",
                           style: TextStyle(fontSize: 20),
                         ),
                         Row(
@@ -1182,118 +1215,137 @@ class VisitorsTabsPage extends HookConsumerWidget {
                 ),
                 wrongVisitors.when(
                     skipLoadingOnRefresh: false,
-                    data: (data) => data.isEmpty
-                        ? Center(
-                            child: Column(
-                              children: [
-                                // const Text("This is an empty list"),
-                                Lottie.asset("assets/mt_list.json"),
-                              ],
-                            ),
-                          )
-                        : Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Column(
-                              children: selectedFilter.value == "All"
-                                  ? data.map((item) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          quickDialogue(
-                                            callBack: () {},
-                                            subtitle: item.visitorStatus,
-                                            title: item.visitorName,
-                                            visitorType: item.visitorType,
-                                            context: context,
-                                            visitormobile: item.visitorMobile,
-                                            inTime: item.visitorEnterTime,
-                                            inDate: item.visitorEnterDate,
-                                            outTime: item.visitorEnterTime,
-                                            outDate: item.visitorExitDate ??
-                                                "Still Inside",
-                                            allowedBy: item.visitorAppRejBy,
-                                            visitorTypeDetail:
-                                                item.visitorTypeDetail,
-                                            phoneNo: item.visitorMobile,
-                                            image: NetworkImage(
-                                              item.visitorImage,
-                                            ),
-                                          );
-                                        },
-                                        child: VisitorCard(
-                                          visitormobile: item.visitorMobile,
-                                          visitorId: item.visitorId,
-                                          visitorApproveBy:
-                                              item.visitorAppRejBy,
-                                          visitorEnterTime:
-                                              item.visitorEnterTime,
-                                          visitorExitTime: item
-                                                  .visitorExitTime!.isEmpty
-                                              ? "Still Inside"
-                                              : "Exited at${item.visitorExitTime!}",
-                                          visitorImage: item.visitorImage,
-                                          visitorName: item.visitorName,
-                                          visitorEnterDate:
-                                              item.visitorEnterDate,
-                                          visitorStatus: item.visitorStatus,
-                                          visitorType: item.visitorType,
-                                          visitorTypeDetail:
-                                              item.visitorTypeDetail,
-                                        ),
-                                      );
-                                    }).toList()
-                                  : data
-                                      .where((e) =>
-                                          e.visitorType == selectedFilter.value)
-                                      .map((item) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          quickDialogue(
-                                            callBack: () {},
-                                            subtitle: item.visitorStatus,
-                                            title: item.visitorName,
-                                            visitorType: item.visitorType,
-                                            context: context,
-                                            visitormobile: item.visitorMobile,
-                                            inTime: item.visitorEnterTime,
-                                            inDate: item.visitorEnterDate,
-                                            outTime: item.visitorEnterTime,
-                                            outDate: item.visitorExitDate ??
-                                                "Still Inside",
-                                            allowedBy: item.visitorAppRejBy,
-                                            visitorTypeDetail:
-                                                item.visitorTypeDetail,
-                                            phoneNo: item.visitorMobile,
-                                            image: NetworkImage(
-                                              item.visitorImage,
-                                            ),
-                                          );
-                                        },
-                                        child: VisitorCard(
-                                          visitormobile: item.visitorMobile,
-                                          visitorId: item.visitorId,
-                                          visitorApproveBy:
-                                              item.visitorAppRejBy,
-                                          visitorEnterTime:
-                                              item.visitorEnterTime,
-                                          visitorExitTime: item
-                                                  .visitorExitTime!.isEmpty
-                                              ? "Still Inside"
-                                              : "Exited at${item.visitorExitTime!}",
-                                          visitorImage: item.visitorImage,
-                                          visitorName: item.visitorName,
-                                          visitorEnterDate:
-                                              item.visitorEnterDate,
-                                          visitorStatus: item.visitorStatus,
-                                          visitorType: item.visitorType,
-                                          visitorTypeDetail:
-                                              item.visitorTypeDetail,
-                                        ),
-                                      );
-                                    }).toList(),
-                            ),
+                    data: (data) {
+                      if (data.isEmpty) {
+                        return Center(
+                          child: Column(
+                            children: [
+                              // const Text("This is an empty list"),
+                              Lottie.asset("assets/mt_list.json"),
+                            ],
                           ),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
+                        );
+                      } else {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            children: selectedFilter.value == "All"
+                                ? data.map((item) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        quickDialogue(
+                                          callBack: () {},
+                                          subtitle: item.visitorStatus,
+                                          title: item.visitorName,
+                                          visitorType: item.visitorType,
+                                          context: context,
+                                          visitormobile: item.visitorMobile,
+                                          inTime: item.visitorEnterTime,
+                                          inDate: item.visitorEnterDate,
+                                          outTime: item.visitorEnterTime,
+                                          outDate: item.visitorExitDate ??
+                                              "Still Inside",
+                                          allowedBy: item.visitorAppRejBy,
+                                          visitorTypeDetail:
+                                              item.visitorTypeDetail,
+                                          phoneNo: item.visitorMobile,
+                                          image: NetworkImage(
+                                            item.visitorImage,
+                                          ),
+                                        );
+                                      },
+                                      child: VisitorCard(
+                                        visitormobile: item.visitorMobile,
+                                        visitorId: item.visitorId,
+                                        visitorApproveBy: item.visitorAppRejBy,
+                                        visitorEnterTime: item.visitorEnterTime,
+                                        visitorExitTime: item
+                                                .visitorExitTime!.isEmpty
+                                            ? "Still Inside"
+                                            : "Exited at${item.visitorExitTime!}",
+                                        visitorImage: item.visitorImage,
+                                        visitorName: item.visitorName,
+                                        visitorEnterDate: item.visitorEnterDate,
+                                        visitorStatus: item.visitorStatus,
+                                        visitorType: item.visitorType,
+                                        visitorTypeDetail:
+                                            item.visitorTypeDetail,
+                                      ),
+                                    );
+                                  }).toList()
+                                : data
+                                        .where((e) =>
+                                            e.visitorType ==
+                                            selectedFilter.value)
+                                        .isNotEmpty
+                                    ? data
+                                        .where((e) =>
+                                            e.visitorType ==
+                                            selectedFilter.value)
+                                        .map((item) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            quickDialogue(
+                                              callBack: () {},
+                                              subtitle: item.visitorStatus,
+                                              title: item.visitorName,
+                                              visitorType: item.visitorType,
+                                              context: context,
+                                              visitormobile: item.visitorMobile,
+                                              inTime: item.visitorEnterTime,
+                                              inDate: item.visitorEnterDate,
+                                              outTime: item.visitorEnterTime,
+                                              outDate: item.visitorExitDate ??
+                                                  "Still Inside",
+                                              allowedBy: item.visitorAppRejBy,
+                                              visitorTypeDetail:
+                                                  item.visitorTypeDetail,
+                                              phoneNo: item.visitorMobile,
+                                              image: NetworkImage(
+                                                item.visitorImage,
+                                              ),
+                                            );
+                                          },
+                                          child: VisitorCard(
+                                            visitormobile: item.visitorMobile,
+                                            visitorId: item.visitorId,
+                                            visitorApproveBy:
+                                                item.visitorAppRejBy,
+                                            visitorEnterTime:
+                                                item.visitorEnterTime,
+                                            visitorExitTime: item
+                                                    .visitorExitTime!.isEmpty
+                                                ? "Still Inside"
+                                                : "Exited at${item.visitorExitTime!}",
+                                            visitorImage: item.visitorImage,
+                                            visitorName: item.visitorName,
+                                            visitorEnterDate:
+                                                item.visitorEnterDate,
+                                            visitorStatus: item.visitorStatus,
+                                            visitorType: item.visitorType,
+                                            visitorTypeDetail:
+                                                item.visitorTypeDetail,
+                                          ),
+                                        );
+                                      }).toList()
+                                    : [
+                                        Lottie.asset("assets/mt_list.json"),
+                                      ],
+                          ),
+                        );
+                      }
+                    },
+                    loading: () => const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            children: [
+                              CurrentVisitorLoadingWidget(),
+                              CurrentVisitorLoadingWidget(),
+                              CurrentVisitorLoadingWidget(),
+                              CurrentVisitorLoadingWidget(),
+                            ],
+                          ),
+                        ),
                     error: (e, s) {
                       return Text(e.toString());
                     }),
@@ -1302,7 +1354,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
           ),
           RefreshIndicator(
             onRefresh: () async {
-              ref.refresh(currentVisitorsProvider.future);
+              ref.refresh(deniedVisitorsProvider.future);
             },
             child: ListView(
               children: [
@@ -1320,7 +1372,7 @@ class VisitorsTabsPage extends HookConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          "Denied Visitors",
+                          "Filters",
                           style: TextStyle(fontSize: 20),
                         ),
                         Row(
@@ -1549,7 +1601,18 @@ class VisitorsTabsPage extends HookConsumerWidget {
                 ),
                 deniedVisitor.when(
                     skipLoadingOnRefresh: false,
-                    data: (data) => Container(
+                    data: (data) {
+                      if (data.isEmpty) {
+                        return Center(
+                          child: Column(
+                            children: [
+                              // const Text("This is an empty list"),
+                              Lottie.asset("assets/mt_list.json"),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Column(
                             children: selectedFilter.value == "All"
@@ -1597,55 +1660,78 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                     );
                                   }).toList()
                                 : data
-                                    .where((e) =>
-                                        e.visitorType == selectedFilter.value)
-                                    .map((item) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        quickDialogue(
-                                          callBack: () {},
-                                          subtitle: item.visitorStatus,
-                                          title: item.visitorName,
-                                          visitorType: item.visitorType,
-                                          context: context,
-                                          visitormobile: item.visitorMobile,
-                                          inTime: item.visitorEnterTime,
-                                          inDate: item.visitorEnterDate,
-                                          outTime: item.visitorEnterTime,
-                                          outDate: item.visitorExitDate ??
-                                              "Still Inside",
-                                          allowedBy: item.visitorAppRejBy,
-                                          visitorTypeDetail:
-                                              item.visitorTypeDetail,
-                                          phoneNo: item.visitorMobile,
-                                          image: NetworkImage(
-                                            item.visitorImage,
+                                        .where((e) =>
+                                            e.visitorType ==
+                                            selectedFilter.value)
+                                        .isNotEmpty
+                                    ? data
+                                        .where((e) =>
+                                            e.visitorType ==
+                                            selectedFilter.value)
+                                        .map((item) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            quickDialogue(
+                                              callBack: () {},
+                                              subtitle: item.visitorStatus,
+                                              title: item.visitorName,
+                                              visitorType: item.visitorType,
+                                              context: context,
+                                              visitormobile: item.visitorMobile,
+                                              inTime: item.visitorEnterTime,
+                                              inDate: item.visitorEnterDate,
+                                              outTime: item.visitorEnterTime,
+                                              outDate: item.visitorExitDate ??
+                                                  "Still Inside",
+                                              allowedBy: item.visitorAppRejBy,
+                                              visitorTypeDetail:
+                                                  item.visitorTypeDetail,
+                                              phoneNo: item.visitorMobile,
+                                              image: NetworkImage(
+                                                item.visitorImage,
+                                              ),
+                                            );
+                                          },
+                                          child: VisitorCard(
+                                            visitormobile: item.visitorMobile,
+                                            visitorId: item.visitorId,
+                                            visitorApproveBy:
+                                                item.visitorAppRejBy,
+                                            visitorEnterTime:
+                                                item.visitorEnterTime,
+                                            visitorExitTime: item
+                                                    .visitorExitTime!.isEmpty
+                                                ? "Still Inside"
+                                                : "Exited at${item.visitorExitTime!}",
+                                            visitorImage: item.visitorImage,
+                                            visitorName: item.visitorName,
+                                            visitorEnterDate:
+                                                item.visitorEnterDate,
+                                            visitorStatus: item.visitorStatus,
+                                            visitorType: item.visitorType,
+                                            visitorTypeDetail:
+                                                item.visitorTypeDetail,
                                           ),
                                         );
-                                      },
-                                      child: VisitorCard(
-                                        visitormobile: item.visitorMobile,
-                                        visitorId: item.visitorId,
-                                        visitorApproveBy: item.visitorAppRejBy,
-                                        visitorEnterTime: item.visitorEnterTime,
-                                        visitorExitTime: item
-                                                .visitorExitTime!.isEmpty
-                                            ? "Still Inside"
-                                            : "Exited at${item.visitorExitTime!}",
-                                        visitorImage: item.visitorImage,
-                                        visitorName: item.visitorName,
-                                        visitorEnterDate: item.visitorEnterDate,
-                                        visitorStatus: item.visitorStatus,
-                                        visitorType: item.visitorType,
-                                        visitorTypeDetail:
-                                            item.visitorTypeDetail,
-                                      ),
-                                    );
-                                  }).toList(),
+                                      }).toList()
+                                    : [
+                                        Lottie.asset("assets/mt_list.json"),
+                                      ],
+                          ),
+                        );
+                      }
+                    },
+                    loading: () => const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
+                            children: [
+                              CurrentVisitorLoadingWidget(),
+                              CurrentVisitorLoadingWidget(),
+                              CurrentVisitorLoadingWidget(),
+                              CurrentVisitorLoadingWidget(),
+                            ],
                           ),
                         ),
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
                     error: (e, s) {
                       return Text(e.toString());
                     }),

@@ -50,7 +50,7 @@ class NotificationResponsePage extends HookConsumerWidget {
     }, []);
 
     return Scaffold(
-      body: Column(
+      body: ListView(
         children: [
           Container(
             width: size.width,
@@ -99,21 +99,19 @@ class NotificationResponsePage extends HookConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 30),
-                // ClipRRect(
-                // borderRadius: const BorderRadius.all(
-                //   Radius.circular(
-                //     90,
-                //   ),
-                // ),
-                //   child: Image(
-                //     image: NetworkImage(
-                //       notificationVisitor.visitorImage,
-                //     ),
-                //     height: 150,
-                //     width: 150,
-                //     fit: BoxFit.cover,
-                //   ),
-                // ),
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(
+                      90,
+                    ),
+                  ),
+                  child: Image.network(
+                    notificationVisitor.visitorImage,
+                    height: 150,
+                    width: 150,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 const SizedBox(height: 20),
                 Text(
                   notificationVisitor.visitorName,
@@ -194,7 +192,7 @@ class NotificationResponsePage extends HookConsumerWidget {
                           "visitor_app_rej": "Denied",
                           "visitor_app_rej_by": "Owner",
                           "visitor_app_rej_by_name": currentUser.ownerFirstName,
-                          "status": "NA",
+                          "status": "Denied",
                         });
 
                         final Dio dio = Dio();

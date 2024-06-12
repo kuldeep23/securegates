@@ -29,6 +29,7 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'High Importance Notifications', // title
     // 'This channel is used for important notifications.', // description
     importance: Importance.high,
+    sound: RawResourceAndroidNotificationSound('notification'),
     playSound: true);
 
 // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
