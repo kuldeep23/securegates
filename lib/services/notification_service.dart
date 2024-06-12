@@ -161,13 +161,14 @@ class NotificationService {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       const NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
-          'Event Managers', 'Offers and News',
+          'Event Managers',
+          'Offers and News',
           playSound: true,
           channelDescription: "Offers and News",
           importance: Importance.max,
           priority: Priority.high,
           fullScreenIntent: false,
-          // sound: RawResourceAndroidNotificationSound("zomato")
+          sound: RawResourceAndroidNotificationSound('notification'),
         ),
         // iOS: DarwinNotificationDetails(
         //   'Event Managers',

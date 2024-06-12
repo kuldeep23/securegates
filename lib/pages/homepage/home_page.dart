@@ -130,10 +130,10 @@ class HomePage extends HookConsumerWidget {
         FirebaseMessaging.instance.getInitialMessage().then(
           (message) {
             log("FirebaseMessaging.instance.getInitialMessage ${message?.data}");
-            Fluttertoast.showToast(
-                msg:
-                    "FirebaseMessaging.instance.getInitialMessage${message?.data}");
-            print("+++++++++++++++++GET INITIAL MESSAGE++++++++++++++");
+            // Fluttertoast.showToast(
+            //     msg:
+            //         "FirebaseMessaging.instance.getInitialMessage${message?.data}");
+            // print("+++++++++++++++++GET INITIAL MESSAGE++++++++++++++");
 
             // context.pushNamed(MyAppRoutes.notificationResponsePage,
             //     extra: VisitorFromNotification.fromMap(message!.data));
@@ -156,7 +156,7 @@ class HomePage extends HookConsumerWidget {
         FirebaseMessaging.onMessage.listen(
           (message) {
             log("FirebaseMessaging.onMessage.listen ${message.data}");
-            Fluttertoast.showToast(msg: "FirebaseMessaging.onMessage.listen");
+            // Fluttertoast.showToast(msg: "FirebaseMessaging.onMessage.listen");
 
             context.pushNamed(MyAppRoutes.notificationResponsePage,
                 extra: VisitorFromNotification.fromMap(message.data));
@@ -175,8 +175,8 @@ class HomePage extends HookConsumerWidget {
           (message) {
             print("+++++++++++++++++On Message Opened App++++++++++++++ ");
             log("FirebaseMessaging.onMessageOpenedApp.listen ${message.data}");
-            Fluttertoast.showToast(
-                msg: "FirebaseMessaging.onMessageOpenedApp.listen");
+            // Fluttertoast.showToast(
+            //     msg: "FirebaseMessaging.onMessageOpenedApp.listen");
             context.pushNamed(MyAppRoutes.notificationResponsePage,
                 extra: VisitorFromNotification.fromMap(message.data));
             NotificationService.createanddisplaynotification(message);
