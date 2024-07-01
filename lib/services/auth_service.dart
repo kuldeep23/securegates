@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/controller/user_controller.dart';
+import 'package:secure_gates_project/general_providers.dart';
 import 'package:secure_gates_project/services/login_presistence_service.dart';
 
 import '../custom_exception.dart';
@@ -27,7 +28,7 @@ class AuthenticationService implements BaseAuthenticationService {
     try {
       final formData = FormData.fromMap({"email": email, "password": password});
       final userResponse = await _dio.post(
-        "https://gatesadmin.000webhostapp.com/user_login.php",
+        "${ref.read(generalUrlPathProvider)}/user_login.php",
         data: formData,
       );
       if (userResponse.data["flag"] == 1) {

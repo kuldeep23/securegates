@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:secure_gates_project/general_providers.dart';
 
 import '../auth_exception_handler.dart';
 import '../controller/user_controller.dart';
@@ -37,7 +38,7 @@ class DirectoryService implements BaseDirectoryService {
       });
 
       final response = await _dio.post(
-          "https://gatesadmin.000webhostapp.com/local_directory.php",
+          "${ref.read(generalUrlPathProvider)}/local_directory.php",
           data: data);
 
       final status = response.data["status"];

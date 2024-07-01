@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:secure_gates_project/general_providers.dart';
 import 'package:secure_gates_project/widgets/responsive_wrap.dart';
 import 'package:secure_gates_project/widgets/vertical_divider_widget.dart';
 
@@ -377,7 +378,7 @@ class VisitorCard extends HookConsumerWidget {
                                                 });
 
                                                 await Dio().post(
-                                                    "https://gatesadmin.000webhostapp.com/visitor_wrong.php",
+                                                    "${ref.read(generalUrlPathProvider)}/visitor_wrong.php",
                                                     data: formData);
 
                                                 ref.refresh(

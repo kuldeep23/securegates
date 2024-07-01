@@ -8,6 +8,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/controller/user_controller.dart';
+import 'package:secure_gates_project/general_providers.dart';
 import 'package:secure_gates_project/widgets/circular_button.dart';
 import 'package:secure_gates_project/widgets/vertical_divider_widget.dart';
 
@@ -197,7 +198,7 @@ class NotificationResponsePage extends HookConsumerWidget {
 
                         final Dio dio = Dio();
                         final response = await dio.post(
-                          "https://gatesadmin.000webhostapp.com/visitor_app_rej_update.php",
+                          "${ref.read(generalUrlPathProvider)}/visitor_app_rej_update.php",
                           data: data,
                         );
                         if (context.mounted) {
@@ -240,7 +241,7 @@ class NotificationResponsePage extends HookConsumerWidget {
 
                         final Dio dio = Dio();
                         final response = await dio.post(
-                          "https://gatesadmin.000webhostapp.com/visitor_app_rej_update.php",
+                          "${ref.read(generalUrlPathProvider)}/visitor_app_rej_update.php",
                           data: data,
                         );
                         if (context.mounted) {

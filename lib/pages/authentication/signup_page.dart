@@ -31,7 +31,7 @@ class _SignupPageState extends State<SignupPage> {
     getData() async {
       Future.delayed(const Duration(seconds: 2));
       final res = await http.get(Uri.parse(
-          "https://gatesadmin.000webhostapp.com/society_details.php"));
+          "https://superhuman-shortage.000webhostapp.com/society_details.php"));
       data = jsonDecode(res.body);
 
       setState(() {

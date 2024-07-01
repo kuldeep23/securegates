@@ -10,15 +10,15 @@ class Visitor {
   final String visitorMobile;
   final String visitorFlatNo;
   final String visitorImage;
-  final String visitorEnterDate;
-  final String visitorEnterTime;
+  final String? visitorEnterDate;
+  final String? visitorEnterTime;
   final String? visitorExitDate;
-  final String? visitorExitTime;
-  final String visitorStatus;
+  final String visitorExitTime;
+  final String? visitorStatus;
   final String? visitorIsValidUpdate;
   final String? visitorApprovReject;
-  final String visitorAppRejBy;
-  final String visitorRejByName;
+  final String? visitorAppRejBy;
+  final String? visitorRejByName;
   final String? guardName;
   final String visitorIsValid;
   final String? visitorReview;
@@ -34,7 +34,7 @@ class Visitor {
     required this.visitorEnterDate,
     required this.visitorEnterTime,
     this.visitorExitDate,
-    this.visitorExitTime,
+    required this.visitorExitTime,
     required this.visitorStatus,
     required this.visitorIsValidUpdate,
     required this.visitorApprovReject,
@@ -123,31 +123,39 @@ class Visitor {
       visitorType: map['visitor_type'] as String,
       visitorTypeDetail: map['visitor_type_detail'] as String,
       visitorName: map['visitor_name'] as String,
+      visitorImage: map['visitor_image'] as String,
       visitorMobile: map['visitor_mobile'] as String,
       visitorFlatNo: map['visitor_flat_no'] as String,
-      visitorImage: map['visitor_image'] as String,
-      visitorEnterDate: map['visitor_enter_date'] as String,
-      visitorEnterTime: map['visitor_enter_time'] as String,
-      visitorAppRejBy: map['visitor_app_rej_by'] as String,
-      visitorRejByName: map['visitor_app_rej_by_name'] as String,
       visitorApprovReject: map['visitor_approve_reject'] != null
           ? map['visitor_approve_reject'] as String
           : null,
       visitorIsValidUpdate: map['visitor_is_valid_update'] != null
           ? map['visitor_is_valid_update'] as String
           : null,
-      guardName: map['guard_name'] != null ? map['guard_name'] as String : null,
       visitorExitDate: map['visitor_exit_date'] != null
           ? map['visitor_exit_date'] as String
           : null,
-      visitorExitTime: map['visitor_exit_time'] != null
-          ? map['visitor_exit_time'] as String
-          : null,
-      visitorStatus: map['visitor_status'] as String,
+      visitorExitTime: map['visitor_exit_time'] as String,
       visitorIsValid: map['visitor_is_valid'] as String,
       visitorReview: map['visitor_review'] != null
           ? map['visitor_review'] as String
           : null,
+      visitorEnterDate: map['visitor_enter_date'] != null
+          ? map['visitor_enter_date'] as String
+          : null,
+      visitorEnterTime: map['visitor_enter_time'] != null
+          ? map['visitor_enter_time'] as String
+          : null,
+      visitorStatus: map['visitor_status'] != null
+          ? map['visitor_status'] as String
+          : null,
+      visitorAppRejBy: map['visito_app_rej_by'] != null
+          ? map['visito_app_rej_by'] as String
+          : null,
+      visitorRejByName: map['visitor_rej_by_name'] != null
+          ? map['visitor_rej_by_name'] as String
+          : null,
+      guardName: map['guard_name'] != null ? map['guard_name'] as String : null,
     );
   }
 
