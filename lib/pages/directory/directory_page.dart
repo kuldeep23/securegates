@@ -8,6 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:secure_gates_project/controller/user_controller.dart';
 import 'package:secure_gates_project/entities/emergency_contact.dart';
 import 'package:secure_gates_project/entities/resisdent_block.dart';
+import 'package:secure_gates_project/general_providers.dart';
 import 'package:secure_gates_project/routes/app_routes_constants.dart';
 import 'package:secure_gates_project/services/directory_service.dart';
 import 'package:secure_gates_project/widgets/rounded_button.dart';
@@ -20,7 +21,7 @@ final residentBlockProvider =
   final data = FormData.fromMap({'soc_code': socCode});
 
   final response = await Dio().post(
-    "https://gatesadmin.000webhostapp.com/resident_block.php",
+    "${ref.read(generalUrlPathProvider)}/resident_block.php",
     data: data,
   );
   ref.keepAlive();
@@ -45,7 +46,7 @@ final emergencyContactsProvider = FutureProvider.autoDispose
   });
 
   final response = await Dio().post(
-    "https://gatesadmin.000webhostapp.com/emergency_directory.php",
+    "${ref.read(generalUrlPathProvider)}/emergency_directory.php",
     data: data,
   );
   ref.keepAlive();

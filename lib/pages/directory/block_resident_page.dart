@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/controller/user_controller.dart';
 import 'package:secure_gates_project/entities/resident.dart';
+import 'package:secure_gates_project/general_providers.dart';
 
 import '../../routes/app_routes_constants.dart';
 
@@ -17,7 +18,7 @@ final residentFlatsProvider = FutureProvider.autoDispose
   });
 
   final response = await Dio().post(
-    "https://gatesadmin.000webhostapp.com/resident_flat.php",
+    "${ref.read(generalUrlPathProvider)}/resident_flat.php",
     data: data,
   );
   ref.keepAlive();

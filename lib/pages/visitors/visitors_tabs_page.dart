@@ -8,9 +8,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:secure_gates_project/controller/user_controller.dart';
 import 'package:secure_gates_project/entities/visitor.dart';
+import 'package:secure_gates_project/general_providers.dart';
 import 'package:secure_gates_project/widgets/loading_widgets.dart';
 import 'package:secure_gates_project/widgets/visitor_card_widget.dart';
-import 'package:secure_gates_project/widgets/visitor_card_widget_second.dart';
 
 import '../homepage/home_page.dart';
 
@@ -24,7 +24,7 @@ final allVisitorProvider =
   });
 
   final response = await Dio().post(
-    "https://gatesadmin.000webhostapp.com/get_all_visitors.php",
+    "${ref.read(generalUrlPathProvider)}/get_all_visitors.php",
     data: data,
   );
 
@@ -50,7 +50,7 @@ final currentVisitorsProvider =
     'visitor_flat_no': currentUser.flatNumber
   });
   final response = await Dio().post(
-    "https://gatesadmin.000webhostapp.com/get_inside_visitors.php",
+    "${ref.read(generalUrlPathProvider)}/get_inside_visitors.php",
     data: data,
   );
 
@@ -77,7 +77,7 @@ final wrongVisitorsProvider =
     'visitor_flat_no': currentUser.flatNumber
   });
   final response = await Dio().post(
-    "https://gatesadmin.000webhostapp.com/get_wrong_visitors.php",
+    "${ref.read(generalUrlPathProvider)}/get_wrong_visitors.php",
     data: data,
   );
   ref.keepAlive();
@@ -103,7 +103,7 @@ final deniedVisitorsProvider =
     'visitor_flat_no': currentUser.flatNumber
   });
   final response = await Dio().post(
-    "https://gatesadmin.000webhostapp.com/get_denied_visitors.php",
+    "${ref.read(generalUrlPathProvider)}/get_denied_visitors.php",
     data: data,
   );
   ref.keepAlive();
@@ -462,17 +462,17 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                       onTap: () {
                                         quickDialogue(
                                           callBack: () {},
-                                          subtitle: item.visitorStatus,
+                                          subtitle: item.visitorStatus ?? "",
                                           title: item.visitorName,
                                           visitorType: item.visitorType,
                                           context: context,
                                           visitormobile: item.visitorMobile,
-                                          inTime: item.visitorEnterTime,
-                                          inDate: item.visitorEnterDate,
-                                          outTime: item.visitorEnterTime,
+                                          inTime: item.visitorEnterTime ?? "",
+                                          inDate: item.visitorEnterDate ?? "",
+                                          outTime: item.visitorEnterTime ?? "",
                                           outDate: item.visitorExitDate ??
                                               "Still Inside",
-                                          allowedBy: item.visitorAppRejBy,
+                                          allowedBy: item.visitorAppRejBy ?? "",
                                           visitorTypeDetail:
                                               item.visitorTypeDetail,
                                           phoneNo: item.visitorMobile,
@@ -484,16 +484,19 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                       child: VisitorCard(
                                         visitormobile: item.visitorMobile,
                                         visitorId: item.visitorId,
-                                        visitorApproveBy: item.visitorAppRejBy,
-                                        visitorEnterTime: item.visitorEnterTime,
+                                        visitorApproveBy:
+                                            item.visitorAppRejBy ?? "",
+                                        visitorEnterTime:
+                                            item.visitorEnterTime ?? "",
                                         visitorExitTime: item
                                                 .visitorExitTime!.isEmpty
                                             ? "Still Inside"
                                             : "Exited at${item.visitorExitTime!}",
                                         visitorImage: item.visitorImage,
                                         visitorName: item.visitorName,
-                                        visitorEnterDate: item.visitorEnterDate,
-                                        visitorStatus: item.visitorStatus,
+                                        visitorEnterDate:
+                                            item.visitorEnterDate ?? "",
+                                        visitorStatus: item.visitorStatus ?? "",
                                         visitorType: item.visitorType,
                                         visitorTypeDetail:
                                             item.visitorTypeDetail,
@@ -514,17 +517,22 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                           onTap: () {
                                             quickDialogue(
                                               callBack: () {},
-                                              subtitle: item.visitorStatus,
+                                              subtitle:
+                                                  item.visitorStatus ?? "",
                                               title: item.visitorName,
                                               visitorType: item.visitorType,
                                               context: context,
                                               visitormobile: item.visitorMobile,
-                                              inTime: item.visitorEnterTime,
-                                              inDate: item.visitorEnterDate,
-                                              outTime: item.visitorEnterTime,
+                                              inTime:
+                                                  item.visitorEnterTime ?? "",
+                                              inDate:
+                                                  item.visitorEnterDate ?? "",
+                                              outTime:
+                                                  item.visitorEnterTime ?? "",
                                               outDate: item.visitorExitDate ??
                                                   "Still Inside",
-                                              allowedBy: item.visitorAppRejBy,
+                                              allowedBy:
+                                                  item.visitorAppRejBy ?? "",
                                               visitorTypeDetail:
                                                   item.visitorTypeDetail,
                                               phoneNo: item.visitorMobile,
@@ -537,9 +545,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitormobile: item.visitorMobile,
                                             visitorId: item.visitorId,
                                             visitorApproveBy:
-                                                item.visitorAppRejBy,
+                                                item.visitorAppRejBy ?? "",
                                             visitorEnterTime:
-                                                item.visitorEnterTime,
+                                                item.visitorEnterTime ?? "",
                                             visitorExitTime: item
                                                     .visitorExitTime!.isEmpty
                                                 ? "Still Inside"
@@ -547,8 +555,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitorImage: item.visitorImage,
                                             visitorName: item.visitorName,
                                             visitorEnterDate:
-                                                item.visitorEnterDate,
-                                            visitorStatus: item.visitorStatus,
+                                                item.visitorEnterDate ?? "",
+                                            visitorStatus:
+                                                item.visitorStatus ?? "",
                                             visitorType: item.visitorType,
                                             visitorTypeDetail:
                                                 item.visitorTypeDetail,
@@ -848,17 +857,17 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                       onTap: () {
                                         quickDialogue(
                                           callBack: () {},
-                                          subtitle: item.visitorStatus,
+                                          subtitle: item.visitorStatus ?? "",
                                           title: item.visitorName,
                                           visitorType: item.visitorType,
                                           context: context,
                                           visitormobile: item.visitorMobile,
-                                          inTime: item.visitorEnterTime,
-                                          inDate: item.visitorEnterDate,
-                                          outTime: item.visitorEnterTime,
+                                          inTime: item.visitorEnterTime ?? "",
+                                          inDate: item.visitorEnterDate ?? "",
+                                          outTime: item.visitorEnterTime ?? "",
                                           outDate: item.visitorExitDate ??
                                               "Still Inside",
-                                          allowedBy: item.visitorAppRejBy,
+                                          allowedBy: item.visitorAppRejBy ?? "",
                                           visitorTypeDetail:
                                               item.visitorTypeDetail,
                                           phoneNo: item.visitorMobile,
@@ -870,16 +879,19 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                       child: VisitorCard(
                                         visitormobile: item.visitorMobile,
                                         visitorId: item.visitorId,
-                                        visitorApproveBy: item.visitorAppRejBy,
-                                        visitorEnterTime: item.visitorEnterTime,
+                                        visitorApproveBy:
+                                            item.visitorAppRejBy ?? "",
+                                        visitorEnterTime:
+                                            item.visitorEnterTime ?? "",
                                         visitorExitTime: item
                                                 .visitorExitTime!.isEmpty
                                             ? "Still Inside"
                                             : "Exited at${item.visitorExitTime!}",
                                         visitorImage: item.visitorImage,
                                         visitorName: item.visitorName,
-                                        visitorEnterDate: item.visitorEnterDate,
-                                        visitorStatus: item.visitorStatus,
+                                        visitorEnterDate:
+                                            item.visitorEnterDate ?? "",
+                                        visitorStatus: item.visitorStatus ?? "",
                                         visitorType: item.visitorType,
                                         visitorTypeDetail:
                                             item.visitorTypeDetail,
@@ -900,17 +912,22 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                           onTap: () {
                                             quickDialogue(
                                               callBack: () {},
-                                              subtitle: item.visitorStatus,
+                                              subtitle:
+                                                  item.visitorStatus ?? "",
                                               title: item.visitorName,
                                               visitorType: item.visitorType,
                                               context: context,
                                               visitormobile: item.visitorMobile,
-                                              inTime: item.visitorEnterTime,
-                                              inDate: item.visitorEnterDate,
-                                              outTime: item.visitorEnterTime,
+                                              inTime:
+                                                  item.visitorEnterTime ?? "",
+                                              inDate:
+                                                  item.visitorEnterDate ?? "",
+                                              outTime:
+                                                  item.visitorEnterTime ?? "",
                                               outDate: item.visitorExitDate ??
                                                   "Still Inside",
-                                              allowedBy: item.visitorAppRejBy,
+                                              allowedBy:
+                                                  item.visitorAppRejBy ?? "",
                                               visitorTypeDetail:
                                                   item.visitorTypeDetail,
                                               phoneNo: item.visitorMobile,
@@ -923,9 +940,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitormobile: item.visitorMobile,
                                             visitorId: item.visitorId,
                                             visitorApproveBy:
-                                                item.visitorAppRejBy,
+                                                item.visitorAppRejBy ?? "",
                                             visitorEnterTime:
-                                                item.visitorEnterTime,
+                                                item.visitorEnterTime ?? "",
                                             visitorExitTime: item
                                                     .visitorExitTime!.isEmpty
                                                 ? "Still Inside"
@@ -933,8 +950,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitorImage: item.visitorImage,
                                             visitorName: item.visitorName,
                                             visitorEnterDate:
-                                                item.visitorEnterDate,
-                                            visitorStatus: item.visitorStatus,
+                                                item.visitorEnterDate ?? "",
+                                            visitorStatus:
+                                                item.visitorStatus ?? "",
                                             visitorType: item.visitorType,
                                             visitorTypeDetail:
                                                 item.visitorTypeDetail,
@@ -1235,17 +1253,17 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                       onTap: () {
                                         quickDialogue(
                                           callBack: () {},
-                                          subtitle: item.visitorStatus,
+                                          subtitle: item.visitorStatus ?? "",
                                           title: item.visitorName,
                                           visitorType: item.visitorType,
                                           context: context,
                                           visitormobile: item.visitorMobile,
-                                          inTime: item.visitorEnterTime,
-                                          inDate: item.visitorEnterDate,
-                                          outTime: item.visitorEnterTime,
+                                          inTime: item.visitorEnterTime ?? "",
+                                          inDate: item.visitorEnterDate ?? "",
+                                          outTime: item.visitorEnterTime ?? "",
                                           outDate: item.visitorExitDate ??
                                               "Still Inside",
-                                          allowedBy: item.visitorAppRejBy,
+                                          allowedBy: item.visitorAppRejBy ?? "",
                                           visitorTypeDetail:
                                               item.visitorTypeDetail,
                                           phoneNo: item.visitorMobile,
@@ -1257,16 +1275,19 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                       child: VisitorCard(
                                         visitormobile: item.visitorMobile,
                                         visitorId: item.visitorId,
-                                        visitorApproveBy: item.visitorAppRejBy,
-                                        visitorEnterTime: item.visitorEnterTime,
+                                        visitorApproveBy:
+                                            item.visitorAppRejBy ?? "",
+                                        visitorEnterTime:
+                                            item.visitorEnterTime ?? "",
                                         visitorExitTime: item
                                                 .visitorExitTime!.isEmpty
                                             ? "Still Inside"
                                             : "Exited at${item.visitorExitTime!}",
                                         visitorImage: item.visitorImage,
                                         visitorName: item.visitorName,
-                                        visitorEnterDate: item.visitorEnterDate,
-                                        visitorStatus: item.visitorStatus,
+                                        visitorEnterDate:
+                                            item.visitorEnterDate ?? "",
+                                        visitorStatus: item.visitorStatus ?? "",
                                         visitorType: item.visitorType,
                                         visitorTypeDetail:
                                             item.visitorTypeDetail,
@@ -1287,17 +1308,22 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                           onTap: () {
                                             quickDialogue(
                                               callBack: () {},
-                                              subtitle: item.visitorStatus,
+                                              subtitle:
+                                                  item.visitorStatus ?? "",
                                               title: item.visitorName,
                                               visitorType: item.visitorType,
                                               context: context,
                                               visitormobile: item.visitorMobile,
-                                              inTime: item.visitorEnterTime,
-                                              inDate: item.visitorEnterDate,
-                                              outTime: item.visitorEnterTime,
+                                              inTime:
+                                                  item.visitorEnterTime ?? "",
+                                              inDate:
+                                                  item.visitorEnterDate ?? "",
+                                              outTime:
+                                                  item.visitorEnterTime ?? "",
                                               outDate: item.visitorExitDate ??
                                                   "Still Inside",
-                                              allowedBy: item.visitorAppRejBy,
+                                              allowedBy:
+                                                  item.visitorAppRejBy ?? "",
                                               visitorTypeDetail:
                                                   item.visitorTypeDetail,
                                               phoneNo: item.visitorMobile,
@@ -1310,9 +1336,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitormobile: item.visitorMobile,
                                             visitorId: item.visitorId,
                                             visitorApproveBy:
-                                                item.visitorAppRejBy,
+                                                item.visitorAppRejBy ?? "",
                                             visitorEnterTime:
-                                                item.visitorEnterTime,
+                                                item.visitorEnterTime ?? "",
                                             visitorExitTime: item
                                                     .visitorExitTime!.isEmpty
                                                 ? "Still Inside"
@@ -1320,8 +1346,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitorImage: item.visitorImage,
                                             visitorName: item.visitorName,
                                             visitorEnterDate:
-                                                item.visitorEnterDate,
-                                            visitorStatus: item.visitorStatus,
+                                                item.visitorEnterDate ?? "",
+                                            visitorStatus:
+                                                item.visitorStatus ?? "",
                                             visitorType: item.visitorType,
                                             visitorTypeDetail:
                                                 item.visitorTypeDetail,
@@ -1621,17 +1648,17 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                       onTap: () {
                                         quickDialogue(
                                           callBack: () {},
-                                          subtitle: item.visitorStatus,
+                                          subtitle: item.visitorStatus ?? "",
                                           title: item.visitorName,
                                           visitorType: item.visitorType,
                                           context: context,
                                           visitormobile: item.visitorMobile,
-                                          inTime: item.visitorEnterTime,
-                                          inDate: item.visitorEnterDate,
-                                          outTime: item.visitorEnterTime,
+                                          inTime: item.visitorEnterTime ?? "",
+                                          inDate: item.visitorEnterDate ?? "",
+                                          outTime: item.visitorEnterTime ?? "",
                                           outDate: item.visitorExitDate ??
                                               "Still Inside",
-                                          allowedBy: item.visitorAppRejBy,
+                                          allowedBy: item.visitorAppRejBy ?? "",
                                           visitorTypeDetail:
                                               item.visitorTypeDetail,
                                           phoneNo: item.visitorMobile,
@@ -1643,16 +1670,19 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                       child: VisitorCard(
                                         visitormobile: item.visitorMobile,
                                         visitorId: item.visitorId,
-                                        visitorApproveBy: item.visitorAppRejBy,
-                                        visitorEnterTime: item.visitorEnterTime,
+                                        visitorApproveBy:
+                                            item.visitorAppRejBy ?? "",
+                                        visitorEnterTime:
+                                            item.visitorEnterTime ?? "",
                                         visitorExitTime: item
                                                 .visitorExitTime!.isEmpty
                                             ? "Still Inside"
                                             : "Exited at${item.visitorExitTime!}",
                                         visitorImage: item.visitorImage,
                                         visitorName: item.visitorName,
-                                        visitorEnterDate: item.visitorEnterDate,
-                                        visitorStatus: item.visitorStatus,
+                                        visitorEnterDate:
+                                            item.visitorEnterDate ?? "",
+                                        visitorStatus: item.visitorStatus ?? "",
                                         visitorType: item.visitorType,
                                         visitorTypeDetail:
                                             item.visitorTypeDetail,
@@ -1673,17 +1703,22 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                           onTap: () {
                                             quickDialogue(
                                               callBack: () {},
-                                              subtitle: item.visitorStatus,
+                                              subtitle:
+                                                  item.visitorStatus ?? "",
                                               title: item.visitorName,
                                               visitorType: item.visitorType,
                                               context: context,
                                               visitormobile: item.visitorMobile,
-                                              inTime: item.visitorEnterTime,
-                                              inDate: item.visitorEnterDate,
-                                              outTime: item.visitorEnterTime,
+                                              inTime:
+                                                  item.visitorEnterTime ?? "",
+                                              inDate:
+                                                  item.visitorEnterDate ?? "",
+                                              outTime:
+                                                  item.visitorEnterTime ?? "",
                                               outDate: item.visitorExitDate ??
                                                   "Still Inside",
-                                              allowedBy: item.visitorAppRejBy,
+                                              allowedBy:
+                                                  item.visitorAppRejBy ?? "",
                                               visitorTypeDetail:
                                                   item.visitorTypeDetail,
                                               phoneNo: item.visitorMobile,
@@ -1696,9 +1731,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitormobile: item.visitorMobile,
                                             visitorId: item.visitorId,
                                             visitorApproveBy:
-                                                item.visitorAppRejBy,
+                                                item.visitorAppRejBy ?? "",
                                             visitorEnterTime:
-                                                item.visitorEnterTime,
+                                                item.visitorEnterTime ?? "",
                                             visitorExitTime: item
                                                     .visitorExitTime!.isEmpty
                                                 ? "Still Inside"
@@ -1706,8 +1741,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitorImage: item.visitorImage,
                                             visitorName: item.visitorName,
                                             visitorEnterDate:
-                                                item.visitorEnterDate,
-                                            visitorStatus: item.visitorStatus,
+                                                item.visitorEnterDate ?? "",
+                                            visitorStatus:
+                                                item.visitorStatus ?? "",
                                             visitorType: item.visitorType,
                                             visitorTypeDetail:
                                                 item.visitorTypeDetail,

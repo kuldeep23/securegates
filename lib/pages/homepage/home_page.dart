@@ -669,7 +669,8 @@ class HomePage extends HookConsumerWidget {
                                                   quickDialogue(
                                                     callBack: () {},
                                                     subtitle:
-                                                        item.visitorStatus,
+                                                        item.visitorStatus ??
+                                                            "",
                                                     title: item.visitorName,
                                                     visitormobile:
                                                         item.visitorMobile,
@@ -677,9 +678,11 @@ class HomePage extends HookConsumerWidget {
                                                         item.visitorType,
                                                     context: context,
                                                     inTime:
-                                                        item.visitorEnterTime,
+                                                        item.visitorEnterTime ??
+                                                            "",
                                                     inDate:
-                                                        item.visitorEnterDate,
+                                                        item.visitorEnterDate ??
+                                                            "",
                                                     outTime:
                                                         item.visitorExitTime ??
                                                             "Still Inside",
@@ -687,7 +690,8 @@ class HomePage extends HookConsumerWidget {
                                                         item.visitorExitDate ??
                                                             "Still Inside",
                                                     allowedBy:
-                                                        item.visitorAppRejBy,
+                                                        item.visitorAppRejBy ??
+                                                            "",
                                                     visitorTypeDetail:
                                                         item.visitorTypeDetail,
                                                     phoneNo: item.visitorMobile,
@@ -743,7 +747,7 @@ class HomePage extends HookConsumerWidget {
                                                               ),
                                                             ),
                                                             child: Text(
-                                                              item.visitorStatus
+                                                              item.visitorStatus!
                                                                   .toUpperCase(),
                                                               style:
                                                                   const TextStyle(
@@ -841,7 +845,7 @@ class HomePage extends HookConsumerWidget {
                                                             width: 2,
                                                           ),
                                                           Text(
-                                                            "${item.visitorEnterTime.toUpperCase()}, ",
+                                                            "${item.visitorEnterTime!.toUpperCase()}, ",
                                                             style: TextStyle(
                                                               fontSize: 12,
                                                               color: Colors
@@ -849,7 +853,8 @@ class HomePage extends HookConsumerWidget {
                                                             ),
                                                           ),
                                                           Text(
-                                                            item.visitorEnterDate,
+                                                            item.visitorEnterDate ??
+                                                                "",
                                                             style: TextStyle(
                                                               fontSize: 12,
                                                               color: Colors

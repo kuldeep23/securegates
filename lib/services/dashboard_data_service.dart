@@ -4,11 +4,16 @@ import 'package:secure_gates_project/controller/user_controller.dart';
 import 'package:secure_gates_project/entities/carousel_item.dart';
 import 'package:secure_gates_project/entities/home_page_card_item.dart';
 import 'package:secure_gates_project/entities/visitor.dart';
+import 'package:secure_gates_project/general_providers.dart';
 
 import '../custom_exception.dart';
 
 final dashboardServiceProvider = Provider<DashboardDataService>((ref) {
-  return DashboardDataService(ref);
+  final generalPathUrl = ref.read(generalUrlPathProvider);
+  return DashboardDataService(
+    ref,
+    generalPathUrl,
+  );
 });
 
 abstract class BaseDashboardDataService {
@@ -19,15 +24,15 @@ abstract class BaseDashboardDataService {
 
 class DashboardDataService implements BaseDashboardDataService {
   final Dio _dio = Dio();
+  final String generalPath;
   final Ref ref;
 
-  DashboardDataService(this.ref);
+  DashboardDataService(this.ref, this.generalPath);
 
   @override
   Future<List<CarouselItem>> getCarouselItems() async {
     try {
-      final response =
-          await _dio.get("https://gatesadmin.000webhostapp.com/banner.php");
+      final response = await _dio.get("$generalPath/banner.php");
 
       final results = List<Map<String, dynamic>>.from(response.data);
 
@@ -46,7 +51,7 @@ class DashboardDataService implements BaseDashboardDataService {
     try {
       final data = FormData.fromMap({'soc': 'CP'});
       final response = await _dio.post(
-        "https://gatesadmin.000webhostapp.com/dashboard.php",
+        "$generalPath/dashboard.php",
         data: data,
       );
 
@@ -71,7 +76,7 @@ class DashboardDataService implements BaseDashboardDataService {
         'flat_no': currentUser.flatNumber,
       });
       final response = await _dio.post(
-        "https://gatesadmin.000webhostapp.com/last_three_visitors.php",
+        "$generalPath/last_three_visitors.php",
         data: data,
       );
 

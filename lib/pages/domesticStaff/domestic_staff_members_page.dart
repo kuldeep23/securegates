@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:secure_gates_project/general_providers.dart';
 
 import '../../controller/user_controller.dart';
 import '../../entities/staff.dart';
@@ -14,7 +15,7 @@ final staffMemberProvider = FutureProvider.autoDispose
   final data = FormData.fromMap({'soc': socCode, 'staff_type': staffType});
 
   final response = await Dio().post(
-    "https://gatesadmin.000webhostapp.com/staff_member.php",
+    "${ref.read(generalUrlPathProvider)}/staff_member.php",
     data: data,
   );
   ref.keepAlive();
