@@ -51,7 +51,7 @@ class DomesticStaffListPage extends HookConsumerWidget {
           staffList.when(
               data: (data) => Padding(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 10,
+                      vertical: 5,
                     ),
                     child: Column(
                       children: data
@@ -65,26 +65,32 @@ class DomesticStaffListPage extends HookConsumerWidget {
                                       extra: item.staffType,
                                     );
                                   },
-                                  child: ListTile(
-                                    title: Text(item.staffType),
-                                    trailing: Wrap(
-                                      spacing: 15,
-                                      children: [
-                                        Text(
-                                          item.count,
-                                          style: const TextStyle(fontSize: 20),
-                                        ),
-                                        const Icon(
-                                          Icons.arrow_forward_ios,
-                                        ),
-                                      ],
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5, vertical: 5),
+                                    child: ListTile(
+                                      tileColor: Colors.white,
+                                      focusColor: Colors.grey,
+                                      title: Row(
+                                        children: [
+                                          Text(item.staffType),
+                                        ],
+                                      ),
+                                      trailing: Wrap(
+                                        spacing: 15,
+                                        children: [
+                                          Text(
+                                            item.count,
+                                            style:
+                                                const TextStyle(fontSize: 15),
+                                          ),
+                                          const Icon(
+                                            Icons.arrow_forward_ios_sharp,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const Divider(
-                                  height: 1,
-                                  thickness: 1,
-                                  color: Colors.grey,
                                 ),
                               ],
                             ),
@@ -97,7 +103,7 @@ class DomesticStaffListPage extends HookConsumerWidget {
                 return Text(e.toString());
               }),
         ],
-      ),
+      )
     );
   }
 }

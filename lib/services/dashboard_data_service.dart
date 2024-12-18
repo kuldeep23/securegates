@@ -32,7 +32,7 @@ class DashboardDataService implements BaseDashboardDataService {
   @override
   Future<List<CarouselItem>> getCarouselItems() async {
     try {
-      final response = await _dio.get("$generalPath/banner.php");
+      final response = await _dio.get("$generalPath/banners.php");
 
       final results = List<Map<String, dynamic>>.from(response.data);
 

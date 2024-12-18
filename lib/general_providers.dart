@@ -6,5 +6,5 @@ final firebaseMessagingProvider = Provider<FirebaseMessaging>((ref) {
 });
 
 final generalUrlPathProvider = Provider<String>((ref) {
-  return "https://superhuman-shortage.000webhostapp.com";
+  return "https://peru-heron-650794.hostingersite.com";
 });
