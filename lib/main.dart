@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/firebase_options.dart';
 import 'package:secure_gates_project/secure_gates_app.dart';
@@ -20,8 +21,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // await Firebase.initializeApp(
   //   options: DefaultFirebaseOptions.currentPlatform,
   // );
-  NotificationService.createanddisplaynotification(message);
+  // NotificationService.createanddisplaynotification(message,
+  //     source: "background #23");
   log("Handling a background message: ${message.data}");
+  Fluttertoast.showToast(msg: "main 24");
 }
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -131,8 +134,8 @@ Future<void> main() async {
 
   final token = await FirebaseMessaging.instance.getToken();
 
-  print(token);
-  print("++++++++++++++++++++++++++++++++++++++++");
+  log(token.toString());
+  log("++++++++++++++++++++++++++++++++++++++++");
   await LoginPresistenceService.init();
   await FastCachedImageConfig.init(clearCacheAfter: const Duration(days: 15));
   runApp(const ProviderScope(child: MyApp()));

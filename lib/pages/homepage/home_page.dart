@@ -22,6 +22,7 @@ import 'package:secure_gates_project/entities/home_page_card_item.dart';
 import 'package:secure_gates_project/entities/visitor.dart';
 import 'package:secure_gates_project/main.dart';
 import 'package:secure_gates_project/entities/visitor_from_notification.dart';
+import 'package:secure_gates_project/routes/app_routes_config.dart';
 import 'package:secure_gates_project/services/auth_service.dart';
 import 'package:secure_gates_project/services/dashboard_data_service.dart';
 import 'package:secure_gates_project/widgets/home_page_card.dart';
@@ -92,9 +93,12 @@ class HomePage extends HookConsumerWidget {
       if (details != null && details.didNotificationLaunchApp) {
         // Fluttertoast.showToast(
         //     msg: "${details.payload!} : toast message payload");
-        context.pushNamed(MyAppRoutes.notificationResponsePage,
-            extra: VisitorFromNotification.fromMap(
-                jsonDecode(details.notificationResponse!.payload!)));
+        MyAppRouterConfig.rootNavigatorKey.currentContext?.pushNamed(
+          MyAppRoutes.notificationResponsePage,
+          extra: VisitorFromNotification.fromMap(
+            jsonDecode(details.notificationResponse!.payload!),
+          ),
+        );
       } else {
         // Fluttertoast.showToast(msg: "not launched from notification");
       }
@@ -130,44 +134,23 @@ class HomePage extends HookConsumerWidget {
         FirebaseMessaging.instance.getInitialMessage().then(
           (message) {
             log("FirebaseMessaging.instance.getInitialMessage ${message?.data}");
-            // Fluttertoast.showToast(
-            //     msg:
-            //         "FirebaseMessaging.instance.getInitialMessage${message?.data}");
-            // print("+++++++++++++++++GET INITIAL MESSAGE++++++++++++++");
-
-            // context.pushNamed(MyAppRoutes.notificationResponsePage,
-            //     extra: VisitorFromNotification.fromMap(message!.data));
-            // log(message?.data["title"]);
-
-            // context.pushNamed(MyAppRoutes.notificationResponsePage,
-            //     extra: VisitorFromNotification.fromMap(message.data));
-            // NotificationService.createanddisplaynotification(message);
-            // if (message.data['id'] != null) {
-            //   log("message.data11 ${message.data}");
-            //   NotificationService.createanddisplaynotification(message);
-            //   respo.logOpenViaNotification(message.data);
-            //   throwToTheScreens(
-            //       context, message.data['id'], message.data['type']);
-            // }
+            if ((message?.data ?? {}).isNotEmpty) {
+              context.pushNamed(MyAppRoutes.notificationResponsePage,
+                  extra: VisitorFromNotification.fromMap(message?.data ?? {}));
+            }
           },
         );
 
         // 2. This method only call when App in forground it mean app must be opened
         FirebaseMessaging.onMessage.listen(
           (message) {
-            log("FirebaseMessaging.onMessage.listen ${message.data}");
-            // Fluttertoast.showToast(msg: "FirebaseMessaging.onMessage.listen");
+            log("FirebaseMessaging.onMessage.listen ${message.notification?.title}");
+            log("FirebaseMessaging.onMessage.listen ${message.notification?.toMap()}");
+            log("message.data11 ${message.data}");
+            Fluttertoast.showToast(msg: "FirebaseMessaging.onMessage.listen");
 
             context.pushNamed(MyAppRoutes.notificationResponsePage,
                 extra: VisitorFromNotification.fromMap(message.data));
-
-            // if (message.notification != null) {
-            log("message.data11 ${message.data}");
-            // NotificationService.createanddisplaynotification(message);
-            // Fluttertoast.showToast(
-            //     msg: message.notification!.title!,
-            //     toastLength: Toast.LENGTH_LONG);
-            // }
           },
         );
         // 3. This method only call when App in background and not terminated(not closed)
@@ -175,15 +158,10 @@ class HomePage extends HookConsumerWidget {
           (message) {
             print("+++++++++++++++++On Message Opened App++++++++++++++ ");
             log("FirebaseMessaging.onMessageOpenedApp.listen ${message.data}");
-            // Fluttertoast.showToast(
-            //     msg: "FirebaseMessaging.onMessageOpenedApp.listen");
+            Fluttertoast.showToast(
+                msg: "FirebaseMessaging.onMessageOpenedApp.listen");
             context.pushNamed(MyAppRoutes.notificationResponsePage,
                 extra: VisitorFromNotification.fromMap(message.data));
-            NotificationService.createanddisplaynotification(message);
-            // if (message.notification != null) {
-            //   log("message.data22 ${message.data}");
-            //   NotificationService.createanddisplaynotification(message);
-            // }
           },
         );
       }
@@ -878,10 +856,10 @@ class HomePage extends HookConsumerWidget {
                                                             width: 2,
                                                           ),
                                                           Text(
-                                                            item.visitorExitTime!
+                                                            item.visitorExitTime
                                                                     .isEmpty
                                                                 ? "Still Inside"
-                                                                : "${item.visitorExitTime?.toUpperCase()}, ",
+                                                                : "${item.visitorExitTime.toUpperCase()}, ",
                                                             style: TextStyle(
                                                               fontSize: 12,
                                                               color: Colors
