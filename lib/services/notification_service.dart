@@ -18,6 +18,7 @@ Future<void> didRecieveNotification(NotificationResponse details) async {
   MyAppRouterConfig.rootNavigatorKey.currentContext?.pushNamed(
       MyAppRoutes.notificationResponsePage,
       extra: VisitorFromNotification.fromMap(jsonDecode(details.payload!)));
+  Fluttertoast.showToast(msg: "notification service 21");
   if (details.actionId != null && details.actionId!.isNotEmpty) {
     log("Router Value1234 ${details.actionId}");
   }
@@ -29,9 +30,14 @@ Future<void> didRecieveNotification(NotificationResponse details) async {
 ///Then calls [didNotificationLaunchDetails] on homescreen to redirect
 @pragma('vm:entry-point')
 Future<void> notificationTappedBackground(NotificationResponse details) async {
-  NotificationService.createanddisplaynotification(
-      jsonDecode(details.payload!));
+  MyAppRouterConfig.rootNavigatorKey.currentContext?.pushNamed(
+    MyAppRoutes.notificationResponsePage,
+    extra: VisitorFromNotification.fromMap(
+      jsonDecode(details.payload!),
+    ),
+  );
   // Fluttertoast.showToast(msg: "Notificiaton Received");
+  Fluttertoast.showToast(msg: "notification service 40");
   log("onBackground");
   if (details.actionId!.isNotEmpty) {
     log("Router Value1234 ${details.actionId}");
@@ -128,7 +134,7 @@ class NotificationService {
   static Future<void> updateFBID(
       {required String token, required String uid}) async {
     String apiUrl =
-        "https://superhuman-shortage.000webhostapp.com/user_firebase_id.php";
+        "https://peru-heron-650794.hostingersite.com/user_firebase_id.php";
     final data = FormData.fromMap({
       "uid": uid,
       "fb_id": token,
@@ -157,7 +163,9 @@ class NotificationService {
   //           );
   // }
 
-  static void createanddisplaynotification(RemoteMessage message) async {
+  static void createanddisplaynotification(RemoteMessage message,
+      {required String source}) async {
+    log("Source: $source");
     try {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       const NotificationDetails notificationDetails = NotificationDetails(
@@ -184,8 +192,8 @@ class NotificationService {
 
       await _notificationsPlugin.show(
         id,
-        message.data["title"],
-        message.data["body"],
+        message.notification?.title,
+        message.notification?.body,
         notificationDetails,
         payload: jsonEncode(message.data),
       );

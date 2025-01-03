@@ -3,6 +3,7 @@ import 'dart:ffi';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +27,7 @@ class NotificationResponsePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     final size = MediaQuery.of(context).size;
     final currentUser = ref.read(userControllerProvider).currentUser!;
     final remainingTime = useState<int>(15);
@@ -113,11 +115,11 @@ class NotificationResponsePage extends HookConsumerWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Text(
                   notificationVisitor.visitorName,
                   style: const TextStyle(
-                      fontSize: 25,
+                      fontSize: 20,
                       color: Colors.white,
                       fontWeight: FontWeight.w600),
                 ),
@@ -152,7 +154,7 @@ class NotificationResponsePage extends HookConsumerWidget {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 25),
+              
                 Transform.translate(
                   offset: const Offset(0, 40),
                   child: Container(
@@ -169,7 +171,7 @@ class NotificationResponsePage extends HookConsumerWidget {
                       child: Text(
                         currentUser.socName,
                         style: const TextStyle(
-                          fontSize: 25,
+                          fontSize: 20,
                           color: Colors.redAccent,
                         ),
                       ),
@@ -193,7 +195,8 @@ class NotificationResponsePage extends HookConsumerWidget {
                           "visitor_app_rej": "Denied",
                           "visitor_app_rej_by": "Owner",
                           "visitor_app_rej_by_name": currentUser.ownerFirstName,
-                          "status": "Denied",
+                          "visitor_status": "Denied",
+                          "visitor_is_valid": "1"
                         });
 
                         final Dio dio = Dio();
@@ -236,7 +239,8 @@ class NotificationResponsePage extends HookConsumerWidget {
                           "visitor_app_rej": "Allowed",
                           "visitor_app_rej_by": "Owner",
                           "visitor_app_rej_by_name": currentUser.ownerFirstName,
-                          "status": "Inside",
+                          "visitor_status": "Inside",
+                          "visitor_is_valid": "1"
                         });
 
                         final Dio dio = Dio();
@@ -273,13 +277,12 @@ class NotificationResponsePage extends HookConsumerWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              top: 100,
-            ),
+            padding: const EdgeInsets.all(50),
             child: Text(
               "This page will pop after ${remainingTime.value} seconds",
+              textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 20,
+                fontSize: 15,
                 color: Colors.red,
               ),
             ),
