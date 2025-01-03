@@ -6,9 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:secure_gates_project/entities/visitor_from_notification.dart';
-import 'package:secure_gates_project/general_providers.dart';
 import 'package:secure_gates_project/routes/app_routes_config.dart';
 import 'package:secure_gates_project/routes/app_routes_constants.dart';
 

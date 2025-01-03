@@ -489,9 +489,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                         visitorEnterTime:
                                             item.visitorEnterTime ?? "",
                                         visitorExitTime: item
-                                                .visitorExitTime!.isEmpty
+                                                .visitorExitTime.isEmpty
                                             ? "Still Inside"
-                                            : "Exited at${item.visitorExitTime!}",
+                                            : "Exited at${item.visitorExitTime}",
                                         visitorImage: item.visitorImage,
                                         visitorName: item.visitorName,
                                         visitorEnterDate:
@@ -549,9 +549,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitorEnterTime:
                                                 item.visitorEnterTime ?? "",
                                             visitorExitTime: item
-                                                    .visitorExitTime!.isEmpty
+                                                    .visitorExitTime.isEmpty
                                                 ? "Still Inside"
-                                                : "Exited at${item.visitorExitTime!}",
+                                                : "Exited at${item.visitorExitTime}",
                                             visitorImage: item.visitorImage,
                                             visitorName: item.visitorName,
                                             visitorEnterDate:
@@ -884,9 +884,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                         visitorEnterTime:
                                             item.visitorEnterTime ?? "",
                                         visitorExitTime: item
-                                                .visitorExitTime!.isEmpty
+                                                .visitorExitTime.isEmpty
                                             ? "Still Inside"
-                                            : "Exited at${item.visitorExitTime!}",
+                                            : "Exited at${item.visitorExitTime}",
                                         visitorImage: item.visitorImage,
                                         visitorName: item.visitorName,
                                         visitorEnterDate:
@@ -944,9 +944,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitorEnterTime:
                                                 item.visitorEnterTime ?? "",
                                             visitorExitTime: item
-                                                    .visitorExitTime!.isEmpty
+                                                    .visitorExitTime.isEmpty
                                                 ? "Still Inside"
-                                                : "Exited at${item.visitorExitTime!}",
+                                                : "Exited at${item.visitorExitTime}",
                                             visitorImage: item.visitorImage,
                                             visitorName: item.visitorName,
                                             visitorEnterDate:
@@ -1280,9 +1280,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                         visitorEnterTime:
                                             item.visitorEnterTime ?? "",
                                         visitorExitTime: item
-                                                .visitorExitTime!.isEmpty
+                                                .visitorExitTime.isEmpty
                                             ? "Still Inside"
-                                            : "Exited at${item.visitorExitTime!}",
+                                            : "Exited at${item.visitorExitTime}",
                                         visitorImage: item.visitorImage,
                                         visitorName: item.visitorName,
                                         visitorEnterDate:
@@ -1340,9 +1340,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitorEnterTime:
                                                 item.visitorEnterTime ?? "",
                                             visitorExitTime: item
-                                                    .visitorExitTime!.isEmpty
+                                                    .visitorExitTime.isEmpty
                                                 ? "Still Inside"
-                                                : "Exited at${item.visitorExitTime!}",
+                                                : "Exited at${item.visitorExitTime}",
                                             visitorImage: item.visitorImage,
                                             visitorName: item.visitorName,
                                             visitorEnterDate:
@@ -1675,9 +1675,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                         visitorEnterTime:
                                             item.visitorEnterTime ?? "",
                                         visitorExitTime: item
-                                                .visitorExitTime!.isEmpty
+                                                .visitorExitTime.isEmpty
                                             ? "Still Inside"
-                                            : "Exited at${item.visitorExitTime!}",
+                                            : "Exited at${item.visitorExitTime}",
                                         visitorImage: item.visitorImage,
                                         visitorName: item.visitorName,
                                         visitorEnterDate:
@@ -1735,9 +1735,9 @@ class VisitorsTabsPage extends HookConsumerWidget {
                                             visitorEnterTime:
                                                 item.visitorEnterTime ?? "",
                                             visitorExitTime: item
-                                                    .visitorExitTime!.isEmpty
+                                                    .visitorExitTime.isEmpty
                                                 ? "Still Inside"
-                                                : "Exited at${item.visitorExitTime!}",
+                                                : "Exited at${item.visitorExitTime}",
                                             visitorImage: item.visitorImage,
                                             visitorName: item.visitorName,
                                             visitorEnterDate:
