@@ -134,7 +134,7 @@ class NotificationService {
   static Future<void> updateFBID(
       {required String token, required String uid}) async {
     String apiUrl =
-        "https://superhuman-shortage.000webhostapp.com/user_firebase_id.php";
+        "https://peru-heron-650794.hostingersite.com/user_firebase_id.php";
     final data = FormData.fromMap({
       "uid": uid,
       "fb_id": token,
