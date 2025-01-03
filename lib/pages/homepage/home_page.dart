@@ -20,7 +20,6 @@ import 'package:secure_gates_project/controller/user_controller.dart';
 import 'package:secure_gates_project/entities/carousel_item.dart';
 import 'package:secure_gates_project/entities/home_page_card_item.dart';
 import 'package:secure_gates_project/entities/visitor.dart';
-import 'package:secure_gates_project/main.dart';
 import 'package:secure_gates_project/entities/visitor_from_notification.dart';
 import 'package:secure_gates_project/routes/app_routes_config.dart';
 import 'package:secure_gates_project/services/auth_service.dart';
@@ -30,7 +29,6 @@ import 'package:secure_gates_project/widgets/photo_view_wrapper.dart';
 import 'package:secure_gates_project/widgets/skelton_widget.dart';
 
 import '../../routes/app_routes_constants.dart';
-import '../../services/notification_service.dart';
 import '../visitors/visitors_tabs_page.dart';
 
 final carouselDataProvider =
