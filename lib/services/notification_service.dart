@@ -133,7 +133,8 @@ class NotificationService {
 
   static Future<void> updateFBID(
       {required String token, required String uid}) async {
-    String apiUrl = "lib/general_providers.dart/user_firebase_id.php";
+    String apiUrl =
+        "https://peru-heron-650794.hostingersite.com/user_firebase_id.php";
     final data = FormData.fromMap({
       "uid": uid,
       "fb_id": token,
