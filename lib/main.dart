@@ -134,7 +134,7 @@ Future<void> main() async {
 
   final token = await FirebaseMessaging.instance.getToken();
 
-  log(token.toString());
+  log("${token}device token");
   log("++++++++++++++++++++++++++++++++++++++++");
   await LoginPresistenceService.init();
   await FastCachedImageConfig.init(clearCacheAfter: const Duration(days: 15));
