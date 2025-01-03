@@ -9,6 +9,7 @@ import 'package:secure_gates_project/entities/visitor_from_notification.dart';
 import 'package:secure_gates_project/pages/authentication/login_page.dart';
 import 'package:secure_gates_project/pages/authentication/signup_page.dart';
 import 'package:secure_gates_project/pages/authentication/staging_page.dart';
+import 'package:secure_gates_project/pages/complaints/complaints_outer_page.dart';
 import 'package:secure_gates_project/pages/complaints/complaints_page.dart';
 import 'package:secure_gates_project/pages/directory/block_resident_details_page.dart';
 import 'package:secure_gates_project/pages/directory/block_resident_page.dart';
@@ -117,8 +118,13 @@ class MyAppRouterConfig {
         builder: (context, state) => const StagingPage(),
       ),
       GoRoute(
-        name: MyAppRoutes.complaints,
+        name: MyAppRoutes.complaintsDashBoard,
         path: "/complaints-page",
+        builder: (context, state) => const ComplaintsOuterPage(),
+      ),
+      GoRoute(
+        name: MyAppRoutes.complaints,
+        path: "/complaints-dashboard-page",
         builder: (context, state) => const ComplaintsPage(),
       ),
       GoRoute(
